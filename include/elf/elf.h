@@ -28,6 +28,7 @@
 #define ELFMAG1 'E'
 #define ELFMAG2 'L'
 #define ELFMAG3 'F'
+
 /*
  * Byte e_ident[EI_CLASS] identifies the file's class or capacity.
  * 
