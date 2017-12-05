@@ -1,6 +1,7 @@
 #ifndef ELF_639918_H
 #define ELF_639918_H
 
+#include <unordered_map>
 #include <stdint.h>
 
 /*
@@ -13,7 +14,9 @@
 #define EI_CLASS 4
 #define EI_DATA 5
 #define EI_VERSION 6
-#define EI_PAD 7
+#define EI_OSABI 7
+#define EI_ABIVERSION 8
+#define EI_PAD 9
 
 /*
  * A files first 4 bytes hold a "magic number" identifying the file as an ELF
@@ -55,16 +58,35 @@
 #define ELFDATA2MSB 2
 
 /*
- * Byte e_ident[EI_VERSION] identifies the ELF header version number.
- * 
+ * Byte e_ident[EI_VERSION] specifies the ELF header version number.
+ *
  * EV_NONE: Invalid version.
  * EV_CURRENT: Current version.
  */
 #define EV_NONE 0
-#define EV_CURRENT
+#define EV_CURRENT 1
 
 /*
- * Currently defined vlaues for e_machine.
+ * Byte e_ident[EI_OSABI] identifies the OS- or ABI specific ELF extensions
+ * used by this file. 
+ */
+
+#define ELFOSABI_NONE 0     /* No extensions or unspecified */
+#define ELFOSABI_HPUX 1     /* Hewlett-Packard HP-UX */
+#define ELFOSABI_NETBSD 2   /* NetBSD */
+#define ELFOSABI_LINUX 3    /* Linux */
+#define ELFOSABI_SOLARIS 6  /* Sun Solaris */
+#define ELFOSABI_AIX 7      /* AIX */
+#define ELFOSABI_IRIX 8     /* IRIX */
+#define ELFOSABI_FREEBSD 9  /* FreeBSD */
+#define ELFOSABI_TRU64 10   /* Compaq TRU64 UNIX */
+#define ELFOSABI_MODESTO 11 /* Novell Modesto */
+#define ELFOSABI_OPENBSD 12 /* Open BSD */
+#define ELFOSABI_OPENVMS 13 /* Open VMS */
+#define ELFOSABI_NSK 14     /* Hewlett-Packard Non-Stop Kernel */
+
+/*
+ * Currently defined values for e_machine.
  */
 #define EM_NONE 0         /* No machine */
 #define EM_M32 1          /* AT&T WE 32100 */
@@ -148,6 +170,131 @@
 #define EM_TPC 98         /* Tenor Network TPC processor */
 #define EM_SNP1K 99       /* Trebia SNP 1000 processor */
 #define EM_ST200 100      /* STMicroelectronics (www.st.com) ST200 microcontroller */
+
+/* 
+ * Human friendly names for e_machine values
+ */
+std::unordered_map<int, std::string> e_machine_names = {
+    {0, "No machine"},
+	{1, "AT&T WE 32100"},
+	{2, "SPARC"},
+	{3, "Intel 80386"},
+	{4, "Motorola 68000"},
+	{5, "Motorola 88000"},
+	{7, "Intel 80860"},
+	{8, "MIPS I Architecture"},
+	{9, "IBM System/370 Processor"},
+	{10, "MIPS RS3000 Little-endian"},
+	{15, "Hewlett-Packard PA-RISC"},
+	{17, "Fujitsu VPP500"},
+	{18, "Enhanced instruction set SPARC"},
+	{19, "Intel 80960"},
+	{20, "PowerPC"},
+	{21, "64-bit PowerPC"},
+	{22, "IBM System/390 Processor"},
+	{36, "NEC V800"},
+	{37, "Fujitsu FR20"},
+	{38, "TRW RH-32"},
+	{39, "Motorola RCE"},
+	{40, "Advanced RISC Machines ARM"},
+	{41, "Digital Alpha"},
+	{42, "Hitachi SH"},
+	{43, "SPARC Version 9"},
+	{44, "Siemens TriCore embedded processor"},
+	{45, "Argonaut RISC Core, Argonaut Technologies Inc."},
+	{46, "Hitachi H8/300"},
+	{47, "Hitachi H8/300H"},
+	{48, "Hitachi H8S"},
+	{49, "Hitachi H8/500"},
+	{50, "Intel IA-64 processor architecture"},
+	{51, "Stanford MIPS-X"},
+	{52, "Motorola ColdFire"},
+	{53, "Motorola M68HC12"},
+	{54, "Fujitsu MMA Multimedia Accelerator"},
+	{55, "Siemens PCP"},
+	{56, "Sony nCPU embedded RISC processor"},
+	{57, "Denso NDR1 microprocessor"},
+	{58, "Motorola Star*Core processor"},
+	{59, "Toyota ME16 processor"},
+	{60, "STMicroelectronics ST100 processor"},
+	{61, "Advanced Logic Corp. TinyJ embedded processor family"},
+	{62, "AMD x86-64 architecture"},
+	{63, "Sony DSP Processor"},
+	{64, "Digital Equipment Corp. PDP-10"},
+	{65, "Digital Equipment Corp. PDP-11"},
+	{66, "Siemens FX66 microcontroller"},
+	{67, "STMicroelectronics ST9+ 8/16 bit microcontroller"},
+	{68, "STMicroelectronics ST7 8-bit microcontroller"},
+	{69, "Motorola MC68HC16 Microcontroller"},
+	{70, "Motorola MC68HC11 Microcontroller"},
+	{71, "Motorola MC68HC08 Microcontroller"},
+	{72, "Motorola MC68HC05 Microcontroller"},
+	{73, "Silicon Graphics SVx"},
+	{74, "STMicroelectronics ST19 8-bit microcontroller"},
+	{75, "Digital VAX"},
+	{76, "Axis Communications 32-bit embedded processor"},
+	{77, "Infineon Technologies 32-bit embedded processor"},
+	{78, "Element 14 64-bit DSP Processor"},
+	{79, "LSI Logic 16-bit DSP Processor"},
+	{80, "Donald Knuth's educational 64-bit processor"},
+	{81, "Harvard University machine-independent object files"},
+	{82, "SiTera Prism"},
+	{83, "Atmel AVR 8-bit microcontroller"},
+	{84, "Fujitsu FR30"},
+	{85, "Mitsubishi D10V"},
+	{86, "Mitsubishi D30V"},
+	{87, "NEC v850"},
+	{88, "Mitsubishi M32R"},
+	{89, "Matsushita MN10300"},
+	{90, "Matsushita MN10200"},
+	{91, "picoJava"},
+	{92, "OpenRISC 32-bit embedded processor"},
+	{93, "ARC Cores Tangent-A5"},
+	{94, "Tensilica Xtensa Architecture"},
+	{95, "Alphamosaic VideoCore processor"},
+	{96, "Thompson Multimedia General Purpose Processor"},
+	{97, "National Semiconductor 32000 series"},
+	{98, "Tenor Network TPC processor"},
+	{99, "Trebia SNP 1000 processor"},
+	{100, "STMicroelectronics (www.st.com) ST200 microcontroller"},
+};
+
+/*
+ * Some section header table indexes are reserved; an object file will not have
+ * sections for these special indexes.
+ * 
+ * SHN_UNDEF: This value marks an undefined, missing or otherwise meaningless
+ *   section reference.
+ * SHN_LORESERVE: This value specifies the lower bound of the range of
+ *   reserved indexes.
+ * SHN_LOPROC through SHN_HIPROC: Values in this inclusive range are reserved
+ *   for processor-specific semantics.
+ * SHN_LOOS through SHN_HIOS: Values in this inclusive range are reserved for
+ *   operating system-specific semantics.
+ * SHN_ABS: This value specifies absolute values for the corresponding
+ *   reference. For example, symbols defined relative to section number SHN_ABS
+ *   have absolute values and are not affected by relocation.
+ * SHN_COMMON: Symbols defined relative to this section are common symbols,
+ *   such as FORTRAN COMMON or unallocated C external variables.
+ * SHN_XINDEX: This value is an escape value. It indicates that the actual
+ *   section header index is too large to fit in the containing field and is to
+ *   be found in another location (specific to the structure where it appears).
+ * SHN_HIRESERVE: This value specifies the upper bound of the range of reserved
+ *   indexes. The system reserves indexes between SHN_LORESERVE and
+ *   SHN_HIRESERVE, inclusive; the values do not reference the section header
+ *   table. The section header table does not contain entries for the reserved
+ *   indexes. 
+ */
+#define SHN_UNDEF 0
+#define SHN_LORESERVE 0xff00
+#define SHN_LOPROC 0xff00
+#define SHN_HIPROC 0xff1f
+#define SHN_LOOS 0xff20
+#define SHN_HIOS 0xff3f
+#define SHN_ABS 0xfff1
+#define SHN_COMMON 0xfff2
+#define SHN_XINDEX 0xffff
+#define SHN_HIRESERVE 0xffff
 
 /*
  * An ELF header resides at the beginning of an ELF object file and holds
