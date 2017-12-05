@@ -262,28 +262,6 @@ std::unordered_map<int, std::string> e_machine_names = {
 /*
  * Some section header table indexes are reserved; an object file will not have
  * sections for these special indexes.
- * 
- * SHN_UNDEF: This value marks an undefined, missing or otherwise meaningless
- *   section reference.
- * SHN_LORESERVE: This value specifies the lower bound of the range of
- *   reserved indexes.
- * SHN_LOPROC through SHN_HIPROC: Values in this inclusive range are reserved
- *   for processor-specific semantics.
- * SHN_LOOS through SHN_HIOS: Values in this inclusive range are reserved for
- *   operating system-specific semantics.
- * SHN_ABS: This value specifies absolute values for the corresponding
- *   reference. For example, symbols defined relative to section number SHN_ABS
- *   have absolute values and are not affected by relocation.
- * SHN_COMMON: Symbols defined relative to this section are common symbols,
- *   such as FORTRAN COMMON or unallocated C external variables.
- * SHN_XINDEX: This value is an escape value. It indicates that the actual
- *   section header index is too large to fit in the containing field and is to
- *   be found in another location (specific to the structure where it appears).
- * SHN_HIRESERVE: This value specifies the upper bound of the range of reserved
- *   indexes. The system reserves indexes between SHN_LORESERVE and
- *   SHN_HIRESERVE, inclusive; the values do not reference the section header
- *   table. The section header table does not contain entries for the reserved
- *   indexes. 
  */
 #define SHN_UNDEF 0
 #define SHN_LORESERVE 0xff00
@@ -298,80 +276,6 @@ std::unordered_map<int, std::string> e_machine_names = {
 
 /*
  * currently defined values for sh_type
- * 
- * SHT_NULL: This value marks the section header as inactive; it does not have
- *   an associated section. Other members of the section header have undefined
- *   values.
- * SHT_PROGBITS: The section holds information defined by the program, whose
- *   format and meaning are determined solely by the program.
- * SHT_SYMTAB and SHT_DYNSYM:  hese sections hold a symbol table. Currently,
- *   an object file may have only one section of each type, but this restriction
- *   may be relaxed in the future. Typically, SHT_SYMTAB provides symbols for
- *   link editing, though it may also be used for dynamic linking. As a complete
- *   symbol table, it may contain many symbols unnecessary for dynamic linking.
- *   Consequently, an object file may also contain a SHT_DYNSYM section, which
- *   holds a minimal set of dynamic linking symbols, to save space. See ``Symbol
- *   Table'' below for details.
- * SHT_STRTAB: The section holds a string table. An object file may have
- *   multiple string table sections. See ``String Table'' below for details.
- * SHT_RELA: The section holds relocation entries with explicit addends, such
- *   as type Elf32_Rela for the 32-bit class of object files or type Elf64_Rela
- *   for the 64-bit class of object files. An object file may have multiple
- *   relocation sections. ``Relocation'' below for details.
- * SHT_HASH: The section holds a symbol hash table. Currently, an object file
- *   may have only one hash table, but this restriction may be relaxed in the
- *   future. See ``Hash Table'' in the Chapter 5 for details.
- * SHT_DYNAMIC: The section holds information for dynamic linking. Currently,
- *   an object file may have only one dynamic section, but this restriction may
- *   be relaxed in the future. See ``Dynamic Section'' in Chapter 5 for details.
- * SHT_NOTE: The section holds information that marks the file in some way.
- *   See ``Note Section'' in Chapter 5 for details.
- * SHT_NOBITS: A section of this type occupies no space in the file but
- *   otherwise resembles SHT_PROGBITS. Although this section contains no bytes,
- *   the sh_offset member contains the conceptual file offset.
- * SHT_REL: The section holds relocation entries without explicit addends,
- *   such as type Elf32_Rel for the 32-bit class of object files or type
- *   Elf64_Rel for the 64-bit class of object files. An object file may have
- *   multiple relocation sections. See ``Relocation'' below for details.
- * SHT_SHLIB: This section type is reserved but has unspecified semantics.
- * SHT_INIT_ARRAY: This section contains an array of pointers to
- *   initialization functions, as described in ``Initialization and Termination
- *   Functions'' in Chapter 5. Each pointer in the array is taken as a
- *   parameterless procedure with a void return.
- * SHT_FINI_ARRAY: This section contains an array of pointers to termination
- *   functions, as described in ``Initialization and Termination Functions'' in
- *   Chapter 5. Each pointer in the array is taken as a parameterless procedure
- *   with a void return.
- * SHT_PREINIT_ARRAY: This section contains an array of pointers to functions
- *   that are invoked before all other initialization functions, as described in
- *   ``Initialization and Termination Functions'' in Chapter 5. Each pointer in
- *   the array is taken as a parameterless procedure with a void return.
- * SHT_GROUP: This section defines a section group. A section group is a set
- *   of sections that are related and that must be treated specially by the
- *   linker (see below for further details). Sections of type SHT_GROUP may
- *   appear only in relocatable objects (objects with the ELF header e_type
- *   member set to ET_REL). The section header table entry for a group section
- *   must appear in the section header table before the entries for any of the
- *   sections that are members of the group.
- * SHT_SYMTAB_SHNDX: This section is associated with a section of type
- * SHT_SYMTAB and is required if any of the section header indexes referenced
- *   by that symbol table contain the escape value SHN_XINDEX. The section is an
- *   array of Elf32_Word values. Each value corresponds one to one with a symbol
- *   table entry and appear in the same order as those entries. The values
- *   represent the section header indexes against which the symbol table entries
- *   are defined. Only if corresponding symbol table entry's st_shndx field
- *   contains the escape value SHN_XINDEX will the matching Elf32_Word hold the
- *   actual section header index; otherwise, the entry must be SHN_UNDEF (0).
- * SHT_LOOS through SHT_HIOS: Values in this inclusive range are reserved for
- *   operating system-specific semantics.
- * SHT_LOPROC through SHT_HIPROC: Values in this inclusive range are reserved
- *   for processor-specific semantics.
- * SHT_LOUSER: This value specifies the lower bound of the range of indexes
- *   reserved for application programs.
- * SHT_HIUSER: This value specifies the upper bound of the range of indexes
- *   reserved for application programs. Section types between SHT_LOUSER and
- * SHT_HIUSER may be used by the application, without conflicting with current
- *   or future system-defined section types. 
  */
 #define SHT_NULL 0
 #define SHT_PROGBITS 1
