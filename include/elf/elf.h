@@ -362,4 +362,84 @@ typedef struct {
     uint16_t e_shstrndx;
 } Elf64_Ehdr_t;
 
+/*
+ * An object file's section header table lets one locate all the file's
+ * sections. The section header table is an array of Elf32_Shdr or Elf64_Shdr
+ * structures. A section header table index is a subscript into this array.
+ * The ELF header's e_shoff member gives the byte offset from the beginning of
+ * the file to the section header table. e_shnum normally tells how many
+ * entries the section header table contains. e_shentsize gives the size
+ * in bytes of each entry. If the number of sections is greater than or equal
+ * to SHN_LORESERVE (0xff00), e_shnum has the value SHN_UNDEF (0) and the actual
+ * number of section header table entries is contained in the sh_size field of
+ * the section header at index 0 (otherwise, the sh_size member of the initial
+ * entry contains 0). Some section header table indexes are reserved in contexts
+ * where index size is restricted, for example, the st_shndx member of a symbol
+ * table entry and the e_shnum and e_shstrndx members of the ELF header. In such
+ * contexts, the reserved values do not represent actual sections in the object
+ * file. Also in such contexts, an escape value indicates that the actual
+ * section index is to be found elsewhere, in a larger field. 
+ * 
+ * sh_name: This member specifies the name of the section. Its value is an index
+ *   into the section header string table section [see ``String Table'' below],
+ *   giving the location of a null-terminated string.
+ * sh_type: This member categorizes the section's contents and semantics.
+ *   Section types and their descriptions appear below.
+ * sh_flags: Sections support 1-bit flags that describe miscellaneous
+ *   attributes. Flag definitions appear below.
+ * sh_addr: If the section will appear in the memory image of a process, this
+ *   member gives the address at which the section's first byte should reside.
+ *   Otherwise, the member contains 0.
+ * sh_offset: This member's value gives the byte offset from the beginning of
+ *   the file to the first byte in the section. One section type, SHT_NOBITS
+ *   described below, occupies no space in the file, and its sh_offset member
+ *   locates the conceptual placement in the file.
+ * sh_size: This member gives the section's size in bytes. Unless the section
+ *   type is SHT_NOBITS, the section occupies sh_size bytes in the file. A
+ *   section of type SHT_NOBITS may have a non-zero size, but it occupies no
+ *   space in the file.
+ * sh_link: This member holds a section header table index link, whose
+ *   interpretation depends on the section type. A table below describes the
+ *   values.
+ * sh_info: This member holds extra information, whose interpretation depends
+ *   on the section type. A table below describes the values. If the sh_flags
+ *   field for this section header includes the attribute SHF_INFO_LINK, then
+ *   this member represents a section header table index.
+ * sh_addralign: Some sections have address alignment constraints. For example,
+ *   if a section holds a doubleword, the system must ensure doubleword
+ *   alignment for the entire section. The value of sh_addr must be congruent to
+ *   0, modulo the value of sh_addralign. Currently, only 0 and positive
+ *   integral powers of two are allowed. Values 0 and 1 mean the section has no
+ *   alignment constraints.
+ * sh_entsize: Some sections hold a table of fixed-size entries, such as a
+ *   symbol table. For such a section, this member gives the size in bytes of
+ *   each entry. The member contains 0 if the section does not hold a table of
+ *   fixed-size entries. 
+ */
+typedef struct {
+	uint32_t	sh_name;
+	uint32_t	sh_type;
+	uint32_t	sh_flags;
+	uint32_t	sh_addr;
+	uint32_t	sh_offset;
+	uint32_t	sh_size;
+	uint32_t	sh_link;
+	uint32_t	sh_info;
+	uint32_t	sh_addralign;
+	uint32_t	sh_entsize;
+} Elf32_Shdr_t;
+
+typedef struct {
+	uint32_t	sh_name;
+	uint32_t	sh_type;
+	uint64_t	sh_flags;
+	uint64_t	sh_addr;
+	uint64_t	sh_offset;
+	uint64_t	sh_size;
+	uint32_t	sh_link;
+	uint32_t	sh_info;
+	uint64_t	sh_addralign;
+	uint64_t	sh_entsize;
+} Elf64_Shdr_t;
+
 #endif
