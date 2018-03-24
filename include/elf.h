@@ -144,11 +144,12 @@ extern Elf_Desc *Elf_Open(const char *path);
 extern void Elf_Close(Elf_Desc *elf_desc);
 extern void Elf_Dump_Ident(Elf_Desc *elf_desc);
 
-const char *get_elf_class(unsigned int elf_class);
-const char *get_data_encoding(unsigned int encoding);
-const char *get_osabi_name(unsigned int osabi);
-const char *get_file_type(unsigned int file_type);
-const char *get_machine_name(unsigned int machine);
+static const char *get_elf_class(unsigned int elf_class);
+static const char *get_data_encoding(unsigned int encoding);
+static const char *get_elf_version(unsigned int version);
+static const char *get_osabi_name(unsigned int osabi);
+static const char *get_file_type(unsigned int file_type);
+static const char *get_machine_name(unsigned int machine);
 
 
 #endif // ELF_B8FA07

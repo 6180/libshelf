@@ -115,40 +115,18 @@ void Elf_Dump_Ident(Elf_Desc *desc) {
     );
 
     printf("\tClass: %s\n", get_elf_class(desc->e_ident[EI_CLASS]));
-
-
-    printf("\tData: ");
-    switch (desc->e_ident[EI_DATA]) {
-      case 1: {
-        printf("2's compliment, little endian\n");
-        break;
-      }
-      case 2: {
-        printf("2's compliment, big endian\n");        
-        break;
-      }
-      default: {
-        printf("Invalid data format (0x%02x)\n", desc->e_ident[EI_DATA]);
-        break;
-      }
-    }
-
-    printf("\tVersion: ");
-    if (desc->e_ident[EI_VERSION] == 1)
-        printf("1 (current version)\n");
-    else
-        printf("%d (invalid version)\n", desc->e_ident[EI_VERSION]);
-
-    printf("\tOS/ABI: %s\n");
+    printf("\tData: %s\n", get_data_encoding(desc->e_ident[EI_DATA]));
+    printf("\tVersion: %s\n", get_elf_version(desc->e_ident[EI_VERSION]));
+    printf("\tOS/ABI: %s\n", get_osabi_name(desc->e_ident[EI_OSABI]));
 }
 
 static const char* get_elf_class(unsigned int elf_class) {
     static char buf[32];
 
     switch (elf_class) {
-        case 0: return "none";
-        case 1: return "ELF32";
-        case 2: return "ELF64";
+        case ELFCLASSNONE: return "none";
+        case ELFCLASS32:    return "ELF32";
+        case ELFCLASS64:    return "ELF64";
         default: {
             snprintf(buf, sizeof(buf), "<unknown: 0x%02x>", elf_class);
             return buf;
@@ -160,11 +138,24 @@ static const char *get_data_encoding(unsigned int encoding) {
     static char buf[32];
 
     switch (encoding) {
-        case 0: return "none";
-        case 1: return "2's compliment, little-endian";
-        case 2: return "2's compliment, big-endian";
+        case ELFDATANONE: return "none";
+        case ELFDATA2LSB: return "2's compliment, little-endian";
+        case ELFDATA2MSB: return "2's compliment, big-endian";
         default: {
             snprintf(buf, sizeof(buf), "<unknown: 0x%02x>", encoding);
+            return buf;
+        }
+    }
+}
+
+static const char *get_elf_version(unsigned int version) {
+    static char buf[32];
+
+    switch (version) {
+        case EV_NONE:    return "none";
+        case EV_CURRENT: return "current (1)";
+        default: {
+            snprintf(buf, sizeof(buf), "<unknown: 0x%02x>", version);
             return buf;
         }
     }
@@ -174,7 +165,7 @@ static const char *get_osabi_name(unsigned int osabi) {
     static char buf[32];
 
     switch (osabi) {
-        case ELFOSABI_NONE:    return "none";
+        case ELFOSABI_SYSV:    return "UNIX System V ABI";
         case ELFOSABI_HPUX:    return "Hewlett-Packard HP-UX";
         case ELFOSABI_NETBSD:  return "NetBSD";
         case ELFOSABI_LINUX:   return "Linux";
@@ -204,12 +195,13 @@ static const char *get_file_type(unsigned int file_type) {
         case ET_DYN:  return "DYN (Shared object file)";
         case ET_CORE: return "CORE (Core file)";
         default: {
-            snprintf(buf, sizeof(buf), "<unknown: 0x%02x>", osabi);
+            snprintf(buf, sizeof(buf), "<unknown: 0x%02x>", file_type);
             return buf;
         }
     }
 }
 
 static const char *get_machine_name(unsigned int machine) {
+    (void) machine;
     return "TODO: implement me cuck";
 }

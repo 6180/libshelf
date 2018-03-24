@@ -6,8 +6,8 @@
 #define EI_NIDENT 16
 #define EI_MAG0 0
 #define EI_MAG1 1
-#define EI_MAG3 2
-#define EI_MAG4 3
+#define EI_MAG2 2
+#define EI_MAG3 3
 #define EI_CLASS 4
 #define EI_DATA 5
 #define EI_VERSION 6
@@ -69,6 +69,7 @@
  */
 
 #define ELFOSABI_NONE 0     /* No extensions or unspecified */
+#define ELFOSABI_SYSV 0     /* UNIX System V ABI */
 #define ELFOSABI_HPUX 1     /* Hewlett-Packard HP-UX */
 #define ELFOSABI_NETBSD 2   /* NetBSD */
 #define ELFOSABI_LINUX 3    /* Linux */
