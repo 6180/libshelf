@@ -83,6 +83,15 @@
 #define ELFOSABI_NSK 14     /* Hewlett-Packard Non-Stop Kernel */
 
 /*
+ * Defined values for e_type.
+ */
+ #define ET_NONE 0
+ #define ET_REL  1
+ #define ET_EXEC 2
+ #define ET_DYN  3
+ #define ET_CORE 4
+
+/*
  * Currently defined values for e_machine.
  */
 #define EM_NONE 0         /* No machine */
