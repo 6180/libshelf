@@ -169,3 +169,47 @@ static const char *get_data_encoding(unsigned int encoding) {
         }
     }
 }
+
+static const char *get_osabi_name(unsigned int osabi) {
+    static char buf[32];
+
+    switch (osabi) {
+        case ELFOSABI_NONE:    return "none";
+        case ELFOSABI_HPUX:    return "Hewlett-Packard HP-UX";
+        case ELFOSABI_NETBSD:  return "NetBSD";
+        case ELFOSABI_LINUX:   return "Linux";
+        case ELFOSABI_SOLARIS: return "Sun Solaris";
+        case ELFOSABI_AIX:     return "AIX";
+        case ELFOSABI_IRIX:    return "IRIX";
+        case ELFOSABI_FREEBSD: return "FreeBSD";
+        case ELFOSABI_TRU64:   return "Compaq TRU64 UNIX";
+        case ELFOSABI_MODESTO: return "Novell Modesto";
+        case ELFOSABI_OPENBSD: return "Open BSD";
+        case ELFOSABI_OPENVMS: return "Open VMS";
+        case ELFOSABI_NSK:     return "Hewlett-Packard Non-Stop Kernel";
+        default: {
+            snprintf(buf, sizeof(buf), "<unknown: 0x%02x>", osabi);
+            return buf;
+        }
+    }
+}
+
+static const char *get_file_type(unsigned int file_type) {
+    static char buf[32];
+
+    switch (file_type) {
+        case ET_NONE: return "NONE (None)";
+        case ET_REL:  return "REL (Relocatable file)";
+        case ET_EXEC: return "EXEC (Executable file)";
+        case ET_DYN:  return "DYN (Shared object file)";
+        case ET_CORE: return "CORE (Core file)";
+        default: {
+            snprintf(buf, sizeof(buf), "<unknown: 0x%02x>", osabi);
+            return buf;
+        }
+    }
+}
+
+static const char *get_machine_name(unsigned int machine) {
+    return "TODO: implement me cuck";
+}
