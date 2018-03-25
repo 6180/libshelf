@@ -93,10 +93,38 @@ Elf_Desc *Elf_Open(const char *path) {
         read_qword = read_qword_be;
     }
 
+    size_t offset = EI_NIDENT;
+
     if (desc->e_class == 1) {         // 32 bit
         memcpy(desc->e_hdr.ehdr32.e_ident, desc->e_rawdata, EI_NIDENT);
+        desc->e_hdr.ehdr32.e_type = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.ehdr32.e_machine = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.ehdr32.e_version = read_dword(desc->e_rawdata + offset); offset += 4;
+        desc->e_hdr.ehdr32.e_entry = read_dword(desc->e_rawdata + offset); offset += 4;
+        desc->e_hdr.ehdr32.e_phoff = read_dword(desc->e_rawdata + offset); offset += 4;
+        desc->e_hdr.ehdr32.e_shoff = read_dword(desc->e_rawdata + offset); offset += 4;
+        desc->e_hdr.ehdr32.e_flags = read_dword(desc->e_rawdata + offset); offset += 4;
+        desc->e_hdr.ehdr32.e_ehsize = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.ehdr32.e_phentsize = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.ehdr32.e_phnum = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.ehdr32.e_shentsize = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.ehdr32.e_shnum = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.ehdr32.e_shstrndx = read_word(desc->e_rawdata + offset); offset += 2;
     } else if (desc->e_class == 2) {  // 64 bit
         memcpy(desc->e_hdr.ehdr64.e_ident, desc->e_rawdata, EI_NIDENT);
+        desc->e_hdr.ehdr64.e_type = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.ehdr64.e_machine = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.ehdr64.e_version = read_dword(desc->e_rawdata + offset); offset += 4;
+        desc->e_hdr.ehdr64.e_entry = read_qword(desc->e_rawdata + offset); offset += 8;
+        desc->e_hdr.ehdr64.e_phoff = read_qword(desc->e_rawdata + offset); offset += 8;
+        desc->e_hdr.ehdr64.e_shoff = read_qword(desc->e_rawdata + offset); offset += 8;
+        desc->e_hdr.ehdr64.e_flags = read_dword(desc->e_rawdata + offset); offset += 4;
+        desc->e_hdr.ehdr64.e_ehsize = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.ehdr64.e_phentsize = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.ehdr64.e_phnum = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.ehdr64.e_shentsize = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.ehdr64.e_shnum = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.ehdr64.e_shstrndx = read_word(desc->e_rawdata + offset); offset += 2;
     }
 
     return desc;
