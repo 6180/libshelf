@@ -62,6 +62,7 @@ typedef uint64_t Elf64_Xword;
  */
 typedef struct Elf32_Ehdr {
     unsigned char e_ident[EI_NIDENT];
+    uint16_t      e_type;
     uint16_t      e_machine;
     uint32_t      e_version;
     Elf32_Addr    e_entry;
@@ -79,6 +80,7 @@ typedef struct Elf32_Ehdr {
 
 typedef struct Elf64_Ehdr {
     unsigned char e_ident[EI_NIDENT];
+    uint16_t      e_type;
     uint16_t      e_machine;
     uint32_t      e_version;
     Elf64_Addr    e_entry;
