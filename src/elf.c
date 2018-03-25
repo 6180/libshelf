@@ -12,9 +12,14 @@
 
 
 Elf_Desc *Elf_Open(const char *path) {
-    Elf_Desc *elf_desc;
+    Elf_Desc *desc;
     long path_length;
     struct stat file_stat;
+
+    /* Function pointers we'll set later to handle different endianesses */
+    uint16_t (*read_word)(const char *src);
+    uint32_t (*read_dword)(const char *src);
+    uint64_t (*read_qword)(const char *src);
 
     stat(path, &file_stat);
 
@@ -27,77 +32,96 @@ Elf_Desc *Elf_Open(const char *path) {
         return NULL;
 
     /* Allocate memory for the elf descriptor struct and set the filepath. */
-    elf_desc = calloc(1, sizeof(Elf_Desc));
+    desc = calloc(1, sizeof(desc));
     path_length = strlen(path);
-    elf_desc->filepath = malloc(path_length + 1);
-    strncpy(elf_desc->filepath, path, path_length);
+    desc->filepath = malloc(path_length + 1);
+    strncpy(desc->filepath, path, path_length);
 
     /* Check if we can write to the file. */
-    if (access(elf_desc->filepath, W_OK) == 0)
-        elf_desc->e_writable = 1;
+    if (access(desc->filepath, W_OK) == 0)
+        desc->e_writable = 1;
 
     /* Initialize fields we know at this point. */
-    elf_desc->e_size = file_stat.st_size;
-    elf_desc->e_readable = 1;
-    elf_desc->e_magic = ELF_MAGIC;
+    desc->e_size = file_stat.st_size;
+    desc->e_readable = 1;
+    desc->e_magic = ELF_MAGIC;
 
     /* Before trying to open make sure the file is at least as large as an elf header. */
-    if (elf_desc->e_size < 52) {
+    if (desc->e_size < 52) {
         printf("File is smaller than the smallest valid elf header.\n");
     }
 
-    if (elf_desc->e_writable) 
-        elf_desc->e_fd = open(elf_desc->filepath, O_RDWR);
+    if (desc->e_writable) 
+        desc->e_fd = open(desc->filepath, O_RDWR);
     else 
-        elf_desc->e_fd = open(elf_desc->filepath, O_RDONLY);
+        desc->e_fd = open(desc->filepath, O_RDONLY);
 
     /* We can't open with the permissions detected earlier for some reason. */
-    if (elf_desc->e_fd == -1) {
+    if (desc->e_fd == -1) {
         printf("Failed opening file\ni");
-        elf_desc->e_fd = 0;
+        desc->e_fd = 0;
         goto error;
     }
     
-    elf_desc->e_rawdata = mmap(
+    desc->e_rawdata = mmap(
         NULL,
-        elf_desc->e_size,
+        desc->e_size,
         PROT_READ,
         MAP_PRIVATE,
-        elf_desc->e_fd,
+        desc->e_fd,
         0
     );
 
-    if (elf_desc->e_rawdata == MAP_FAILED) {
+    if (desc->e_rawdata == MAP_FAILED) {
         printf("mmap() failed.\n");
         goto error;
     }
 
-    elf_desc->e_mmapped = 1;
-    elf_desc->e_ident = elf_desc->e_rawdata;
+    desc->e_mmapped = 1;
+    desc->e_ident = desc->e_rawdata;
 
-    return elf_desc;
+    desc->e_class = desc->e_ident[EI_CLASS];
+    desc->e_encoding = desc->e_ident[EI_DATA];
+
+    if (desc->e_encoding != 2) { // little-endian
+        read_word = read_word_le;
+        read_dword = read_dword_le;
+        read_qword = read_qword_le;
+    } else {                   // big-endian
+        read_word = read_word_be;
+        read_dword = read_dword_be;
+        read_qword = read_qword_be;
+    }
+
+    if (desc->e_class == 1) {         // 32 bit
+        memcpy(desc->e_hdr.ehdr32.e_ident, desc->e_rawdata, EI_NIDENT);
+    } else if (desc->e_class == 2) {  // 64 bit
+        memcpy(desc->e_hdr.ehdr64.e_ident, desc->e_rawdata, EI_NIDENT);
+    }
+
+    return desc;
 
 error:
     fflush(stdout);
 
-    if (elf_desc->e_mmapped)
-        munmap(elf_desc->e_rawdata, elf_desc->e_size);
+    if (desc->e_mmapped)
+        munmap(desc->e_rawdata, desc->e_size);
 
-    if (elf_desc->e_fd)
-        close(elf_desc->e_fd);
+    if (desc->e_fd)
+        close(desc->e_fd);
 
-    free(elf_desc->filepath);
-    free(elf_desc);
+    free(desc->filepath);
+    free(desc);
 
-    return (Elf_Desc *) NULL;
+    return NULL;
 }
 
-// ssize_t Elf_Write(Elf_Desc *elf_desc, const char *path) {
+// ssize_t Elf_Write(desc *desc, const char *path) {
 //     return (ssize_t) 0;
 // }
 
-void Elf_Close(Elf_Desc *elf_desc) {
-    (void) elf_desc;
+void Elf_Close(Elf_Desc *desc) {
+    (void) desc;
 }
 
 void Elf_Dump_Ident(Elf_Desc *desc) {
@@ -118,6 +142,7 @@ void Elf_Dump_Ident(Elf_Desc *desc) {
     printf("\tData: %s\n", get_data_encoding(desc->e_ident[EI_DATA]));
     printf("\tVersion: %s\n", get_elf_version(desc->e_ident[EI_VERSION]));
     printf("\tOS/ABI: %s\n", get_osabi_name(desc->e_ident[EI_OSABI]));
+    printf("\tOS/ABI Version: %d\n", desc->e_ident[EI_ABIVERSION]);
 }
 
 static const char* get_elf_class(unsigned int elf_class) {
@@ -204,4 +229,62 @@ static const char *get_file_type(unsigned int file_type) {
 static const char *get_machine_name(unsigned int machine) {
     (void) machine;
     return "TODO: implement me cuck";
+}
+
+static uint16_t read_word_le(const char *src) {
+    uint16_t ret = 0;
+    ret |= src[0];
+    ret |= src[1] << 8;
+    return ret;
+}
+
+static uint16_t read_word_be(const char *src) {
+    uint16_t ret = 0;
+    ret |= src[1];
+    ret |= src[0] << 8;
+    return ret;
+}
+
+static uint32_t read_dword_le(const char *src) {
+    uint32_t ret = 0;
+    ret |= src[0];
+    ret |= src[1] << 8;
+    ret |= src[2] << 16;
+    ret |= src[3] << 24;
+    return ret;
+}
+
+static uint32_t read_dword_be(const char *src) {
+    uint32_t ret = 0;
+    ret |= src[3];
+    ret |= src[2] << 8;
+    ret |= src[1] << 16;
+    ret |= src[0] << 24;
+    return ret;
+}
+
+static uint64_t read_qword_le(const char *src) {
+    uint64_t ret = 0;
+    ret |= (uint64_t)src[0];
+    ret |= (uint64_t)src[1] << 8;
+    ret |= (uint64_t)src[2] << 16;
+    ret |= (uint64_t)src[3] << 24;
+    ret |= (uint64_t)src[4] << 32;
+    ret |= (uint64_t)src[5] << 40;
+    ret |= (uint64_t)src[6] << 48;
+    ret |= (uint64_t)src[7] << 56;
+    return ret;
+}
+
+static uint64_t read_qword_be(const char *src) {
+    uint64_t ret = 0;
+    ret |= (uint64_t)src[3];
+    ret |= (uint64_t)src[2] << 8;
+    ret |= (uint64_t)src[1] << 16;
+    ret |= (uint64_t)src[0] << 24;
+    ret |= (uint64_t)src[0] << 32;
+    ret |= (uint64_t)src[0] << 40;
+    ret |= (uint64_t)src[0] << 48;
+    ret |= (uint64_t)src[0] << 56;
+    return ret;
 }

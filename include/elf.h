@@ -60,7 +60,7 @@ typedef uint64_t Elf64_Xword;
  *   associated with the section name string table. If the file has no section
  *   name string table, this member holds the value SH_UNDEF.
  */
-typedef struct {
+typedef struct Elf32_Ehdr {
     unsigned char e_ident[EI_NIDENT];
     uint16_t      e_machine;
     uint32_t      e_version;
@@ -77,7 +77,7 @@ typedef struct {
 
 } Elf32_Ehdr;
 
-typedef struct {
+typedef struct Elf64_Ehdr {
     unsigned char e_ident[EI_NIDENT];
     uint16_t      e_machine;
     uint32_t      e_version;
@@ -123,10 +123,10 @@ typedef struct Elf_Desc {
      * 2 - big-endian */
     unsigned char e_encoding;
 
-    union e_header {
-        Elf32_Ehdr elf32_hdr;
-        Elf64_Ehdr elf64_hdr;
-    } e_header;
+    union e_hdr {
+        Elf32_Ehdr ehdr32;
+        Elf64_Ehdr ehdr64;
+    } e_hdr;
 
     /* Misc flagerinos. */
     unsigned e_readable:1;  /* File is readable. */
@@ -150,6 +150,13 @@ static const char *get_elf_version(unsigned int version);
 static const char *get_osabi_name(unsigned int osabi);
 static const char *get_file_type(unsigned int file_type);
 static const char *get_machine_name(unsigned int machine);
+
+static uint16_t read_word_le(const char *src);
+static uint16_t read_word_be(const char *src);
+static uint32_t read_dword_le(const char *src);
+static uint32_t read_dword_be(const char *src);
+static uint64_t read_qword_le(const char *src);
+static uint64_t read_qword_be(const char *src);
 
 
 #endif // ELF_B8FA07
