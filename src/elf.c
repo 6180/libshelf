@@ -100,39 +100,35 @@ Elf_Desc *Elf_Open(const char *path) {
     size_t offset = EI_NIDENT;
 
     if (desc->e_class == 1) { // 32 bit
-        memcpy(desc->e_hdr.ehdr32.e_ident, desc->e_rawdata, EI_NIDENT);
-        desc->e_hdr.ehdr32.e_type = read_word(desc->e_rawdata + offset); offset += 2;
-        desc->e_hdr.ehdr32.e_machine = read_word(desc->e_rawdata + offset); offset += 2;
-        desc->e_hdr.ehdr32.e_version = read_dword(desc->e_rawdata + offset); offset += 4;
-        desc->e_hdr.ehdr32.e_entry = read_dword(desc->e_rawdata + offset); offset += 4;
-        desc->e_hdr.ehdr32.e_phoff = read_dword(desc->e_rawdata + offset); offset += 4;
-        desc->e_hdr.ehdr32.e_shoff = read_dword(desc->e_rawdata + offset); offset += 4;
-        desc->e_hdr.ehdr32.e_flags = read_dword(desc->e_rawdata + offset); offset += 4;
-        desc->e_hdr.ehdr32.e_ehsize = read_word(desc->e_rawdata + offset); offset += 2;
-        desc->e_hdr.ehdr32.e_phentsize = read_word(desc->e_rawdata + offset); offset += 2;
-        desc->e_hdr.ehdr32.e_phnum = read_word(desc->e_rawdata + offset); offset += 2;
-        desc->e_hdr.ehdr32.e_shentsize = read_word(desc->e_rawdata + offset); offset += 2;
-        desc->e_hdr.ehdr32.e_shnum = read_word(desc->e_rawdata + offset); offset += 2;
-        desc->e_hdr.ehdr32.e_shstrndx = read_word(desc->e_rawdata + offset); offset += 2;
+        memcpy(desc->e_hdr.e_ident, desc->e_rawdata, EI_NIDENT);
+        desc->e_hdr.e_type = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.e_machine = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.e_version = read_dword(desc->e_rawdata + offset); offset += 4;
+        desc->e_hdr.e_entry = read_dword(desc->e_rawdata + offset); offset += 4;
+        desc->e_hdr.e_phoff = read_dword(desc->e_rawdata + offset); offset += 4;
+        desc->e_hdr.e_shoff = read_dword(desc->e_rawdata + offset); offset += 4;
+        desc->e_hdr.e_flags = read_dword(desc->e_rawdata + offset); offset += 4;
+        desc->e_hdr.e_ehsize = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.e_phentsize = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.e_phnum = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.e_shentsize = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.e_shnum = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.e_shstrndx = read_word(desc->e_rawdata + offset); offset += 2;
     } else if (desc->e_class == 2) {  // 64 bit
-        // printf("w");
-        // char *bepis = malloc(16);
-        // free(bepis);
-        memcpy(desc->e_hdr.ehdr64.e_ident, desc->e_rawdata, EI_NIDENT);
-        // printf("%x\n", desc->e_hdr.ehdr64.e_ident[EI_MAG0]);
-        desc->e_hdr.ehdr64.e_type = read_word(desc->e_rawdata + offset); offset += 2;
-        desc->e_hdr.ehdr64.e_machine = read_word(desc->e_rawdata + offset); offset += 2;
-        desc->e_hdr.ehdr64.e_version = read_dword(desc->e_rawdata + offset); offset += 4;
-        desc->e_hdr.ehdr64.e_entry = read_qword(desc->e_rawdata + offset); offset += 8;
-        desc->e_hdr.ehdr64.e_phoff = read_qword(desc->e_rawdata + offset); offset += 8;
-        desc->e_hdr.ehdr64.e_shoff = read_qword(desc->e_rawdata + offset); offset += 8;
-        desc->e_hdr.ehdr64.e_flags = read_dword(desc->e_rawdata + offset); offset += 4;
-        desc->e_hdr.ehdr64.e_ehsize = read_word(desc->e_rawdata + offset); offset += 2;
-        desc->e_hdr.ehdr64.e_phentsize = read_word(desc->e_rawdata + offset); offset += 2;
-        desc->e_hdr.ehdr64.e_phnum = read_word(desc->e_rawdata + offset); offset += 2;
-        desc->e_hdr.ehdr64.e_shentsize = read_word(desc->e_rawdata + offset); offset += 2;
-        desc->e_hdr.ehdr64.e_shnum = read_word(desc->e_rawdata + offset); offset += 2;
-        desc->e_hdr.ehdr64.e_shstrndx = read_word(desc->e_rawdata + offset); offset += 2;
+        memcpy(desc->e_hdr.e_ident, desc->e_rawdata, EI_NIDENT);
+        desc->e_hdr.e_type = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.e_machine = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.e_version = read_dword(desc->e_rawdata + offset); offset += 4;
+        desc->e_hdr.e_entry = read_qword(desc->e_rawdata + offset); offset += 8;
+        desc->e_hdr.e_phoff = read_qword(desc->e_rawdata + offset); offset += 8;
+        desc->e_hdr.e_shoff = read_qword(desc->e_rawdata + offset); offset += 8;
+        desc->e_hdr.e_flags = read_dword(desc->e_rawdata + offset); offset += 4;
+        desc->e_hdr.e_ehsize = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.e_phentsize = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.e_phnum = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.e_shentsize = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.e_shnum = read_word(desc->e_rawdata + offset); offset += 2;
+        desc->e_hdr.e_shstrndx = read_word(desc->e_rawdata + offset); offset += 2;
     }
 
     return desc;
@@ -173,7 +169,6 @@ void Elf_Dump_Ident(Elf_Desc *desc) {
         desc-> e_ident[EI_MAG2],
         desc-> e_ident[EI_MAG3]        
     );
-
     printf("\tClass: %s\n", get_elf_class(desc->e_ident[EI_CLASS]));
     printf("\tData: %s\n", get_data_encoding(desc->e_ident[EI_DATA]));
     printf("\tVersion: %s\n", get_elf_version(desc->e_ident[EI_VERSION]));
@@ -183,11 +178,43 @@ void Elf_Dump_Ident(Elf_Desc *desc) {
 
 void Elf_Dump_Header(Elf_Desc *desc) {
     if (desc == NULL) {
-        printf("Null pointer passed to Elf_Dump_Ident()\n");
+        printf("Null pointer passed to Elf_Dump_Header()\n");
         exit(-1);
     }
 
+    printf("Elf Header:\n");
+    printf("\tMagic: %02x %02x %02x %02x\n",
+        desc-> e_ident[EI_MAG0],
+        desc-> e_ident[EI_MAG1],
+        desc-> e_ident[EI_MAG2],
+        desc-> e_ident[EI_MAG3]        
+    );
+    printf("\tClass: %s\n", get_elf_class(desc->e_ident[EI_CLASS]));
+    printf("\tData: %s\n", get_data_encoding(desc->e_ident[EI_DATA]));
+    printf("\tVersion: %s\n", get_elf_version(desc->e_ident[EI_VERSION]));
+    printf("\tOS/ABI: %s\n", get_osabi_name(desc->e_ident[EI_OSABI]));
+    printf("\tOS/ABI Version: %d\n", desc->e_ident[EI_ABIVERSION]);
+    printf("\tType: %s\n", get_file_type(desc->e_hdr.e_type));
+    printf("\tMachine: %s\n", get_machine_name(desc->e_hdr.e_machine));
+    printf("\tVersion: %s\n", get_elf_version(desc->e_hdr.e_version));
 
+    if (desc->e_class != 2) {
+        printf("\tEntry: 0x%1$08x (%1$u)\n", (unsigned int) desc->e_hdr.e_entry);
+        printf("\tProgram Header Offset: 0x%1$x (%1$u)\n", (unsigned int) desc->e_hdr.e_phoff);
+        printf("\tSection Header Offset: 0x%1$x (%1$u)\n", (unsigned int) desc->e_hdr.e_shoff);
+    } else {
+        printf("\tEntry: 0x%1$016lx\n", desc->e_hdr.e_entry);
+        printf("\tProgram Header Offset: 0x%1$lx (%1$lu)\n", desc->e_hdr.e_phoff);
+        printf("\tSection Header Offset: 0x%1$lx (%1$lu)\n", desc->e_hdr.e_shoff);
+    }
+
+    printf("\tFlags: 0x%1$x (%1$d)\n", desc->e_hdr.e_flags);
+    printf("\tHeader Size: 0x%1$04x (%1$d)\n", desc->e_hdr.e_ehsize);
+    printf("\tSize of program headers: 0x%1$x (%1$d)\n", desc->e_hdr.e_phentsize);
+    printf("\tNumber of program headers: %d\n", desc->e_hdr.e_phnum);
+    printf("\tSize of section headers: 0x%1$x (%1$d)\n", desc->e_hdr.e_shentsize);
+    printf("\tNumber of section headers: %d\n", desc->e_hdr.e_shnum);
+    printf("\tSection header string table index: %u\n", desc->e_hdr.e_shstrndx);
 }
 
 static const char* get_elf_class(unsigned int elf_class) {

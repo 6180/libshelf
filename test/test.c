@@ -10,7 +10,7 @@ int main(void) {
 
     if (desc != NULL) {
         printf("Huzzah!\n");
-        Elf_Dump_Ident(desc);
+        Elf_Dump_Header(desc);
     }
 
     printf("Goodbye, World!\n");

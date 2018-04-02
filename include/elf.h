@@ -125,10 +125,8 @@ typedef struct Elf_Desc {
      * 2 - big-endian */
     unsigned char e_encoding;
 
-    union e_hdr {
-        Elf32_Ehdr ehdr32;
-        Elf64_Ehdr ehdr64;
-    } e_hdr;
+    /* Internally we'll just use the 64-bit header to simplify implementation */
+    Elf64_Ehdr e_hdr;
 
     /* Misc flagerinos. */
     unsigned e_readable:1;  /* File is readable. */
