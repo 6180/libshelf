@@ -299,8 +299,96 @@ static const char *get_file_type(unsigned int file_type) {
 }
 
 static const char *get_machine_name(unsigned int machine) {
-    (void) machine;
-    return "TODO: implement me cuck";
+    static char buf[32];
+
+    switch (machine) {
+        case 0:   return"No machine";
+        case 1:   return"AT&T WE 32100";
+        case 2:   return"SPARC";
+        case 3:   return"Intel 80386";
+        case 4:   return"Motorola 68000";
+        case 5:   return"Motorola 88000";
+        case 7:   return"Intel 80860";
+        case 8:   return"MIPS I Architecture";
+        case 9:   return"IBM System/370 Processor";
+        case 10:  return "MIPS RS3000 Little-endian";
+        case 15:  return "Hewlett-Packard PA-RISC";
+        case 17:  return "Fujitsu VPP500";
+        case 18:  return "Enhanced instruction set SPARC";
+        case 19:  return "Intel 80960";
+        case 20:  return "PowerPC";
+        case 21:  return "64-bit PowerPC";
+        case 22:  return "IBM System/390 Processor";
+        case 36:  return "NEC V800";
+        case 37:  return "Fujitsu FR20";
+        case 38:  return "TRW RH-32";
+        case 39:  return "Motorola RCE";
+        case 40:  return "Advanced RISC Machines ARM";
+        case 41:  return "Digital Alpha";
+        case 42:  return "Hitachi SH";
+        case 43:  return "SPARC Version 9";
+        case 44:  return "Siemens TriCore embedded processor";
+        case 45:  return "Argonaut RISC Core, Argonaut Technologies Inc.";
+        case 46:  return "Hitachi H8/300";
+        case 47:  return "Hitachi H8/300H";
+        case 48:  return "Hitachi H8S";
+        case 49:  return "Hitachi H8/500";
+        case 50:  return "Intel IA-64 processor architecture";
+        case 51:  return "Stanford MIPS-X";
+        case 52:  return "Motorola ColdFire";
+        case 53:  return "Motorola M68HC12";
+        case 54:  return "Fujitsu MMA Multimedia Accelerator";
+        case 55:  return "Siemens PCP";
+        case 56:  return "Sony nCPU embedded RISC processor";
+        case 57:  return "Denso NDR1 microprocessor";
+        case 58:  return "Motorola Star*Core processor";
+        case 59:  return "Toyota ME16 processor";
+        case 60:  return "STMicroelectronics ST100 processor";
+        case 61:  return "Advanced Logic Corp. TinyJ embedded processor family";
+        case 62:  return "AMD x86-64 architecture";
+        case 63:  return "Sony DSP Processor";
+        case 64:  return "Digital Equipment Corp. PDP-10";
+        case 65:  return "Digital Equipment Corp. PDP-11";
+        case 66:  return "Siemens FX66 microcontroller";
+        case 67:  return "STMicroelectronics ST9+ 8/16 bit microcontroller";
+        case 68:  return "STMicroelectronics ST7 8-bit microcontroller";
+        case 69:  return "Motorola MC68HC16 Microcontroller";
+        case 70:  return "Motorola MC68HC11 Microcontroller";
+        case 71:  return "Motorola MC68HC08 Microcontroller";
+        case 72:  return "Motorola MC68HC05 Microcontroller";
+        case 73:  return "Silicon Graphics SVx";
+        case 74:  return "STMicroelectronics ST19 8-bit microcontroller";
+        case 75:  return "Digital VAX";
+        case 76:  return "Axis Communications 32-bit embedded processor";
+        case 77:  return "Infineon Technologies 32-bit embedded processor";
+        case 78:  return "Element 14 64-bit DSP Processor";
+        case 79:  return "LSI Logic 16-bit DSP Processor";
+        case 80:  return "Donald Knuth's educational 64-bit processor";
+        case 81:  return "Harvard University machine-independent object files";
+        case 82:  return "SiTera Prism";
+        case 83:  return "Atmel AVR 8-bit microcontroller";
+        case 84:  return "Fujitsu FR30";
+        case 85:  return "Mitsubishi D10V";
+        case 86:  return "Mitsubishi D30V";
+        case 87:  return "NEC v850";
+        case 88:  return "Mitsubishi M32R";
+        case 89:  return "Matsushita MN10300";
+        case 90:  return "Matsushita MN10200";
+        case 91:  return "picoJava";
+        case 92:  return "OpenRISC 32-bit embedded processor";
+        case 93:  return "ARC Cores Tangent-A5";
+        case 94:  return "Tensilica Xtensa Architecture";
+        case 95:  return "Alphamosaic VideoCore processor";
+        case 96:  return "Thompson Multimedia General Purpose Processor";
+        case 97:  return "National Semiconductor 32000 series";
+        case 98:  return "Tenor Network TPC processor";
+        case 99:  return "Trebia SNP 1000 processor";
+        case 100: return "STMicroelectronics (www.st.com) ST200 microcontroller";
+        default: {
+            snprintf(buf, sizeof(buf), "<unknown: 0x%02x>", machine);
+            return buf;
+        }
+    }
 }
 
 static uint16_t read_word_le(const char *src) {
