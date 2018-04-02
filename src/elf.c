@@ -183,37 +183,37 @@ void Elf_Dump_Header(Elf_Desc *desc) {
     }
 
     printf("Elf Header:\n");
-    printf("\tMagic: %02x %02x %02x %02x\n",
+    printf("\tMagic:                             %02x %02x %02x %02x\n",
         desc-> e_ident[EI_MAG0],
         desc-> e_ident[EI_MAG1],
         desc-> e_ident[EI_MAG2],
         desc-> e_ident[EI_MAG3]        
     );
-    printf("\tClass: %s\n", get_elf_class(desc->e_ident[EI_CLASS]));
-    printf("\tData: %s\n", get_data_encoding(desc->e_ident[EI_DATA]));
-    printf("\tVersion: %s\n", get_elf_version(desc->e_ident[EI_VERSION]));
-    printf("\tOS/ABI: %s\n", get_osabi_name(desc->e_ident[EI_OSABI]));
-    printf("\tOS/ABI Version: %d\n", desc->e_ident[EI_ABIVERSION]);
-    printf("\tType: %s\n", get_file_type(desc->e_hdr.e_type));
-    printf("\tMachine: %s\n", get_machine_name(desc->e_hdr.e_machine));
-    printf("\tVersion: %s\n", get_elf_version(desc->e_hdr.e_version));
+    printf("\tClass:                             %s\n", get_elf_class(desc->e_ident[EI_CLASS]));
+    printf("\tData:                              %s\n", get_data_encoding(desc->e_ident[EI_DATA]));
+    printf("\tVersion:                           %s\n", get_elf_version(desc->e_ident[EI_VERSION]));
+    printf("\tOS/ABI:                            %s\n", get_osabi_name(desc->e_ident[EI_OSABI]));
+    printf("\tOS/ABI Version:                    %d\n", desc->e_ident[EI_ABIVERSION]);
+    printf("\tType:                              %s\n", get_file_type(desc->e_hdr.e_type));
+    printf("\tMachine:                           %s\n", get_machine_name(desc->e_hdr.e_machine));
+    printf("\tVersion:                           %s\n", get_elf_version(desc->e_hdr.e_version));
 
     if (desc->e_class != 2) {
-        printf("\tEntry: 0x%1$08x (%1$u)\n", (unsigned int) desc->e_hdr.e_entry);
-        printf("\tProgram Header Offset: 0x%1$x (%1$u)\n", (unsigned int) desc->e_hdr.e_phoff);
-        printf("\tSection Header Offset: 0x%1$x (%1$u)\n", (unsigned int) desc->e_hdr.e_shoff);
+        printf("\tEntry:                             0x%1$08x (%1$u)\n", (unsigned int) desc->e_hdr.e_entry);
+        printf("\tProgram Header Offset:             0x%1$x (%1$u)\n", (unsigned int) desc->e_hdr.e_phoff);
+        printf("\tSection Header Offset:             0x%1$x (%1$u)\n", (unsigned int) desc->e_hdr.e_shoff);
     } else {
-        printf("\tEntry: 0x%1$016lx\n", desc->e_hdr.e_entry);
-        printf("\tProgram Header Offset: 0x%1$lx (%1$lu)\n", desc->e_hdr.e_phoff);
-        printf("\tSection Header Offset: 0x%1$lx (%1$lu)\n", desc->e_hdr.e_shoff);
+        printf("\tEntry:                             0x%1$016lx\n", desc->e_hdr.e_entry);
+        printf("\tProgram Header Offset:             0x%1$lx (%1$lu)\n", desc->e_hdr.e_phoff);
+        printf("\tSection Header Offset:             0x%1$lx (%1$lu)\n", desc->e_hdr.e_shoff);
     }
 
-    printf("\tFlags: 0x%1$x (%1$d)\n", desc->e_hdr.e_flags);
-    printf("\tHeader Size: 0x%1$04x (%1$d)\n", desc->e_hdr.e_ehsize);
-    printf("\tSize of program headers: 0x%1$x (%1$d)\n", desc->e_hdr.e_phentsize);
-    printf("\tNumber of program headers: %d\n", desc->e_hdr.e_phnum);
-    printf("\tSize of section headers: 0x%1$x (%1$d)\n", desc->e_hdr.e_shentsize);
-    printf("\tNumber of section headers: %d\n", desc->e_hdr.e_shnum);
+    printf("\tFlags:                             0x%1$x (%1$d)\n", desc->e_hdr.e_flags);
+    printf("\tHeader Size:                       0x%1$04x (%1$d)\n", desc->e_hdr.e_ehsize);
+    printf("\tSize of program headers:           0x%1$x (%1$d)\n", desc->e_hdr.e_phentsize);
+    printf("\tNumber of program headers:         %d\n", desc->e_hdr.e_phnum);
+    printf("\tSize of section headers:           0x%1$x (%1$d)\n", desc->e_hdr.e_shentsize);
+    printf("\tNumber of section headers:         %d\n", desc->e_hdr.e_shnum);
     printf("\tSection header string table index: %u\n", desc->e_hdr.e_shstrndx);
 }
 
