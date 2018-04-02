@@ -20,7 +20,7 @@ Elf_Desc *Elf_Open(const char *path) {
     uint16_t (*read_word)(const char *src);
     uint32_t (*read_dword)(const char *src);
     uint64_t (*read_qword)(const char *src);
-
+    
     stat(path, &file_stat);
 
     /* Make sure this is a regular file. */
@@ -72,10 +72,13 @@ Elf_Desc *Elf_Open(const char *path) {
         0
     );
 
+    // printf("1\n");
+
     if (desc->e_rawdata == MAP_FAILED) {
         printf("mmap() failed.\n");
         goto error;
     }
+
 
     desc->e_mmapped = 1;
     desc->e_ident = desc->e_rawdata;
@@ -93,9 +96,10 @@ Elf_Desc *Elf_Open(const char *path) {
         read_qword = read_qword_be;
     }
 
+
     size_t offset = EI_NIDENT;
 
-    if (desc->e_class == 1) {         // 32 bit
+    if (desc->e_class == 1) { // 32 bit
         memcpy(desc->e_hdr.ehdr32.e_ident, desc->e_rawdata, EI_NIDENT);
         desc->e_hdr.ehdr32.e_type = read_word(desc->e_rawdata + offset); offset += 2;
         desc->e_hdr.ehdr32.e_machine = read_word(desc->e_rawdata + offset); offset += 2;
@@ -111,7 +115,11 @@ Elf_Desc *Elf_Open(const char *path) {
         desc->e_hdr.ehdr32.e_shnum = read_word(desc->e_rawdata + offset); offset += 2;
         desc->e_hdr.ehdr32.e_shstrndx = read_word(desc->e_rawdata + offset); offset += 2;
     } else if (desc->e_class == 2) {  // 64 bit
+        // printf("w");
+        // char *bepis = malloc(16);
+        // free(bepis);
         memcpy(desc->e_hdr.ehdr64.e_ident, desc->e_rawdata, EI_NIDENT);
+        // printf("%x\n", desc->e_hdr.ehdr64.e_ident[EI_MAG0]);
         desc->e_hdr.ehdr64.e_type = read_word(desc->e_rawdata + offset); offset += 2;
         desc->e_hdr.ehdr64.e_machine = read_word(desc->e_rawdata + offset); offset += 2;
         desc->e_hdr.ehdr64.e_version = read_dword(desc->e_rawdata + offset); offset += 4;
@@ -171,6 +179,15 @@ void Elf_Dump_Ident(Elf_Desc *desc) {
     printf("\tVersion: %s\n", get_elf_version(desc->e_ident[EI_VERSION]));
     printf("\tOS/ABI: %s\n", get_osabi_name(desc->e_ident[EI_OSABI]));
     printf("\tOS/ABI Version: %d\n", desc->e_ident[EI_ABIVERSION]);
+}
+
+void Elf_Dump_Header(Elf_Desc *desc) {
+    if (desc == NULL) {
+        printf("Null pointer passed to Elf_Dump_Ident()\n");
+        exit(-1);
+    }
+
+
 }
 
 static const char* get_elf_class(unsigned int elf_class) {

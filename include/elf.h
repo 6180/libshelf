@@ -143,8 +143,9 @@ typedef struct Elf_Desc {
 
 extern Elf_Desc *Elf_Open(const char *path);
 // extern ssize_t Elf_Write(Elf_Desc *elf_desc, const char *path);
-extern void Elf_Close(Elf_Desc *elf_desc);
-extern void Elf_Dump_Ident(Elf_Desc *elf_desc);
+extern void Elf_Close(Elf_Desc *desc);
+extern void Elf_Dump_Ident(Elf_Desc *desc);
+extern void Elf_Dump_Header(Elf_Desc *desc);
 
 static const char *get_elf_class(unsigned int elf_class);
 static const char *get_data_encoding(unsigned int encoding);
