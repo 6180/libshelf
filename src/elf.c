@@ -209,7 +209,7 @@ void Elf_Dump_Header(Elf_Desc *desc) {
     }
 
     printf("\tFlags:                             0x%1$x (%1$d)\n", desc->e_hdr.e_flags);
-    printf("\tHeader Size:                       0x%1$04x (%1$d)\n", desc->e_hdr.e_ehsize);
+    printf("\tHeader Size:                       0x%1$x (%1$d)\n", desc->e_hdr.e_ehsize);
     printf("\tSize of program headers:           0x%1$x (%1$d)\n", desc->e_hdr.e_phentsize);
     printf("\tNumber of program headers:         %d\n", desc->e_hdr.e_phnum);
     printf("\tSize of section headers:           0x%1$x (%1$d)\n", desc->e_hdr.e_shentsize);
