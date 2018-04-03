@@ -75,7 +75,6 @@ typedef struct Elf32_Ehdr {
     uint16_t      e_shentsize;
     uint16_t      e_shnum;
     uint16_t      e_shstrndx;
-
 } Elf32_Ehdr;
 
 typedef struct Elf64_Ehdr {
@@ -93,7 +92,6 @@ typedef struct Elf64_Ehdr {
     uint16_t      e_shentsize;
     uint16_t      e_shnum;
     uint16_t      e_shstrndx;
-
 } Elf64_Ehdr;
 
 /*
@@ -177,8 +175,9 @@ typedef struct Elf_Desc {
      * 2 - big-endian */
     unsigned char e_encoding;
 
-    /* Internally we'll just use the 64-bit header to simplify implementation */
+    /* Internally we'll just use the 64-bit structures to simplify implementation */
     Elf64_Ehdr e_hdr;
+    Elf64_Phdr *e_phdr;
 
     /* Misc flagerinos. */
     unsigned e_readable:1;  /* File is readable. */
