@@ -179,6 +179,25 @@
 #define EM_ST200 100      /* STMicroelectronics (www.st.com) ST200 microcontroller */
 
 /*
+ * The type of a phdr entry indicates  what  kind  of  segment  this array
+ * element  describes  or  how  to  interpret the array element's information.
+ */
+#define PT_NULL 0
+#define PT_LOAD 1
+#define PT_DYNAMIC 2
+#define PT_INTERP 3
+#define PT_NOTE 4
+#define PT_SHLIB 5
+#define PT_PHDR 6
+#define PT_TLS 7
+#define PT_LOOS 0x60000000
+#define PT_HIOS 0x6fffffff
+#define PT_LOPROC 0x70000000
+#define PT_HIPROC 0x7fffffff
+#define PT_GNU_EH_FRAME 0x6474e550
+#define PT_GNU_STACK (PT_LOOS + 0x474e551)
+
+/*
  * Some section header table indexes are reserved; an object file will not have
  * sections for these special indexes.
  */
