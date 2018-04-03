@@ -96,6 +96,58 @@ typedef struct Elf64_Ehdr {
 
 } Elf64_Ehdr;
 
+/*
+ * An executable or shared object file's program header table is an array of
+ * structures, each describing a segment or other information the system needs
+ * to prepare the program for execution. An object file segment contains one or
+ * more sections. Program headers are meaningful only for executable and shared
+ * object files. A program specifies its own program header size with the ELF
+ * header's e_phentsize and e_phnum members. The ELF program header is described
+ * by the type Elf32_Phdr or Elf64_Phdr depending on the architecture.
+ * 
+ * p_type: This member of the structure indicates what kind of segment this
+ *   array element describes or how to interpret the array elemet's information.
+ * p_offset: This member holds the offset from the beginning of the file at
+ *   which the first byte of the segment resides.
+ * p_vaddr: This emmber holds the virtual address at which the first byte of
+ *   this segment resides in memory.
+ * p_paddr: On systems for which physical addressing is relevant, this member is
+ *   reserved for the segment's physical address. Under BSD this member is not
+ *   used and must be zero.
+ * p_filesz: This member holds the number of bytes in the file image of the
+ *   segment. It may be zero.
+ * p_memsz: This member holds the number of bytes in the memory image of the
+ *   segment. It may be zero.
+ * p_flags: This member holds a bit-mask of flags relevant to the segment.
+ * p_align: This member holds the value to which the segments are aligned in
+ *   memory and in the file. Loadable process segments must have congruent
+ *   values for p_vaddr and p_offset, modulo to the page size. Values of zero
+ *   and one mean no alignment is required.Otherwise, p_align should be a
+ *   positive, integral power of two, and p_vaddr should equal p_offset, modulo
+ *   p_align.
+ */
+typedef struct Elf32_Phdr {
+    uint32_t   p_type;
+    Elf32_Off  p_offset;
+    Elf32_Addr p_vaddr;
+    Elf32_Addr p_paddr;
+    uint32_t   p_filesz;
+    uint32_t   p_memsz;
+    uint32_t   p_flags;
+    uint32_t   p_align;
+} Elf32_Phdr;
+
+typedef struct Elf64_Phdr {
+    uint32_t p_type;
+    uint32_t p_flags;
+    Elf64_Off p_offset;
+    Elf64_Addr p_vaddr;
+    Elf64_Addr p_paddr;
+    uint64_t p_filesz;
+    uint64_t p_memsz;
+    uint64_t p_align;
+} Elf64_Phdr;
+
 #define ELF_HEADER_MAXLEN 64
 
 /*
