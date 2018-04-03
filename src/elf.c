@@ -32,7 +32,7 @@ Elf_Desc *Elf_Open(const char *path) {
         return NULL;
 
     /* Allocate memory for the elf descriptor struct and set the filepath. */
-    desc = calloc(1, sizeof(desc));
+    desc = calloc(1, sizeof(Elf_Desc));
     path_length = strlen(path);
     desc->filepath = malloc(path_length + 1);
     strncpy(desc->filepath, path, path_length);
@@ -131,10 +131,41 @@ Elf_Desc *Elf_Open(const char *path) {
         desc->e_hdr.e_shstrndx = read_word(desc->e_rawdata + offset); offset += 2;
     }
 
+    printf("benis: %d\n", desc->e_hdr.e_phnum * sizeof(Elf64_Phdr));
+
+    desc->e_phdr = malloc(desc->e_hdr.e_phnum * sizeof(Elf64_Phdr));
+
+    // if (desc->e_phdr == NULL) {
+    //     printf("mmap() failed.\n");
+    //     goto error;
+    // }
+
+    // char *ph_base = desc->e_rawdata + desc->e_hdr.e_phoff;
+
+    // for (size_t i = 0; i < desc->e_hdr.e_phnum; i++) {
+    //     if (desc->e_class == 2) { // 64-bit
+    //         desc->e_phdr[i].p_type =   read_dword(ph_base + i * desc->e_hdr.e_phentsize);
+    //         desc->e_phdr[i].p_flags =  read_dword(ph_base + i * desc->e_hdr.e_phentsize + 4);
+    //         desc->e_phdr[i].p_offset = read_dword(ph_base + i * desc->e_hdr.e_phentsize + 8);
+    //         desc->e_phdr[i].p_vaddr =  read_qword(ph_base + i * desc->e_hdr.e_phentsize + 16);
+    //         desc->e_phdr[i].p_paddr =  read_qword(ph_base + i * desc->e_hdr.e_phentsize + 24);
+    //         desc->e_phdr[i].p_filesz = read_qword(ph_base + i * desc->e_hdr.e_phentsize + 32);
+    //         desc->e_phdr[i].p_memsz =  read_qword(ph_base + i * desc->e_hdr.e_phentsize + 40);
+    //         desc->e_phdr[i].p_align =  read_qword(ph_base + i * desc->e_hdr.e_phentsize + 48);
+    //     } else {
+
+    //     }
+    // }
+
     return desc;
 
 error:
     fflush(stdout);
+
+    if (desc->e_phdr != NULL) {
+        free(desc->e_phdr);
+        desc->e_phdr = NULL;
+    }
 
     if (desc->e_mmapped)
         munmap(desc->e_rawdata, desc->e_size);
