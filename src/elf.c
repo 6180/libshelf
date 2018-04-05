@@ -32,7 +32,7 @@ Elf_Desc *Elf_Open(const char *path) {
         return NULL;
 
     /* Allocate memory for the elf descriptor struct and set the filepath. */
-    desc = calloc(1, sizeof(Elf_Desc));
+    desc = calloc(1, sizeof(*desc));
     path_length = strlen(path);
     desc->filepath = malloc(path_length + 1);
     strncpy(desc->filepath, path, path_length);
@@ -58,7 +58,7 @@ Elf_Desc *Elf_Open(const char *path) {
 
     /* We can't open with the permissions detected earlier for some reason. */
     if (desc->e_fd == -1) {
-        printf("Failed opening file\ni");
+        printf("Failed opening file\n");
         desc->e_fd = 0;
         goto error;
     }
@@ -135,27 +135,34 @@ Elf_Desc *Elf_Open(const char *path) {
 
     desc->e_phdr = malloc(desc->e_hdr.e_phnum * sizeof(Elf64_Phdr));
 
-    // if (desc->e_phdr == NULL) {
-    //     printf("mmap() failed.\n");
-    //     goto error;
-    // }
+    if (desc->e_phdr == NULL) {
+        printf("mmap() failed.\n");
+        goto error;
+    }
 
-    // char *ph_base = desc->e_rawdata + desc->e_hdr.e_phoff;
+    char *ph_base = desc->e_rawdata + desc->e_hdr.e_phoff;
 
-    // for (size_t i = 0; i < desc->e_hdr.e_phnum; i++) {
-    //     if (desc->e_class == 2) { // 64-bit
-    //         desc->e_phdr[i].p_type =   read_dword(ph_base + i * desc->e_hdr.e_phentsize);
-    //         desc->e_phdr[i].p_flags =  read_dword(ph_base + i * desc->e_hdr.e_phentsize + 4);
-    //         desc->e_phdr[i].p_offset = read_dword(ph_base + i * desc->e_hdr.e_phentsize + 8);
-    //         desc->e_phdr[i].p_vaddr =  read_qword(ph_base + i * desc->e_hdr.e_phentsize + 16);
-    //         desc->e_phdr[i].p_paddr =  read_qword(ph_base + i * desc->e_hdr.e_phentsize + 24);
-    //         desc->e_phdr[i].p_filesz = read_qword(ph_base + i * desc->e_hdr.e_phentsize + 32);
-    //         desc->e_phdr[i].p_memsz =  read_qword(ph_base + i * desc->e_hdr.e_phentsize + 40);
-    //         desc->e_phdr[i].p_align =  read_qword(ph_base + i * desc->e_hdr.e_phentsize + 48);
-    //     } else {
-
-    //     }
-    // }
+    for (size_t i = 0; i < desc->e_hdr.e_phnum; i++) {
+        if (desc->e_class == 2) { // 64-bit
+            desc->e_phdr[i].p_type =   read_dword(ph_base + i * desc->e_hdr.e_phentsize);
+            desc->e_phdr[i].p_flags =  read_dword(ph_base + i * desc->e_hdr.e_phentsize + 4);
+            desc->e_phdr[i].p_offset = read_dword(ph_base + i * desc->e_hdr.e_phentsize + 8);
+            desc->e_phdr[i].p_vaddr =  read_qword(ph_base + i * desc->e_hdr.e_phentsize + 16);
+            desc->e_phdr[i].p_paddr =  read_qword(ph_base + i * desc->e_hdr.e_phentsize + 24);
+            desc->e_phdr[i].p_filesz = read_qword(ph_base + i * desc->e_hdr.e_phentsize + 32);
+            desc->e_phdr[i].p_memsz =  read_qword(ph_base + i * desc->e_hdr.e_phentsize + 40);
+            desc->e_phdr[i].p_align =  read_qword(ph_base + i * desc->e_hdr.e_phentsize + 48);
+        } else {
+            // desc->e_phdr[i].p_type =   read_dword(ph_base + i * desc->e_hdr.e_phentsize);
+            // desc->e_phdr[i].p_offset = read_dword(ph_base + i * desc->e_hdr.e_phentsize + 8);
+            // desc->e_phdr[i].p_vaddr =  read_qword(ph_base + i * desc->e_hdr.e_phentsize + 16);
+            // desc->e_phdr[i].p_paddr =  read_qword(ph_base + i * desc->e_hdr.e_phentsize + 24);
+            // desc->e_phdr[i].p_filesz = read_qword(ph_base + i * desc->e_hdr.e_phentsize + 32);
+            // desc->e_phdr[i].p_memsz =  read_qword(ph_base + i * desc->e_hdr.e_phentsize + 40);
+            // desc->e_phdr[i].p_flags =  read_dword(ph_base + i * desc->e_hdr.e_phentsize + 4);
+            // desc->e_phdr[i].p_align =  read_qword(ph_base + i * desc->e_hdr.e_phentsize + 48);
+        }
+    }
 
     return desc;
 
@@ -167,11 +174,15 @@ error:
         desc->e_phdr = NULL;
     }
 
-    if (desc->e_mmapped)
+    if (desc->e_mmapped) {
         munmap(desc->e_rawdata, desc->e_size);
+        desc->e_mmapped = 0;
+    }
 
-    if (desc->e_fd)
+    if (desc->e_fd) {
         close(desc->e_fd);
+        desc->e_fd = NULL;
+    }
 
     free(desc->filepath);
     free(desc);
@@ -184,10 +195,28 @@ error:
 // }
 
 void Elf_Close(Elf_Desc *desc) {
-    (void) desc;
+    if (!desc)
+        return;
+
+    if (desc->e_phdr != NULL)
+        free(desc->e_phdr);
+
+    if (desc->e_mmapped)
+        munmap(desc->e_rawdata, desc->e_size);
+
+    if (desc->e_malloced)
+        free(desc->e_rawdata);
+
+    if (desc->e_fd)
+        close(desc->e_fd);
+
+    free(desc->filepath);
+    free(desc);
+
+    desc = NULL;
 }
 
-void Elf_Dump_Ident(Elf_Desc *desc) {
+void Elf_Dump_Ident(const Elf_Desc *desc) {
     if (desc == NULL) {
         printf("Null pointer passed to Elf_Dump_Ident()\n");
         exit(-1);
@@ -207,7 +236,7 @@ void Elf_Dump_Ident(Elf_Desc *desc) {
     printf("\tOS/ABI Version: %d\n", desc->e_ident[EI_ABIVERSION]);
 }
 
-void Elf_Dump_Header(Elf_Desc *desc) {
+void Elf_Dump_Header(const Elf_Desc *desc) {
     if (desc == NULL) {
         printf("Null pointer passed to Elf_Dump_Header()\n");
         exit(-1);
@@ -246,6 +275,17 @@ void Elf_Dump_Header(Elf_Desc *desc) {
     printf("\tSize of section headers:           0x%1$x (%1$d)\n", desc->e_hdr.e_shentsize);
     printf("\tNumber of section headers:         %d\n", desc->e_hdr.e_shnum);
     printf("\tSection header string table index: %u\n", desc->e_hdr.e_shstrndx);
+}
+
+void Elf_Dump_Program_Headers(const Elf_Desc *desc) {
+    if (desc == NULL) {
+        printf("Null pointer passed to Elf_Dump_Program_Headers()\n");
+        exit(-1);
+    }
+
+    for (uint16_t i = 0; i < desc->e_hdr.e_phnum; i++) {
+        printf("%s\n", get_phdr_type(desc->e_phdr[i].p_type));
+    }
 }
 
 static const char* get_elf_class(unsigned int elf_class) {
@@ -420,6 +460,10 @@ static const char *get_machine_name(unsigned int machine) {
             return buf;
         }
     }
+}
+
+static const char *get_phdr_type(unsigned int type) {
+    
 }
 
 static uint16_t read_word_le(const char *src) {
