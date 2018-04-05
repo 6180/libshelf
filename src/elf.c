@@ -293,8 +293,8 @@ static const char* get_elf_class(unsigned int elf_class) {
 
     switch (elf_class) {
         case ELFCLASSNONE: return "none";
-        case ELFCLASS32:    return "ELF32";
-        case ELFCLASS64:    return "ELF64";
+        case ELFCLASS32:   return "ELF32";
+        case ELFCLASS64:   return "ELF64";
         default: {
             snprintf(buf, sizeof(buf), "<unknown: 0x%02x>", elf_class);
             return buf;
@@ -463,7 +463,24 @@ static const char *get_machine_name(unsigned int machine) {
 }
 
 static const char *get_phdr_type(unsigned int type) {
-    
+    switch (type) {
+        case PT_NULL:         return "NULL";
+        case PT_LOAD:         return "LOAD";
+        case PT_DYNAMIC:      return "DYNAMIC";
+        case PT_INTERP:       return "INTERP";
+        case PT_NOTE:         return "NOTE";
+        case PT_SHLIB:        return "SHLIB";
+        case PT_PHDR:         return "PHDR";
+        case PT_TLS:          return "TLS";
+        case PT_LOOS:         return "LOOS";
+        case PT_HIOS:         return "HIOS";
+        case PT_LOPROC:       return "LOPROC";
+        case PT_HIPROC:       return "HIPROC";
+        case PT_GNU_EH_FRAME: return "EH_FRAME";
+        case PT_GNU_STACK:    return "STACK";
+        case PT_GNU_RELRO:    return "RELRO";
+        default:              return "INVALID";
+    }
 }
 
 static uint16_t read_word_le(const char *src) {
