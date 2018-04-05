@@ -162,10 +162,10 @@ typedef struct Elf_Desc {
     int e_fd;
     
     /* Pointer to the beginning of the raw file if loaded in memory. */
-    char *e_rawdata;
+    unsigned char *e_rawdata;
 
     /* Pointer to the beginning of the elf header. Usually the same as e_rawdata. */
-    char *e_ident;
+    unsigned char *e_ident;
    
     /* 1 - 32-bit
      * 2 - 64-bit */
@@ -206,12 +206,12 @@ static const char *get_file_type(unsigned int file_type);
 static const char *get_machine_name(unsigned int machine);
 static const char *get_phdr_type(unsigned int type);
 
-static uint16_t read_word_le(const char *src);
-static uint16_t read_word_be(const char *src);
-static uint32_t read_dword_le(const char *src);
-static uint32_t read_dword_be(const char *src);
-static uint64_t read_qword_le(const char *src);
-static uint64_t read_qword_be(const char *src);
+static uint16_t read_word_le(const unsigned char *src);
+static uint16_t read_word_be(const unsigned char *src);
+static uint32_t read_dword_le(const unsigned char *src);
+static uint32_t read_dword_be(const unsigned char *src);
+static uint64_t read_qword_le(const unsigned char *src);
+static uint64_t read_qword_be(const unsigned char *src);
 
 
 #endif // ELF_B8FA07

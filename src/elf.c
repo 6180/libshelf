@@ -17,9 +17,9 @@ Elf_Desc *Elf_Open(const char *path) {
     struct stat file_stat;
 
     /* Function pointers we'll set later to handle different endianesses */
-    uint16_t (*read_word)(const char *src);
-    uint32_t (*read_dword)(const char *src);
-    uint64_t (*read_qword)(const char *src);
+    uint16_t (*read_word)(const unsigned char *src);
+    uint32_t (*read_dword)(const unsigned char *src);
+    uint64_t (*read_qword)(const unsigned char *src);
     
     stat(path, &file_stat);
 
@@ -131,8 +131,6 @@ Elf_Desc *Elf_Open(const char *path) {
         desc->e_hdr.e_shstrndx = read_word(desc->e_rawdata + offset); offset += 2;
     }
 
-    printf("benis: %d\n", desc->e_hdr.e_phnum * sizeof(Elf64_Phdr));
-
     desc->e_phdr = malloc(desc->e_hdr.e_phnum * sizeof(Elf64_Phdr));
 
     if (desc->e_phdr == NULL) {
@@ -140,7 +138,7 @@ Elf_Desc *Elf_Open(const char *path) {
         goto error;
     }
 
-    char *ph_base = desc->e_rawdata + desc->e_hdr.e_phoff;
+    unsigned char *ph_base = desc->e_rawdata + desc->e_hdr.e_phoff;
 
     for (size_t i = 0; i < desc->e_hdr.e_phnum; i++) {
         if (desc->e_class != 2) { // 32-bit
@@ -181,7 +179,7 @@ error:
 
     if (desc->e_fd) {
         close(desc->e_fd);
-        desc->e_fd = NULL;
+        desc->e_fd = 0;
     }
 
     free(desc->filepath);
@@ -284,7 +282,7 @@ void Elf_Dump_Program_Headers(const Elf_Desc *desc) {
     }
 
     for (uint16_t i = 0; i < desc->e_hdr.e_phnum; i++) {
-        printf("%s\n", get_phdr_type(desc->e_phdr[i].p_type));
+        printf("0x%08x: %s\n", desc->e_phdr[i].p_type, get_phdr_type(desc->e_phdr[i].p_type));
     }
 }
 
@@ -483,21 +481,21 @@ static const char *get_phdr_type(unsigned int type) {
     }
 }
 
-static uint16_t read_word_le(const char *src) {
+static uint16_t read_word_le(const unsigned char *src) {
     uint16_t ret = 0;
     ret |= src[0];
     ret |= src[1] << 8;
     return ret;
 }
 
-static uint16_t read_word_be(const char *src) {
+static uint16_t read_word_be(const unsigned char *src) {
     uint16_t ret = 0;
     ret |= src[1];
     ret |= src[0] << 8;
     return ret;
 }
 
-static uint32_t read_dword_le(const char *src) {
+static uint32_t read_dword_le(const unsigned char *src) {
     uint32_t ret = 0;
     ret |= src[0];
     ret |= src[1] << 8;
@@ -506,7 +504,7 @@ static uint32_t read_dword_le(const char *src) {
     return ret;
 }
 
-static uint32_t read_dword_be(const char *src) {
+static uint32_t read_dword_be(const unsigned char *src) {
     uint32_t ret = 0;
     ret |= src[3];
     ret |= src[2] << 8;
@@ -515,7 +513,7 @@ static uint32_t read_dword_be(const char *src) {
     return ret;
 }
 
-static uint64_t read_qword_le(const char *src) {
+static uint64_t read_qword_le(const unsigned char *src) {
     uint64_t ret = 0;
     ret |= (uint64_t)src[0];
     ret |= (uint64_t)src[1] << 8;
@@ -528,7 +526,7 @@ static uint64_t read_qword_le(const char *src) {
     return ret;
 }
 
-static uint64_t read_qword_be(const char *src) {
+static uint64_t read_qword_be(const unsigned char *src) {
     uint64_t ret = 0;
     ret |= (uint64_t)src[3];
     ret |= (uint64_t)src[2] << 8;
