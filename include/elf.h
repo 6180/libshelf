@@ -184,6 +184,7 @@ typedef struct Elf_Desc {
     unsigned e_writable:1;  /* File is Writable. */
     unsigned e_dirty:1;     /* e_rawdata has been modified. */
     unsigned e_mmapped:1;   /* e_rawdata is mmapped */
+    unsigned e_malloced:1;  /* e_rawdata is allocated on yonder heap */
 
     uint64_t e_magic; /* Magic number for debugging. */
 } Elf_Desc;
@@ -193,8 +194,9 @@ typedef struct Elf_Desc {
 extern Elf_Desc *Elf_Open(const char *path);
 // extern ssize_t Elf_Write(Elf_Desc *elf_desc, const char *path);
 extern void Elf_Close(Elf_Desc *desc);
-extern void Elf_Dump_Ident(Elf_Desc *desc);
-extern void Elf_Dump_Header(Elf_Desc *desc);
+extern void Elf_Dump_Ident(const Elf_Desc *desc);
+extern void Elf_Dump_Header(const Elf_Desc *desc);
+extern void Elf_Dump_Program_Headers(const Elf_Desc *desc);
 
 static const char *get_elf_class(unsigned int elf_class);
 static const char *get_data_encoding(unsigned int encoding);
@@ -202,6 +204,7 @@ static const char *get_elf_version(unsigned int version);
 static const char *get_osabi_name(unsigned int osabi);
 static const char *get_file_type(unsigned int file_type);
 static const char *get_machine_name(unsigned int machine);
+static const char *get_phdr_type(unsigned int type);
 
 static uint16_t read_word_le(const char *src);
 static uint16_t read_word_be(const char *src);
