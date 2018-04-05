@@ -143,7 +143,16 @@ Elf_Desc *Elf_Open(const char *path) {
     char *ph_base = desc->e_rawdata + desc->e_hdr.e_phoff;
 
     for (size_t i = 0; i < desc->e_hdr.e_phnum; i++) {
-        if (desc->e_class == 2) { // 64-bit
+        if (desc->e_class != 2) { // 32-bit
+            desc->e_phdr[i].p_type =   read_dword(ph_base + i * desc->e_hdr.e_phentsize);
+            desc->e_phdr[i].p_offset = read_dword(ph_base + i * desc->e_hdr.e_phentsize + 4);
+            desc->e_phdr[i].p_vaddr =  read_dword(ph_base + i * desc->e_hdr.e_phentsize + 8);
+            desc->e_phdr[i].p_paddr =  read_dword(ph_base + i * desc->e_hdr.e_phentsize + 12);
+            desc->e_phdr[i].p_filesz = read_dword(ph_base + i * desc->e_hdr.e_phentsize + 16);
+            desc->e_phdr[i].p_memsz =  read_dword(ph_base + i * desc->e_hdr.e_phentsize + 20);
+            desc->e_phdr[i].p_flags =  read_dword(ph_base + i * desc->e_hdr.e_phentsize + 24);
+            desc->e_phdr[i].p_align =  read_dword(ph_base + i * desc->e_hdr.e_phentsize + 28);
+        } else { // 64-bit
             desc->e_phdr[i].p_type =   read_dword(ph_base + i * desc->e_hdr.e_phentsize);
             desc->e_phdr[i].p_flags =  read_dword(ph_base + i * desc->e_hdr.e_phentsize + 4);
             desc->e_phdr[i].p_offset = read_dword(ph_base + i * desc->e_hdr.e_phentsize + 8);
@@ -152,15 +161,6 @@ Elf_Desc *Elf_Open(const char *path) {
             desc->e_phdr[i].p_filesz = read_qword(ph_base + i * desc->e_hdr.e_phentsize + 32);
             desc->e_phdr[i].p_memsz =  read_qword(ph_base + i * desc->e_hdr.e_phentsize + 40);
             desc->e_phdr[i].p_align =  read_qword(ph_base + i * desc->e_hdr.e_phentsize + 48);
-        } else {
-            // desc->e_phdr[i].p_type =   read_dword(ph_base + i * desc->e_hdr.e_phentsize);
-            // desc->e_phdr[i].p_offset = read_dword(ph_base + i * desc->e_hdr.e_phentsize + 8);
-            // desc->e_phdr[i].p_vaddr =  read_qword(ph_base + i * desc->e_hdr.e_phentsize + 16);
-            // desc->e_phdr[i].p_paddr =  read_qword(ph_base + i * desc->e_hdr.e_phentsize + 24);
-            // desc->e_phdr[i].p_filesz = read_qword(ph_base + i * desc->e_hdr.e_phentsize + 32);
-            // desc->e_phdr[i].p_memsz =  read_qword(ph_base + i * desc->e_hdr.e_phentsize + 40);
-            // desc->e_phdr[i].p_flags =  read_dword(ph_base + i * desc->e_hdr.e_phentsize + 4);
-            // desc->e_phdr[i].p_align =  read_qword(ph_base + i * desc->e_hdr.e_phentsize + 48);
         }
     }
 
