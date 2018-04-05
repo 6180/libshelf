@@ -205,6 +205,7 @@ static const char *get_osabi_name(unsigned int osabi);
 static const char *get_file_type(unsigned int file_type);
 static const char *get_machine_name(unsigned int machine);
 static const char *get_phdr_type(unsigned int type);
+static const char *get_phdr_flags_str(unsigned int flags);
 
 static uint16_t read_word_le(const unsigned char *src);
 static uint16_t read_word_be(const unsigned char *src);

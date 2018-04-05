@@ -281,8 +281,44 @@ void Elf_Dump_Program_Headers(const Elf_Desc *desc) {
         exit(-1);
     }
 
+    printf("Program Headers:\n\n");
+
+    if (desc->e_class != 2) {
+        printf("  Type      Offset     VirtAddr  PhysAddr\n"
+               "            FileSize   MemSize   Flags  Align\n"
+               "-----------------------------------------------\n");
+    } else {
+        printf("  Type      Offset             VirtAddr           PhysAddr\n"
+               "            FileSize           MemSize            Flags  Align\n"
+               "----------------------------------------------------------------\n");
+    }
+
     for (uint16_t i = 0; i < desc->e_hdr.e_phnum; i++) {
-        printf("0x%08x: %s\n", desc->e_phdr[i].p_type, get_phdr_type(desc->e_phdr[i].p_type));
+        if (desc->e_class != 2) {
+            printf("  %-10s0x%08x 0x%08x 0x%08x\n"
+                   "            0x%08x 0x%08x %s  0x%x\n",
+                get_phdr_type(desc->e_phdr[i].p_type),
+                (uint32_t) desc->e_phdr[i].p_offset,
+                (uint32_t) desc->e_phdr[i].p_vaddr,
+                (uint32_t) desc->e_phdr[i].p_paddr,
+                (uint32_t) desc->e_phdr[i].p_filesz,
+                (uint32_t) desc->e_phdr[i].p_memsz,
+                get_phdr_flags_str(desc->e_phdr[i].p_flags),
+                (uint32_t) desc->e_phdr[i].p_align                
+            );
+        } else {
+            printf("  %-10s0x%016lx 0x%016lx 0x%016lx\n"
+                   "            0x%016lx 0x%016lx %s  0x%lx\n",
+                get_phdr_type(desc->e_phdr[i].p_type),
+                desc->e_phdr[i].p_offset,
+                desc->e_phdr[i].p_vaddr,
+                desc->e_phdr[i].p_paddr,
+                desc->e_phdr[i].p_filesz,
+                desc->e_phdr[i].p_memsz,
+                get_phdr_flags_str(desc->e_phdr[i].p_flags),
+                desc->e_phdr[i].p_align
+            );
+        }
     }
 }
 
@@ -479,6 +515,17 @@ static const char *get_phdr_type(unsigned int type) {
         case PT_GNU_RELRO:    return "RELRO";
         default:              return "INVALID";
     }
+}
+
+static const char *get_phdr_flags_str(unsigned int flags) {
+    static char buf[4] = {0};
+
+    buf[0] = (flags & PF_R) ? 'R' : '-';
+    buf[1] = (flags & PF_W) ? 'W' : '-';
+    buf[2] = (flags & PF_X) ? 'X' : '-';
+    buf[3] = '\0'; // Just in case fam.
+
+    return buf;
 }
 
 static uint16_t read_word_le(const unsigned char *src) {

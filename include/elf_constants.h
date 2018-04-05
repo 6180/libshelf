@@ -198,6 +198,14 @@
 #define PT_GNU_STACK 0x6474e551
 #define PT_GNU_RELRO 0x6474e552
 
+/* 
+ * These constants define the permissions on sections in the program
+ * header, p_flags.
+ */
+#define PF_R 0x4
+#define PF_W 0x2
+#define PF_X 0x1
+
 /*
  * Some section header table indexes are reserved; an object file will not have
  * sections for these special indexes.
