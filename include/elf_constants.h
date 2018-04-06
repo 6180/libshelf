@@ -248,4 +248,24 @@
 #define SHT_LOUSER 0x80000000
 #define SHT_HIUSER 0xffffffff
 
+/*
+ * Defined flags for sh_flags.
+ */
+#define SHF_WRITE 0x1
+#define SHF_ALLOC 0x2
+#define SHF_EXECINSTR 0x4
+#define SHF_MERGE 0x10
+#define SHF_STRINGS 0x20
+#define SHF_INFO_LINK 0x40
+#define SHF_LINK_ORDER 0x80
+#define SHF_OS_NONCONFORMING 0x100
+#define SHF_GROUP 0x200
+#define SHF_TLS 0x400
+#define SHF_RELA_LIVEPATCH 0x00100000
+#define SHF_RO_AFTER_INIT 0x00200000
+#define SHF_MASKOS 0x0ff00000
+#define SHF_ORDERED 0x4000000
+#define SHF_EXCLUDE 0x8000000
+#define SHF_MASKPROC 0xf0000000
+
 #endif // ELF_CONSTANTS_4E9D67
