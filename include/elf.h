@@ -136,15 +136,77 @@ typedef struct Elf32_Phdr {
 } Elf32_Phdr;
 
 typedef struct Elf64_Phdr {
-    uint32_t p_type;
-    uint32_t p_flags;
-    Elf64_Off p_offset;
+    uint32_t   p_type;
+    uint32_t   p_flags;
+    Elf64_Off  p_offset;
     Elf64_Addr p_vaddr;
     Elf64_Addr p_paddr;
-    uint64_t p_filesz;
-    uint64_t p_memsz;
-    uint64_t p_align;
+    uint64_t   p_filesz;
+    uint64_t   p_memsz;
+    uint64_t   p_align;
 } Elf64_Phdr;
+
+/*
+ * A file's section header table lets one locate all the file's sections. The
+ * section header table is an array of Elf32_Shdr or Elf64_Shdr structures. The
+ * ELF header's e_shoff member gives the byte offset from the beginning of the
+ * file to the section header table. e_shnum holds the number of entries the
+ * section header table contains. e_shentsize holds the size in bytes of each entry.
+ * 
+ * sh_type: This member specifies the name of the section. It is an index into
+ *   the section header string table section, giving the locatino of a
+ *   null-terminated string.
+ * sh_type: This member categorizes the sections contents and properties.
+ * sh_flags: This member holds bitflags that can be used to describe
+ *   miscellaneous attributes.
+ * sh_addr: if this section appears in the memory image of a process, this
+ *   member holds the address at which the first byte of the section should
+ *   reside. Otherwise this member holds zero.
+ * sh_offset: This memebrs value holds the offset in bytes from the beginning
+ *   of the file to the first byte in the section. One section type, SHT_NOBITS,
+ *   occupies no space in the file and it's sh_offset member locates the
+ *   conceptual placement in the file.
+ * sh_size: This member holds the sections size in bytes. Unless the sections
+ *   type is SHT_NOBITS, the section occupies sh_size bytes in t he file. A
+ *   section of type SHT_NOBITS may have a non-zero size but occupies no space
+ *   in the file.
+ * sh_link: This memebr holds a section header table index link, whose 
+ *   interpretation depends on the section type.
+ * sh_info: This member holds extra information, whose interpretation depends
+ *   on the section type.
+ * sh_addralign: Some sections have address alignment constraints. If a section
+ *   holds a doubleword, the system must ensure doubleword alignment for the
+ *   entire section. That is, the value of sh_addr must be congruent to zero,
+ *   modulo the value of sh_addralign. Only zero and positive integral powers
+ *   of two are allowed. The value of 0 or 1 means the section has no alignment
+ *   constraints.
+ */
+typedef struct Elf32_Shdr {
+    uint32_t   sh_name;
+    uint32_t   sh_type;
+    uint32_t   sh_flags;
+    Elf32_Addr sh_addr;
+    Elf32_Off  sh_offset;
+    uint32_t   sh_size;
+    uint32_t   sh_link;
+    uint32_t   sh_info;
+    uint32_t   sh_addralign;
+    uint32_t   sh_entsize;
+} Elf32_Shdr;
+
+typedef struct {
+    uint32_t   sh_name;
+    uint32_t   sh_type;
+    uint64_t   sh_flags;
+    Elf64_Addr sh_addr;
+    Elf64_Off  sh_offset;
+    uint64_t   sh_size;
+    uint32_t   sh_link;
+    uint32_t   sh_info;
+    uint64_t   sh_addralign;
+    uint64_t   sh_entsize;
+} Elf64_Shdr;
+
 
 #define ELF_HEADER_MAXLEN 64
 
@@ -178,6 +240,7 @@ typedef struct Elf_Desc {
     /* Internally we'll just use the 64-bit structures to simplify implementation */
     Elf64_Ehdr e_hdr;
     Elf64_Phdr *e_phdr;
+    Elf64_Shdr *e_shdr;
 
     /* Misc flagerinos. */
     unsigned e_readable:1;  /* File is readable. */
