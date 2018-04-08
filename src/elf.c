@@ -134,7 +134,7 @@ Elf_Desc *Elf_Open(const char *path) {
     desc->e_phdr = malloc(desc->e_hdr.e_phnum * sizeof(Elf64_Phdr));
 
     if (desc->e_phdr == NULL) {
-        printf("mmap() failed.\n");
+        printf("malloc() for phdr table failed.\n");
         goto error;
     }
 
@@ -161,6 +161,32 @@ Elf_Desc *Elf_Open(const char *path) {
             desc->e_phdr[i].p_align =  read_qword(ph_base + i * desc->e_hdr.e_phentsize + 48);
         }
     }
+
+    desc->e_shdr = malloc(desc->e_hdr.e_shnum * sizeof(Elf64_Shdr));
+
+    if (desc->e_shdr == NULL) {
+        printf("malloc() for shdr table failed.\n");
+        goto error;
+    }
+
+    unsigned char *sh_base = desc->e_rawdata + desc->e_hdr.e_shoff;
+
+    for (size_t i = 0; i < desc->e_hdr.e_shnum; i++) {
+        if (desc->e_class != 2) { // 32-bit
+            // TODO: Do this thingy boi
+        } else { // 64-bit
+            desc->e_shdr[i].sh_name =      read_dword(sh_base + i * desc->e_hdr.e_shentsize);
+            desc->e_shdr[i].sh_type =      read_dword(sh_base + i * desc->e_hdr.e_shentsize + 4);
+            desc->e_shdr[i].sh_flags =     read_qword(sh_base + i * desc->e_hdr.e_shentsize + 8);
+            desc->e_shdr[i].sh_addr =      read_qword(sh_base + i * desc->e_hdr.e_shentsize + 16);
+            desc->e_shdr[i].sh_offset =    read_qword(sh_base + i * desc->e_hdr.e_shentsize + 24);
+            desc->e_shdr[i].sh_size =      read_qword(sh_base + i * desc->e_hdr.e_shentsize + 32);
+            desc->e_shdr[i].sh_link =      read_dword(sh_base + i * desc->e_hdr.e_shentsize + 40);
+            desc->e_shdr[i].sh_info =      read_dword(sh_base + i * desc->e_hdr.e_shentsize + 44);
+            desc->e_shdr[i].sh_addralign = read_qword(sh_base + i * desc->e_hdr.e_shentsize + 48);
+            desc->e_shdr[i].sh_entsize =   read_qword(sh_base + i * desc->e_hdr.e_shentsize + 56);
+        }
+    }    
 
     return desc;
 
@@ -198,6 +224,9 @@ void Elf_Close(Elf_Desc *desc) {
 
     if (desc->e_phdr != NULL)
         free(desc->e_phdr);
+
+    if (desc->e_shdr != NULL)
+        free(desc->e_shdr);
 
     if (desc->e_mmapped)
         munmap(desc->e_rawdata, desc->e_size);
@@ -241,38 +270,38 @@ void Elf_Dump_Header(const Elf_Desc *desc) {
     }
 
     printf("Elf Header:\n");
-    printf("\tMagic:                             %02x %02x %02x %02x\n",
+    printf("  Magic:                             %02x %02x %02x %02x\n",
         desc-> e_ident[EI_MAG0],
         desc-> e_ident[EI_MAG1],
         desc-> e_ident[EI_MAG2],
         desc-> e_ident[EI_MAG3]        
     );
-    printf("\tClass:                             %s\n", get_elf_class(desc->e_ident[EI_CLASS]));
-    printf("\tData:                              %s\n", get_data_encoding(desc->e_ident[EI_DATA]));
-    printf("\tVersion:                           %s\n", get_elf_version(desc->e_ident[EI_VERSION]));
-    printf("\tOS/ABI:                            %s\n", get_osabi_name(desc->e_ident[EI_OSABI]));
-    printf("\tOS/ABI Version:                    %d\n", desc->e_ident[EI_ABIVERSION]);
-    printf("\tType:                              %s\n", get_file_type(desc->e_hdr.e_type));
-    printf("\tMachine:                           %s\n", get_machine_name(desc->e_hdr.e_machine));
-    printf("\tVersion:                           %s\n", get_elf_version(desc->e_hdr.e_version));
+    printf("  Class:                             %s\n", get_elf_class(desc->e_ident[EI_CLASS]));
+    printf("  Data:                              %s\n", get_data_encoding(desc->e_ident[EI_DATA]));
+    printf("  Version:                           %s\n", get_elf_version(desc->e_ident[EI_VERSION]));
+    printf("  OS/ABI:                            %s\n", get_osabi_name(desc->e_ident[EI_OSABI]));
+    printf("  OS/ABI Version:                    %d\n", desc->e_ident[EI_ABIVERSION]);
+    printf("  Type:                              %s\n", get_file_type(desc->e_hdr.e_type));
+    printf("  Machine:                           %s\n", get_machine_name(desc->e_hdr.e_machine));
+    printf("  Version:                           %s\n", get_elf_version(desc->e_hdr.e_version));
 
     if (desc->e_class != 2) {
-        printf("\tEntry:                             0x%1$08x (%1$u)\n", (unsigned int) desc->e_hdr.e_entry);
-        printf("\tProgram Header Offset:             0x%1$x (%1$u)\n", (unsigned int) desc->e_hdr.e_phoff);
-        printf("\tSection Header Offset:             0x%1$x (%1$u)\n", (unsigned int) desc->e_hdr.e_shoff);
+        printf("  Entry:                             0x%1$08x (%1$u)\n", (unsigned int) desc->e_hdr.e_entry);
+        printf("  Program Header Offset:             0x%1$x (%1$u)\n", (unsigned int) desc->e_hdr.e_phoff);
+        printf("  Section Header Offset:             0x%1$x (%1$u)\n", (unsigned int) desc->e_hdr.e_shoff);
     } else {
-        printf("\tEntry:                             0x%1$016lx\n", desc->e_hdr.e_entry);
-        printf("\tProgram Header Offset:             0x%1$lx (%1$lu)\n", desc->e_hdr.e_phoff);
-        printf("\tSection Header Offset:             0x%1$lx (%1$lu)\n", desc->e_hdr.e_shoff);
+        printf("  Entry:                             0x%lx\n", desc->e_hdr.e_entry);
+        printf("  Program Header Offset:             0x%1$lx (%1$lu)\n", desc->e_hdr.e_phoff);
+        printf("  Section Header Offset:             0x%1$lx (%1$lu)\n", desc->e_hdr.e_shoff);
     }
 
-    printf("\tFlags:                             0x%1$x (%1$d)\n", desc->e_hdr.e_flags);
-    printf("\tHeader Size:                       0x%1$x (%1$d)\n", desc->e_hdr.e_ehsize);
-    printf("\tSize of program headers:           0x%1$x (%1$d)\n", desc->e_hdr.e_phentsize);
-    printf("\tNumber of program headers:         %d\n", desc->e_hdr.e_phnum);
-    printf("\tSize of section headers:           0x%1$x (%1$d)\n", desc->e_hdr.e_shentsize);
-    printf("\tNumber of section headers:         %d\n", desc->e_hdr.e_shnum);
-    printf("\tSection header string table index: %u\n", desc->e_hdr.e_shstrndx);
+    printf("  Flags:                             0x%1$x (%1$d)\n", desc->e_hdr.e_flags);
+    printf("  Header Size:                       0x%1$x (%1$d)\n", desc->e_hdr.e_ehsize);
+    printf("  Size of program headers:           0x%1$x (%1$d)\n", desc->e_hdr.e_phentsize);
+    printf("  Number of program headers:         %d\n", desc->e_hdr.e_phnum);
+    printf("  Size of section headers:           0x%1$x (%1$d)\n", desc->e_hdr.e_shentsize);
+    printf("  Number of section headers:         %d\n", desc->e_hdr.e_shnum);
+    printf("  Section header string table index: %u\n", desc->e_hdr.e_shstrndx);
 }
 
 void Elf_Dump_Program_Headers(const Elf_Desc *desc) {
@@ -294,10 +323,10 @@ void Elf_Dump_Program_Headers(const Elf_Desc *desc) {
     }
 
     for (uint16_t i = 0; i < desc->e_hdr.e_phnum; i++) {
-        if (desc->e_class != 2) {
+        if (desc->e_class != 2) { // 32-bit
             printf("  %-10s0x%08x 0x%08x 0x%08x\n"
                    "            0x%08x 0x%08x %s  0x%x\n",
-                get_phdr_type(desc->e_phdr[i].p_type),
+                get_phdr_type_name(desc->e_phdr[i].p_type),
                 (uint32_t) desc->e_phdr[i].p_offset,
                 (uint32_t) desc->e_phdr[i].p_vaddr,
                 (uint32_t) desc->e_phdr[i].p_paddr,
@@ -306,10 +335,10 @@ void Elf_Dump_Program_Headers(const Elf_Desc *desc) {
                 get_phdr_flags_str(desc->e_phdr[i].p_flags),
                 (uint32_t) desc->e_phdr[i].p_align                
             );
-        } else {
+        } else { // 64-bit
             printf("  %-10s0x%016lx 0x%016lx 0x%016lx\n"
                    "            0x%016lx 0x%016lx %s  0x%lx\n",
-                get_phdr_type(desc->e_phdr[i].p_type),
+                get_phdr_type_name(desc->e_phdr[i].p_type),
                 desc->e_phdr[i].p_offset,
                 desc->e_phdr[i].p_vaddr,
                 desc->e_phdr[i].p_paddr,
@@ -317,6 +346,33 @@ void Elf_Dump_Program_Headers(const Elf_Desc *desc) {
                 desc->e_phdr[i].p_memsz,
                 get_phdr_flags_str(desc->e_phdr[i].p_flags),
                 desc->e_phdr[i].p_align
+            );
+        }
+    }
+}
+
+void Elf_Dump_Section_Headers(const Elf_Desc *desc){
+    if (desc == NULL) {
+        printf("Null pointer passed to Elf_Dump_Section_Headers()\n");
+        exit(-1);
+    }
+
+    printf("Section Headers:\n\n");
+
+    for (uint16_t i = 0; i < desc->e_hdr.e_shnum; i++) {
+        if (desc->e_class != 2) { // 32-bit
+
+        } else { // 64-bit
+            printf("%3d %-18s %-18s 0x%016lx 0x%08x\n"
+                   "    0x%016x 0x%016x\n",
+                i,
+                // get_shdr_name(desc, desc->e_shdr[i].sh_name),
+                desc->e_rawdata + desc->e_shdr[desc->e_hdr.e_shstrndx].sh_offset + desc->e_shdr[i].sh_name,
+                get_shdr_type_name(desc->e_shdr[i].sh_type),
+                desc->e_shdr[i].sh_addr,
+                desc->e_shdr[i].sh_offset,
+                desc->e_shdr[i].sh_size,
+                desc->e_shdr[i].sh_entsize
             );
         }
     }
@@ -496,7 +552,7 @@ static const char *get_machine_name(unsigned int machine) {
     }
 }
 
-static const char *get_phdr_type(unsigned int type) {
+static const char *get_phdr_type_name(unsigned int type) {
     switch (type) {
         case PT_NULL:         return "NULL";
         case PT_LOAD:         return "LOAD";
@@ -526,6 +582,44 @@ static const char *get_phdr_flags_str(unsigned int flags) {
     buf[3] = '\0'; // Just in case fam.
 
     return buf;
+}
+
+static const char *get_shdr_type_name(uint32_t type) {
+    switch (type) {
+        case SHT_NULL:           return "NULL";
+        case SHT_PROGBITS:       return "PROGBITS";
+        case SHT_SYMTAB:         return "SYMTAB";
+        case SHT_STRTAB:         return "STRTAB";
+        case SHT_RELA:           return "RELA";
+        case SHT_HASH:           return "HASH";
+        case SHT_DYNAMIC:        return "DYNAMIC";
+        case SHT_NOTE:           return "NOTE";
+        case SHT_NOBITS:         return "NOBITS";
+        case SHT_REL:            return "REL";
+        case SHT_SHLIB:          return "SHLIB";
+        case SHT_DYNSYM:         return "DYNSYM";
+        case SHT_INIT_ARRAY:     return "INIT_ARRAY";
+        case SHT_FINI_ARRAY:     return "FINI_ARRAY";
+        case SHT_PREINIT_ARRAY:  return "PREINIT_ARRAY";
+        case SHT_GROUP:          return "GROUP";
+        case SHT_SYMTAB_SHNDX:   return "SYMTAB_SHNDX";
+        case SHT_LOOS:           return "LOOS";
+        case SHT_GNU_ATTRIBUTES: return "GNU_ATTRIBUTES";
+        case SHT_GNU_HASH:       return "GNU_HASH";
+        case SHT_GNU_LIBLIST:    return "GNU_LIBLIST";
+        case SHT_CHECKSUM:       return "CHECKSUM";
+        case SHT_LOSUNW:         return "LOSUNW";
+        case SHT_SUNW_COMDAT:    return "SUNW_COMDAT";
+        case SHT_SUNW_syminfo:   return "SUNW_syminfo";
+        case SHT_GNU_verdef:     return "GNU_verdef";
+        case SHT_GNU_verneed:    return "GNU_verneed";
+        case SHT_GNU_versym:     return "GNU_versym";
+        case SHT_LOPROC:         return "LOPROC";
+        case SHT_HIPROC:         return "HIPROC";
+        case SHT_LOUSER:         return "LOUSER";
+        case SHT_HIUSER:         return "HIUSER";
+        default:                 return "INVALID";
+    }
 }
 
 static uint16_t read_word_le(const unsigned char *src) {

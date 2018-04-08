@@ -153,8 +153,8 @@ typedef struct Elf64_Phdr {
  * file to the section header table. e_shnum holds the number of entries the
  * section header table contains. e_shentsize holds the size in bytes of each entry.
  * 
- * sh_type: This member specifies the name of the section. It is an index into
- *   the section header string table section, giving the locatino of a
+ * sh_name: This member specifies the name of the section. It is an index into
+ *   the section header string table section, giving the location of a
  *   null-terminated string.
  * sh_type: This member categorizes the sections contents and properties.
  * sh_flags: This member holds bitflags that can be used to describe
@@ -180,6 +180,10 @@ typedef struct Elf64_Phdr {
  *   modulo the value of sh_addralign. Only zero and positive integral powers
  *   of two are allowed. The value of 0 or 1 means the section has no alignment
  *   constraints.
+ * sh_entsize: Some sections hold a table of fixed-size entries such as a symbol
+ *   table. for such a section, this member gives the size in bytes for each
+ *   entry. This member contains zero if the section does not hold a table of
+ *   fixed-size entries.
  */
 typedef struct Elf32_Shdr {
     uint32_t   sh_name;
@@ -260,6 +264,7 @@ extern void Elf_Close(Elf_Desc *desc);
 extern void Elf_Dump_Ident(const Elf_Desc *desc);
 extern void Elf_Dump_Header(const Elf_Desc *desc);
 extern void Elf_Dump_Program_Headers(const Elf_Desc *desc);
+extern void Elf_Dump_Section_Headers(const Elf_Desc *desc);
 
 static const char *get_elf_class(unsigned int elf_class);
 static const char *get_data_encoding(unsigned int encoding);
@@ -267,8 +272,11 @@ static const char *get_elf_version(unsigned int version);
 static const char *get_osabi_name(unsigned int osabi);
 static const char *get_file_type(unsigned int file_type);
 static const char *get_machine_name(unsigned int machine);
-static const char *get_phdr_type(unsigned int type);
+static const char *get_phdr_type_name(unsigned int type);
 static const char *get_phdr_flags_str(unsigned int flags);
+static const char *get_shdr_type_name(uint32_t type);
+static const char *get_shdr_flags_str(unsigned int flags);
+
 
 static uint16_t read_word_le(const unsigned char *src);
 static uint16_t read_word_be(const unsigned char *src);
