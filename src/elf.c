@@ -325,7 +325,7 @@ void Elf_Dump_Program_Headers(const Elf_Desc *desc) {
     for (uint16_t i = 0; i < desc->e_hdr.e_phnum; i++) {
         if (desc->e_class != 2) { // 32-bit
             printf("  %-10s0x%08x 0x%08x 0x%08x\n"
-                   "            0x%08x 0x%08x %s  0x%x\n",
+                   "            0x%08x 0x%08x %s  %#x\n",
                 get_phdr_type_name(desc->e_phdr[i].p_type),
                 (uint32_t) desc->e_phdr[i].p_offset,
                 (uint32_t) desc->e_phdr[i].p_vaddr,
@@ -364,7 +364,7 @@ void Elf_Dump_Section_Headers(const Elf_Desc *desc){
 
         } else { // 64-bit
             printf("%3d %-18s %-18s 0x%016lx 0x%08x\n"
-                   "    0x%016x 0x%016x\n",
+                   "    0x%016x 0x%016x %-5.5s\n",
                 i,
                 // get_shdr_name(desc, desc->e_shdr[i].sh_name),
                 desc->e_rawdata + desc->e_shdr[desc->e_hdr.e_shstrndx].sh_offset + desc->e_shdr[i].sh_name,
@@ -372,7 +372,8 @@ void Elf_Dump_Section_Headers(const Elf_Desc *desc){
                 desc->e_shdr[i].sh_addr,
                 desc->e_shdr[i].sh_offset,
                 desc->e_shdr[i].sh_size,
-                desc->e_shdr[i].sh_entsize
+                desc->e_shdr[i].sh_entsize,
+                get_shdr_flags_str(desc->e_shdr[i].sh_flags)
             );
         }
     }
@@ -620,6 +621,34 @@ static const char *get_shdr_type_name(uint32_t type) {
         case SHT_HIUSER:         return "HIUSER";
         default:                 return "INVALID";
     }
+}
+
+static const char *get_shdr_flags_str(unsigned int sh_flags) {
+    static char buf[32];
+    char *p = buf;
+    unsigned int flag;
+
+    memset(buf, 0, sizeof(buf));
+
+    for (size_t i = 0; i <= 31; i++) {
+        flag = sh_flags & (1 << i);
+
+        switch (flag) {
+            case SHF_WRITE:            *p++ = 'W'; break;
+            case SHF_ALLOC:            *p++ = 'A'; break;
+            case SHF_EXECINSTR:        *p++ = 'X'; break;
+            case SHF_MERGE:            *p++ = 'M'; break;
+            case SHF_STRINGS:          *p++ = 'S'; break;
+            case SHF_INFO_LINK:        *p++ = 'I'; break;
+            case SHF_LINK_ORDER:       *p++ = 'L'; break;
+            case SHF_OS_NONCONFORMING: *p++ = 'O'; break;
+            case SHF_GROUP:            *p++ = 'G'; break;
+            case SHF_TLS:              *p++ = 'T'; break;
+            case SHF_EXCLUDE:          *p++ = 'E'; break;
+        }
+    }
+
+    return buf;
 }
 
 static uint16_t read_word_le(const unsigned char *src) {
