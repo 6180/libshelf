@@ -202,9 +202,9 @@
  * These constants define the permissions on sections in the program
  * header, p_flags.
  */
-#define PF_R 0x4
-#define PF_W 0x2
-#define PF_X 0x1
+#define PF_R (1 << 2)
+#define PF_W (1 << 1)
+#define PF_X (1 << 0)
 
 /*
  * Some section header table indexes are reserved; an object file will not have
@@ -264,21 +264,21 @@
 /*
  * Defined flags for sh_flags.
  */
-#define SHF_WRITE 0x1
-#define SHF_ALLOC 0x2
-#define SHF_EXECINSTR 0x4
-#define SHF_MERGE 0x10
-#define SHF_STRINGS 0x20
-#define SHF_INFO_LINK 0x40
-#define SHF_LINK_ORDER 0x80
-#define SHF_OS_NONCONFORMING 0x100
-#define SHF_GROUP 0x200
-#define SHF_TLS 0x400
-#define SHF_RELA_LIVEPATCH 0x00100000
-#define SHF_RO_AFTER_INIT 0x00200000
-#define SHF_MASKOS 0x0ff00000
-#define SHF_ORDERED 0x4000000
-#define SHF_EXCLUDE 0x8000000
-#define SHF_MASKPROC 0xf0000000
+#define SHF_WRITE            (1 << 0)
+#define SHF_ALLOC            (1 << 1)
+#define SHF_EXECINSTR        (1 << 2)
+#define SHF_MERGE            (1 << 4)
+#define SHF_STRINGS          (1 << 5)
+#define SHF_INFO_LINK        (1 << 6)
+#define SHF_LINK_ORDER       (1 << 7)
+#define SHF_OS_NONCONFORMING (1 << 8)
+#define SHF_GROUP            (1 << 9)
+#define SHF_TLS              (1 << 10)
+#define SHF_RELA_LIVEPATCH   (1 << 20)
+#define SHF_RO_AFTER_INIT    (1 << 21)
+#define SHF_MASKOS           0x0ff00000
+#define SHF_ORDERED          (1 << 26)
+#define SHF_EXCLUDE          (1 << 27)
+#define SHF_MASKPROC         0xf0000000
 
 #endif // ELF_CONSTANTS_4E9D67
