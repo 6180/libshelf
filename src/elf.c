@@ -90,7 +90,7 @@ Elf_Desc *Elf_Open(const char *path) {
         read_word = read_word_le;
         read_dword = read_dword_le;
         read_qword = read_qword_le;
-    } else {                   // big-endian
+    } else {                     // big-endian
         read_word = read_word_be;
         read_dword = read_dword_be;
         read_qword = read_qword_be;
@@ -315,11 +315,11 @@ void Elf_Dump_Program_Headers(const Elf_Desc *desc) {
     if (desc->e_class != 2) {
         printf("  Type      Offset     VirtAddr  PhysAddr\n"
                "            FileSize   MemSize   Flags  Align\n"
-               "-----------------------------------------------\n");
+               "---------------------------------------------------\n");
     } else {
         printf("  Type      Offset             VirtAddr           PhysAddr\n"
                "            FileSize           MemSize            Flags  Align\n"
-               "----------------------------------------------------------------\n");
+               "--------------------------------------------------------------------\n");
     }
 
     for (uint16_t i = 0; i < desc->e_hdr.e_phnum; i++) {
@@ -358,13 +358,34 @@ void Elf_Dump_Section_Headers(const Elf_Desc *desc){
     }
 
     printf("Section Headers:\n\n");
-
-    for (uint16_t i = 0; i < desc->e_hdr.e_shnum; i++) {
-        if (desc->e_class != 2) { // 32-bit
-
-        } else { // 64-bit
-            printf("%3d %-18s %-18s 0x%016lx 0x%08x\n"
-                   "    0x%016x 0x%016x %-5.5s\n",
+    
+    if (desc->e_class != 2) { // 32-bit
+        printf("  [Nr] Name       Type       Address    Offset\n"
+               "       Size       EntSize    Flags  Link  Info  Align\n"
+               "------------------------------------------------------\n");
+        
+        for (uint16_t i = 0; i < desc->e_hdr.e_shnum; i++) {
+            printf("  [%-2d] %-10s %-10s 0x%08x 0x%08x\n"
+                    "       0x%08x 0x%08x %-5.5s\n",
+                i,
+                // get_shdr_name(desc, desc->e_shdr[i].sh_name),
+                desc->e_rawdata + desc->e_shdr[desc->e_hdr.e_shstrndx].sh_offset + desc->e_shdr[i].sh_name,
+                get_shdr_type_name(desc->e_shdr[i].sh_type),
+                desc->e_shdr[i].sh_addr,
+                desc->e_shdr[i].sh_offset,
+                desc->e_shdr[i].sh_size,
+                desc->e_shdr[i].sh_entsize,
+                get_shdr_flags_str(desc->e_shdr[i].sh_flags)
+            );
+        }
+    } else { // 64-bit
+        printf("  [Nr] Name               Type               Address            Offset\n"
+            "       Size               EntSize            Flags  Link  Info  Align\n"
+            "--------------------------------------------------------------------------\n");
+        
+        for (uint16_t i = 0; i < desc->e_hdr.e_shnum; i++) {
+            printf("  [%-2d] %-18s %-18s 0x%016lx 0x%08lx\n"
+                    "       0x%016lx 0x%016lx %-5.5s\n",
                 i,
                 // get_shdr_name(desc, desc->e_shdr[i].sh_name),
                 desc->e_rawdata + desc->e_shdr[desc->e_hdr.e_shstrndx].sh_offset + desc->e_shdr[i].sh_name,
@@ -377,6 +398,8 @@ void Elf_Dump_Section_Headers(const Elf_Desc *desc){
             );
         }
     }
+
+
 }
 
 static const char* get_elf_class(unsigned int elf_class) {
