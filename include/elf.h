@@ -261,29 +261,25 @@ typedef struct Elf_Desc {
 extern Elf_Desc *Elf_Open(const char *path);
 // extern ssize_t Elf_Write(Elf_Desc *elf_desc, const char *path);
 extern void Elf_Close(Elf_Desc *desc);
-extern void Elf_Dump_Ident(const Elf_Desc *desc);
-extern void Elf_Dump_Header(const Elf_Desc *desc);
-extern void Elf_Dump_Program_Headers(const Elf_Desc *desc);
-extern void Elf_Dump_Section_Headers(const Elf_Desc *desc);
 
-static const char *get_elf_class(unsigned int elf_class);
-static const char *get_data_encoding(unsigned int encoding);
-static const char *get_elf_version(unsigned int version);
-static const char *get_osabi_name(unsigned int osabi);
-static const char *get_file_type(unsigned int file_type);
-static const char *get_machine_name(unsigned int machine);
-static const char *get_phdr_type_name(unsigned int type);
-static const char *get_phdr_flags_str(unsigned int flags);
-static const char *get_shdr_type_name(uint32_t type);
-static const char *get_shdr_flags_str(unsigned int flags);
+extern const char *get_elf_class_str(unsigned int elf_class);
+extern const char *get_data_encoding_str(unsigned int encoding);
+extern const char *get_elf_version_str(unsigned int version);
+extern const char *get_osabi_str(unsigned int osabi);
+extern const char *get_file_type_str(unsigned int file_type);
+extern const char *get_machine_str(unsigned int machine);
+extern const char *get_phdr_type_str(unsigned int type);
+extern const char *get_phdr_flags_str(unsigned int flags);
+extern const char *get_shdr_type_str(uint32_t type);
+extern const char *get_shdr_flags_str(unsigned int flags);
 
 
-static uint16_t read_word_le(const unsigned char *src);
-static uint16_t read_word_be(const unsigned char *src);
-static uint32_t read_dword_le(const unsigned char *src);
-static uint32_t read_dword_be(const unsigned char *src);
-static uint64_t read_qword_le(const unsigned char *src);
-static uint64_t read_qword_be(const unsigned char *src);
+uint16_t read_word_le(const unsigned char *src);
+uint16_t read_word_be(const unsigned char *src);
+uint32_t read_dword_le(const unsigned char *src);
+uint32_t read_dword_be(const unsigned char *src);
+uint64_t read_qword_le(const unsigned char *src);
+uint64_t read_qword_be(const unsigned char *src);
 
 
 #endif // ELF_B8FA07

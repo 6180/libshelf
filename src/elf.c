@@ -243,166 +243,7 @@ void Elf_Close(Elf_Desc *desc) {
     desc = NULL;
 }
 
-void Elf_Dump_Ident(const Elf_Desc *desc) {
-    if (desc == NULL) {
-        printf("Null pointer passed to Elf_Dump_Ident()\n");
-        exit(-1);
-    }
-
-    printf("E_Ident:\n");
-    printf("\tMagic: %02x %02x %02x %02x\n",
-        desc-> e_ident[EI_MAG0],
-        desc-> e_ident[EI_MAG1],
-        desc-> e_ident[EI_MAG2],
-        desc-> e_ident[EI_MAG3]        
-    );
-    printf("\tClass: %s\n", get_elf_class(desc->e_ident[EI_CLASS]));
-    printf("\tData: %s\n", get_data_encoding(desc->e_ident[EI_DATA]));
-    printf("\tVersion: %s\n", get_elf_version(desc->e_ident[EI_VERSION]));
-    printf("\tOS/ABI: %s\n", get_osabi_name(desc->e_ident[EI_OSABI]));
-    printf("\tOS/ABI Version: %d\n", desc->e_ident[EI_ABIVERSION]);
-}
-
-void Elf_Dump_Header(const Elf_Desc *desc) {
-    if (desc == NULL) {
-        printf("Null pointer passed to Elf_Dump_Header()\n");
-        exit(-1);
-    }
-
-    printf("Elf Header:\n");
-    printf("  Magic:                             %02x %02x %02x %02x\n",
-        desc-> e_ident[EI_MAG0],
-        desc-> e_ident[EI_MAG1],
-        desc-> e_ident[EI_MAG2],
-        desc-> e_ident[EI_MAG3]        
-    );
-    printf("  Class:                             %s\n", get_elf_class(desc->e_ident[EI_CLASS]));
-    printf("  Data:                              %s\n", get_data_encoding(desc->e_ident[EI_DATA]));
-    printf("  Version:                           %s\n", get_elf_version(desc->e_ident[EI_VERSION]));
-    printf("  OS/ABI:                            %s\n", get_osabi_name(desc->e_ident[EI_OSABI]));
-    printf("  OS/ABI Version:                    %d\n", desc->e_ident[EI_ABIVERSION]);
-    printf("  Type:                              %s\n", get_file_type(desc->e_hdr.e_type));
-    printf("  Machine:                           %s\n", get_machine_name(desc->e_hdr.e_machine));
-    printf("  Version:                           %s\n", get_elf_version(desc->e_hdr.e_version));
-
-    if (desc->e_class != 2) {
-        printf("  Entry:                             0x%1$08x (%1$u)\n", (unsigned int) desc->e_hdr.e_entry);
-        printf("  Program Header Offset:             0x%1$x (%1$u)\n", (unsigned int) desc->e_hdr.e_phoff);
-        printf("  Section Header Offset:             0x%1$x (%1$u)\n", (unsigned int) desc->e_hdr.e_shoff);
-    } else {
-        printf("  Entry:                             0x%lx\n", desc->e_hdr.e_entry);
-        printf("  Program Header Offset:             0x%1$lx (%1$lu)\n", desc->e_hdr.e_phoff);
-        printf("  Section Header Offset:             0x%1$lx (%1$lu)\n", desc->e_hdr.e_shoff);
-    }
-
-    printf("  Flags:                             0x%1$x (%1$d)\n", desc->e_hdr.e_flags);
-    printf("  Header Size:                       0x%1$x (%1$d)\n", desc->e_hdr.e_ehsize);
-    printf("  Size of program headers:           0x%1$x (%1$d)\n", desc->e_hdr.e_phentsize);
-    printf("  Number of program headers:         %d\n", desc->e_hdr.e_phnum);
-    printf("  Size of section headers:           0x%1$x (%1$d)\n", desc->e_hdr.e_shentsize);
-    printf("  Number of section headers:         %d\n", desc->e_hdr.e_shnum);
-    printf("  Section header string table index: %u\n", desc->e_hdr.e_shstrndx);
-}
-
-void Elf_Dump_Program_Headers(const Elf_Desc *desc) {
-    if (desc == NULL) {
-        printf("Null pointer passed to Elf_Dump_Program_Headers()\n");
-        exit(-1);
-    }
-
-    printf("Program Headers:\n\n");
-
-    if (desc->e_class != 2) {
-        printf("  Type      Offset     VirtAddr  PhysAddr\n"
-               "            FileSize   MemSize   Flags  Align\n"
-               "---------------------------------------------------\n");
-    } else {
-        printf("  Type      Offset             VirtAddr           PhysAddr\n"
-               "            FileSize           MemSize            Flags  Align\n"
-               "--------------------------------------------------------------------\n");
-    }
-
-    for (uint16_t i = 0; i < desc->e_hdr.e_phnum; i++) {
-        if (desc->e_class != 2) { // 32-bit
-            printf("  %-10s0x%08x 0x%08x 0x%08x\n"
-                   "            0x%08x 0x%08x %s  %#x\n",
-                get_phdr_type_name(desc->e_phdr[i].p_type),
-                (uint32_t) desc->e_phdr[i].p_offset,
-                (uint32_t) desc->e_phdr[i].p_vaddr,
-                (uint32_t) desc->e_phdr[i].p_paddr,
-                (uint32_t) desc->e_phdr[i].p_filesz,
-                (uint32_t) desc->e_phdr[i].p_memsz,
-                get_phdr_flags_str(desc->e_phdr[i].p_flags),
-                (uint32_t) desc->e_phdr[i].p_align                
-            );
-        } else { // 64-bit
-            printf("  %-10s0x%016lx 0x%016lx 0x%016lx\n"
-                   "            0x%016lx 0x%016lx %s  0x%lx\n",
-                get_phdr_type_name(desc->e_phdr[i].p_type),
-                desc->e_phdr[i].p_offset,
-                desc->e_phdr[i].p_vaddr,
-                desc->e_phdr[i].p_paddr,
-                desc->e_phdr[i].p_filesz,
-                desc->e_phdr[i].p_memsz,
-                get_phdr_flags_str(desc->e_phdr[i].p_flags),
-                desc->e_phdr[i].p_align
-            );
-        }
-    }
-}
-
-void Elf_Dump_Section_Headers(const Elf_Desc *desc){
-    if (desc == NULL) {
-        printf("Null pointer passed to Elf_Dump_Section_Headers()\n");
-        exit(-1);
-    }
-
-    printf("Section Headers:\n\n");
-    
-    if (desc->e_class != 2) { // 32-bit
-        printf("  [Nr] Name       Type       Address    Offset\n"
-               "       Size       EntSize    Flags  Link  Info  Align\n"
-               "------------------------------------------------------\n");
-        
-        for (uint16_t i = 0; i < desc->e_hdr.e_shnum; i++) {
-            printf("  [%-2d] %-10s %-10s 0x%08x 0x%08x\n"
-                    "       0x%08x 0x%08x %-5.5s\n",
-                i,
-                // get_shdr_name(desc, desc->e_shdr[i].sh_name),
-                desc->e_rawdata + desc->e_shdr[desc->e_hdr.e_shstrndx].sh_offset + desc->e_shdr[i].sh_name,
-                get_shdr_type_name(desc->e_shdr[i].sh_type),
-                desc->e_shdr[i].sh_addr,
-                desc->e_shdr[i].sh_offset,
-                desc->e_shdr[i].sh_size,
-                desc->e_shdr[i].sh_entsize,
-                get_shdr_flags_str(desc->e_shdr[i].sh_flags)
-            );
-        }
-    } else { // 64-bit
-        printf("  [Nr] Name               Type               Address            Offset\n"
-            "       Size               EntSize            Flags  Link  Info  Align\n"
-            "--------------------------------------------------------------------------\n");
-        
-        for (uint16_t i = 0; i < desc->e_hdr.e_shnum; i++) {
-            printf("  [%-2d] %-18s %-18s 0x%016lx 0x%08lx\n"
-                    "       0x%016lx 0x%016lx %-5.5s\n",
-                i,
-                // get_shdr_name(desc, desc->e_shdr[i].sh_name),
-                desc->e_rawdata + desc->e_shdr[desc->e_hdr.e_shstrndx].sh_offset + desc->e_shdr[i].sh_name,
-                get_shdr_type_name(desc->e_shdr[i].sh_type),
-                desc->e_shdr[i].sh_addr,
-                desc->e_shdr[i].sh_offset,
-                desc->e_shdr[i].sh_size,
-                desc->e_shdr[i].sh_entsize,
-                get_shdr_flags_str(desc->e_shdr[i].sh_flags)
-            );
-        }
-    }
-
-
-}
-
-static const char* get_elf_class(unsigned int elf_class) {
+const char* get_elf_class_str(unsigned int elf_class) {
     static char buf[32];
 
     switch (elf_class) {
@@ -416,7 +257,7 @@ static const char* get_elf_class(unsigned int elf_class) {
     }
 }
 
-static const char *get_data_encoding(unsigned int encoding) {
+const char *get_data_encoding_str(unsigned int encoding) {
     static char buf[32];
 
     switch (encoding) {
@@ -430,7 +271,7 @@ static const char *get_data_encoding(unsigned int encoding) {
     }
 }
 
-static const char *get_elf_version(unsigned int version) {
+const char *get_elf_version_str(unsigned int version) {
     static char buf[32];
 
     switch (version) {
@@ -443,7 +284,7 @@ static const char *get_elf_version(unsigned int version) {
     }
 }
 
-static const char *get_osabi_name(unsigned int osabi) {
+const char *get_osabi_str(unsigned int osabi) {
     static char buf[32];
 
     switch (osabi) {
@@ -467,7 +308,7 @@ static const char *get_osabi_name(unsigned int osabi) {
     }
 }
 
-static const char *get_file_type(unsigned int file_type) {
+const char *get_file_type_str(unsigned int file_type) {
     static char buf[32];
 
     switch (file_type) {
@@ -483,7 +324,7 @@ static const char *get_file_type(unsigned int file_type) {
     }
 }
 
-static const char *get_machine_name(unsigned int machine) {
+const char *get_machine_str(unsigned int machine) {
     static char buf[32];
 
     switch (machine) {
@@ -576,7 +417,7 @@ static const char *get_machine_name(unsigned int machine) {
     }
 }
 
-static const char *get_phdr_type_name(unsigned int type) {
+const char *get_phdr_type_str(unsigned int type) {
     switch (type) {
         case PT_NULL:         return "NULL";
         case PT_LOAD:         return "LOAD";
@@ -597,7 +438,7 @@ static const char *get_phdr_type_name(unsigned int type) {
     }
 }
 
-static const char *get_phdr_flags_str(unsigned int flags) {
+const char *get_phdr_flags_str(unsigned int flags) {
     static char buf[4] = {0};
 
     buf[0] = (flags & PF_R) ? 'R' : '-';
@@ -608,7 +449,7 @@ static const char *get_phdr_flags_str(unsigned int flags) {
     return buf;
 }
 
-static const char *get_shdr_type_name(uint32_t type) {
+const char *get_shdr_type_str(uint32_t type) {
     switch (type) {
         case SHT_NULL:           return "NULL";
         case SHT_PROGBITS:       return "PROGBITS";
@@ -646,7 +487,7 @@ static const char *get_shdr_type_name(uint32_t type) {
     }
 }
 
-static const char *get_shdr_flags_str(unsigned int sh_flags) {
+const char *get_shdr_flags_str(unsigned int sh_flags) {
     static char buf[32];
     char *p = buf;
     unsigned int flag;
@@ -674,21 +515,21 @@ static const char *get_shdr_flags_str(unsigned int sh_flags) {
     return buf;
 }
 
-static uint16_t read_word_le(const unsigned char *src) {
+uint16_t read_word_le(const unsigned char *src) {
     uint16_t ret = 0;
     ret |= src[0];
     ret |= src[1] << 8;
     return ret;
 }
 
-static uint16_t read_word_be(const unsigned char *src) {
+uint16_t read_word_be(const unsigned char *src) {
     uint16_t ret = 0;
     ret |= src[1];
     ret |= src[0] << 8;
     return ret;
 }
 
-static uint32_t read_dword_le(const unsigned char *src) {
+uint32_t read_dword_le(const unsigned char *src) {
     uint32_t ret = 0;
     ret |= src[0];
     ret |= src[1] << 8;
@@ -697,7 +538,7 @@ static uint32_t read_dword_le(const unsigned char *src) {
     return ret;
 }
 
-static uint32_t read_dword_be(const unsigned char *src) {
+uint32_t read_dword_be(const unsigned char *src) {
     uint32_t ret = 0;
     ret |= src[3];
     ret |= src[2] << 8;
@@ -706,7 +547,7 @@ static uint32_t read_dword_be(const unsigned char *src) {
     return ret;
 }
 
-static uint64_t read_qword_le(const unsigned char *src) {
+uint64_t read_qword_le(const unsigned char *src) {
     uint64_t ret = 0;
     ret |= (uint64_t)src[0];
     ret |= (uint64_t)src[1] << 8;
@@ -719,7 +560,7 @@ static uint64_t read_qword_le(const unsigned char *src) {
     return ret;
 }
 
-static uint64_t read_qword_be(const unsigned char *src) {
+uint64_t read_qword_be(const unsigned char *src) {
     uint64_t ret = 0;
     ret |= (uint64_t)src[3];
     ret |= (uint64_t)src[2] << 8;
