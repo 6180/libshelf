@@ -258,10 +258,60 @@ typedef struct Elf_Desc {
 
 #define ELF_MAGIC 0x2A1D3297AFCED291ULL;
 
+
+/* 
+ * Functions for creating and managing struct Elf_Desc objects. 
+ */
 extern Elf_Desc *Elf_Open(const char *path);
 // extern ssize_t Elf_Write(Elf_Desc *elf_desc, const char *path);
 extern void Elf_Close(Elf_Desc *desc);
 
+
+/*
+ * Accessor functions for individual header fields
+ */
+extern Elf64_Ehdr *esh_get_hdr(Elf_Desc *desc);
+
+extern uint8_t  esh_get_class(Elf_Desc *desc);
+extern uint8_t  esh_get_data(Elf_Desc *desc);
+extern uint8_t  esh_get_osabi(Elf_Desc *desc);
+extern uint8_t  esh_get_osabiversion(Elf_Desc *desc);
+extern uint16_t esh_get_type(Elf_Desc *desc);
+extern uint16_t esh_get_machine(Elf_Desc *desc);
+extern uint32_t esh_get_version(Elf_Desc *desc);
+extern uint64_t esh_get_entry(Elf_Desc *desc);
+extern uint64_t esh_get_phoff(Elf_Desc *desc);
+extern uint64_t esh_get_shoff(Elf_Desc *desc);
+extern uint32_t esh_get_flags(Elf_Desc *desc);
+extern uint16_t esh_get_ehsize(Elf_Desc *desc);
+extern uint16_t esh_get_phentsize(Elf_Desc *desc);
+extern uint16_t esh_get_phentnum(Elf_Desc *desc);
+extern uint16_t esh_get_shentsize(Elf_Desc *desc);
+extern uint16_t esh_get_shentnum(Elf_Desc *desc);
+extern uint16_t esh_get_shstrndx(Elf_Desc *desc);
+
+extern void esh_set_class(Elf_Desc *desc, uint8_t class);
+extern void esh_set_data(Elf_Desc *desc, uint8_t data);
+extern void esh_set_osabi(Elf_Desc *desc, uint8_t osabi);
+extern void esh_set_osabiversion(Elf_Desc *desc, uint8_t osabiversion);
+extern void esh_set_type(Elf_Desc *desc, uint16_t type);
+extern void esh_set_machine(Elf_Desc *desc, uint16_t machine);
+extern void esh_set_version(Elf_Desc *desc, uint32_t version);
+extern void esh_set_entry(Elf_Desc *desc, uint64_t entry);
+extern void esh_set_phoff(Elf_Desc *desc, uint64_t phoff);
+extern void esh_set_shoff(Elf_Desc *desc, uint64_t shoff);
+extern void esh_set_flags(Elf_Desc *desc, uint32_t flags);
+extern void esh_set_ehsize(Elf_Desc *desc, uint16_t ehsize);
+extern void esh_set_phentsize(Elf_Desc *desc, uint16_t phentsize);
+extern void esh_set_phentnum(Elf_Desc *desc, uint16_t phentnum);
+extern void esh_set_shentsize(Elf_Desc *desc, uint16_t shentsize);
+extern void esh_set_shentnum(Elf_Desc *desc, uint16_t shentnum);
+extern void esh_set_shstrndx(Elf_Desc *desc, uint16_t shstrndx);
+
+
+/*
+ * Helper functions for getting user friendlty names for some header fields.
+ */
 extern const char *get_elf_class_str(unsigned int elf_class);
 extern const char *get_data_encoding_str(unsigned int encoding);
 extern const char *get_elf_version_str(unsigned int version);
