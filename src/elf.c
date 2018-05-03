@@ -243,6 +243,183 @@ void Elf_Close(Elf_Desc *desc) {
     desc = NULL;
 }
 
+/*
+ * Getterinos for header memebrs
+ */
+uint8_t  esh_get_class(Elf_Desc *desc) {
+    assert(desc != NULL);
+    return desc->e_ident[EI_CLASS];
+}
+
+uint8_t  esh_get_data(Elf_Desc *desc) {
+    assert(desc != NULL);
+    return desc->e_ident[EI_DATA];
+}
+
+uint8_t  esh_get_osabi(Elf_Desc *desc) {
+    assert(desc != NULL);
+    return desc->e_ident[EI_OSABI];
+}
+
+uint8_t  esh_get_osabiversion(Elf_Desc *desc) {
+    assert(desc != NULL);
+    return desc->e_ident[EI_ABIVERSION];
+}
+
+uint16_t esh_get_type(Elf_Desc *desc) {
+    assert(desc != NULL);
+    return desc->e_hdr.e_type;
+}
+
+uint16_t esh_get_machine(Elf_Desc *desc) {
+    assert(desc != NULL);
+    return desc->e_hdr.e_machine;
+}
+
+uint32_t esh_get_version(Elf_Desc *desc) {
+    assert(desc != NULL);
+    return desc->e_hdr.e_version;
+}
+
+uint64_t esh_get_entry(Elf_Desc *desc) {
+    assert(desc != NULL);
+    return desc->e_hdr.e_entry;
+}
+
+uint64_t esh_get_phoff(Elf_Desc *desc) {
+    assert(desc != NULL);
+    return desc->e_hdr.e_phoff;
+}
+
+uint64_t esh_get_shoff(Elf_Desc *desc) {
+    assert(desc != NULL);
+    return desc->e_hdr.e_shoff;
+}
+
+uint32_t esh_get_flags(Elf_Desc *desc) {
+    assert(desc != NULL);
+    return desc->e_hdr.e_flags;
+}
+
+uint16_t esh_get_ehsize(Elf_Desc *desc) {
+    assert(desc != NULL);
+    return desc->e_hdr.e_ehsize;
+}
+
+uint16_t esh_get_phentsize(Elf_Desc *desc) {
+    assert(desc != NULL);
+    return desc->e_hdr.e_phentsize;
+}
+
+uint16_t esh_get_phnum(Elf_Desc *desc) {
+    assert(desc != NULL);
+    return desc->e_hdr.e_phnum;
+}
+
+uint16_t esh_get_shentsize(Elf_Desc *desc) {
+    assert(desc != NULL);
+    return desc->e_hdr.e_shentsize;
+}
+
+uint16_t esh_get_shnum(Elf_Desc *desc) {
+    assert(desc != NULL);
+    return desc->e_hdr.e_shnum;
+}
+
+uint16_t esh_get_shstrndx(Elf_Desc *desc) {
+    assert(desc != NULL);
+    return desc->e_hdr.e_shstrndx;
+}
+
+/*
+ * Setterinos for header memebrs
+ */
+void esh_set_class(Elf_Desc *desc, uint8_t class) {
+    assert(desc != NULL);
+    desc->e_ident[EI_CLASS] = class;
+}
+
+void esh_set_data(Elf_Desc *desc, uint8_t data) {
+    assert(desc != NULL);
+    desc->e_ident[EI_DATA] = data;
+}
+
+void esh_set_osabi(Elf_Desc *desc, uint8_t osabi) {
+    assert(desc != NULL);
+    desc->e_ident[EI_OSABI] = osabi;
+}
+
+void esh_set_osabiversion(Elf_Desc *desc, uint8_t osabiversion) {
+    assert(desc != NULL);
+    desc->e_ident[EI_ABIVERSION] = osabiversion;
+}
+
+void esh_set_type(Elf_Desc *desc, uint16_t type) {
+    assert(desc != NULL);
+    desc->e_hdr.e_type = type;
+}
+
+void esh_set_machine(Elf_Desc *desc, uint16_t machine) {
+    assert(desc != NULL);
+    desc->e_hdr.e_machine = machine;
+}
+
+void esh_set_version(Elf_Desc *desc, uint32_t version) {
+    assert(desc != NULL);
+    desc->e_hdr.e_version = version;
+}
+
+void esh_set_entry(Elf_Desc *desc, uint64_t entry) {
+    assert(desc != NULL);
+    desc->e_hdr.e_entry = entry;
+}
+
+void esh_set_phoff(Elf_Desc *desc, uint64_t phoff) {
+    assert(desc != NULL);
+    desc->e_hdr.e_phoff = phoff;
+}
+
+void esh_set_shoff(Elf_Desc *desc, uint64_t shoff) {
+    assert(desc != NULL);
+    desc->e_hdr.e_shoff = shoff;
+}
+
+void esh_set_flags(Elf_Desc *desc, uint32_t flags) {
+    assert(desc != NULL);
+    desc->e_hdr.e_flags = flags;
+}
+
+void esh_set_ehsize(Elf_Desc *desc, uint16_t ehsize) {
+    assert(desc != NULL);
+    desc->e_hdr.e_ehsize = ehsize;
+}
+
+void esh_set_phentsize(Elf_Desc *desc, uint16_t phentsize) {
+    assert(desc != NULL);
+    desc->e_hdr.e_phentsize = phentsize;
+}
+
+void esh_set_phnum(Elf_Desc *desc, uint16_t phentnum) {
+    assert(desc != NULL);
+    desc->e_hdr.e_phnum = phnum;
+}
+
+void esh_set_shentsize(Elf_Desc *desc, uint16_t shentsize) {
+    assert(desc != NULL);
+    desc->e_hdr.e_shentsize = shentsize;
+}
+
+void esh_set_shnum(Elf_Desc *desc, uint16_t shentnum) {
+    assert(desc != NULL);
+    desc->e_hdr.e_shnum = shnum;
+}
+
+void esh_set_shstrndx(Elf_Desc *desc, uint16_t shstrndx) {
+    assert(desc != NULL);
+    desc->e_hdr.e_shstrndx = shstrndx;
+}
+
+
 const char* get_elf_class_str(unsigned int elf_class) {
     static char buf[32];
 

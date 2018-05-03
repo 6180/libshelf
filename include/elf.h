@@ -285,9 +285,9 @@ extern uint64_t esh_get_shoff(Elf_Desc *desc);
 extern uint32_t esh_get_flags(Elf_Desc *desc);
 extern uint16_t esh_get_ehsize(Elf_Desc *desc);
 extern uint16_t esh_get_phentsize(Elf_Desc *desc);
-extern uint16_t esh_get_phentnum(Elf_Desc *desc);
+extern uint16_t esh_get_phnum(Elf_Desc *desc);
 extern uint16_t esh_get_shentsize(Elf_Desc *desc);
-extern uint16_t esh_get_shentnum(Elf_Desc *desc);
+extern uint16_t esh_get_shnum(Elf_Desc *desc);
 extern uint16_t esh_get_shstrndx(Elf_Desc *desc);
 
 extern void esh_set_class(Elf_Desc *desc, uint8_t class);
@@ -303,9 +303,9 @@ extern void esh_set_shoff(Elf_Desc *desc, uint64_t shoff);
 extern void esh_set_flags(Elf_Desc *desc, uint32_t flags);
 extern void esh_set_ehsize(Elf_Desc *desc, uint16_t ehsize);
 extern void esh_set_phentsize(Elf_Desc *desc, uint16_t phentsize);
-extern void esh_set_phentnum(Elf_Desc *desc, uint16_t phentnum);
+extern void esh_set_phnum(Elf_Desc *desc, uint16_t phentnum);
 extern void esh_set_shentsize(Elf_Desc *desc, uint16_t shentsize);
-extern void esh_set_shentnum(Elf_Desc *desc, uint16_t shentnum);
+extern void esh_set_shnum(Elf_Desc *desc, uint16_t shentnum);
 extern void esh_set_shstrndx(Elf_Desc *desc, uint16_t shstrndx);
 
 
