@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -243,9 +244,15 @@ void Elf_Close(Elf_Desc *desc) {
     desc = NULL;
 }
 
+
 /*
  * Getterinos for header memebrs
  */
+Elf64_Ehdr *esh_get_hdr(Elf_Desc *desc) {
+    assert(desc != NULL);
+    return &(desc->e_hdr);
+}
+
 uint8_t  esh_get_class(Elf_Desc *desc) {
     assert(desc != NULL);
     return desc->e_ident[EI_CLASS];
@@ -399,7 +406,7 @@ void esh_set_phentsize(Elf_Desc *desc, uint16_t phentsize) {
     desc->e_hdr.e_phentsize = phentsize;
 }
 
-void esh_set_phnum(Elf_Desc *desc, uint16_t phentnum) {
+void esh_set_phnum(Elf_Desc *desc, uint16_t phnum) {
     assert(desc != NULL);
     desc->e_hdr.e_phnum = phnum;
 }
@@ -409,7 +416,7 @@ void esh_set_shentsize(Elf_Desc *desc, uint16_t shentsize) {
     desc->e_hdr.e_shentsize = shentsize;
 }
 
-void esh_set_shnum(Elf_Desc *desc, uint16_t shentnum) {
+void esh_set_shnum(Elf_Desc *desc, uint16_t shnum) {
     assert(desc != NULL);
     desc->e_hdr.e_shnum = shnum;
 }
