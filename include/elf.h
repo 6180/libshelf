@@ -47,12 +47,12 @@ typedef uint64_t Elf64_Xword;
  * e_flags: This member holds processor-specific flags associated with the file.
  *   Flag names take the form EF_machine_flag.
  * e_ehsize: This member holds the ELF header's size in bytes.
- * e_phent_size: This member holds the size of one entry in the file's program
+ * e_phentsize: This member holds the size of one entry in the file's program
  *   header table; all entries are the same size.
  * e_phnum: This member holds the number of entries in the program header table.
  *   Thus the product of e_phent_size and ph_num gives teh tables size in bytes.
  *   If a file has no program header table this member holds zero.
- * e_shent_size: This member holds the size of one entry in the section header
+ * e_shentsize: This member holds the size of one entry in the section header
  *   table; all entries are the same size.
  * e_shnum: This member holds the number of entries in the section header table.
  *   If a file has no section header table this member holds zero.
@@ -104,10 +104,10 @@ typedef struct Elf64_Ehdr {
  * by the type Elf32_Phdr or Elf64_Phdr depending on the architecture.
  * 
  * p_type: This member of the structure indicates what kind of segment this
- *   array element describes or how to interpret the array elemet's information.
+ *   array element describes or how to interpret the array element's information.
  * p_offset: This member holds the offset from the beginning of the file at
  *   which the first byte of the segment resides.
- * p_vaddr: This emmber holds the virtual address at which the first byte of
+ * p_vaddr: This member holds the virtual address at which the first byte of
  *   this segment resides in memory.
  * p_paddr: On systems for which physical addressing is relevant, this member is
  *   reserved for the segment's physical address. Under BSD this member is not
@@ -162,7 +162,7 @@ typedef struct Elf64_Phdr {
  * sh_addr: if this section appears in the memory image of a process, this
  *   member holds the address at which the first byte of the section should
  *   reside. Otherwise this member holds zero.
- * sh_offset: This memebrs value holds the offset in bytes from the beginning
+ * sh_offset: This members value holds the offset in bytes from the beginning
  *   of the file to the first byte in the section. One section type, SHT_NOBITS,
  *   occupies no space in the file and it's sh_offset member locates the
  *   conceptual placement in the file.
@@ -210,6 +210,16 @@ typedef struct {
     uint64_t   sh_addralign;
     uint64_t   sh_entsize;
 } Elf64_Shdr;
+
+typedef struct shelf_sect {
+    char *name;         /* Cached name. */
+    Elf64_Shdr *shdr;   /* Associated Elf64_Shdr for this section. */
+    int index;          /* Index in sht. */
+    void *data;         /* Pointer to sections data cache. */
+
+    struct shelf_sect *prev;  /* Pointer to next section in list. */
+    struct shelf_sect *next;  /* Pointer to previous section in list. */
+} shelfsect_t;
 
 
 #define ELF_HEADER_MAXLEN 64
