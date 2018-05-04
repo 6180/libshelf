@@ -246,7 +246,7 @@ void Elf_Close(Elf_Desc *desc) {
 
 
 /*
- * Getterinos for header memebrs
+ * Getterinos for header members
  */
 Elf64_Ehdr *esh_get_hdr(Elf_Desc *desc) {
     assert(desc != NULL);
@@ -339,7 +339,7 @@ uint16_t esh_get_shstrndx(Elf_Desc *desc) {
 }
 
 /*
- * Setterinos for header memebrs
+ * Setterinos for header members
  */
 void esh_set_class(Elf_Desc *desc, uint8_t class) {
     assert(desc != NULL);
