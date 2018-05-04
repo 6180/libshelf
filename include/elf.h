@@ -310,7 +310,7 @@ extern void esh_set_shstrndx(Elf_Desc *desc, uint16_t shstrndx);
 
 
 /*
- * Helper functions for getting user friendlty names for some header fields.
+ * Helper functions for getting user friendly names for some header fields.
  */
 extern const char *get_elf_class_str(unsigned int elf_class);
 extern const char *get_data_encoding_str(unsigned int encoding);
