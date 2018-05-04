@@ -211,17 +211,6 @@ typedef struct {
     uint64_t   sh_entsize;
 } Elf64_Shdr;
 
-typedef struct shelf_sect {
-    char *name;         /* Cached name. */
-    Elf64_Shdr *shdr;   /* Associated Elf64_Shdr for this section. */
-    int index;          /* Index in sht. */
-    void *data;         /* Pointer to sections data cache. */
-
-    struct shelf_sect *prev;  /* Pointer to next section in list. */
-    struct shelf_sect *next;  /* Pointer to previous section in list. */
-} shelfsect_t;
-
-
 #define ELF_HEADER_MAXLEN 64
 
 /*

@@ -19,3 +19,29 @@ shelfsect_t *create_section(char *name) {
 
     return new_sect;
 }
+
+void free_shelfsect(shelfsect_t *sect) {
+    if (sect == NULL) {
+        printf("NULL pointer passed to free_shelfsect()\n");
+        exit(-1);
+    }
+
+    if (sect->name) {
+        free(sect->name);
+        sect->name = NULL;
+    }
+
+    if (sect->shdr) {
+        free(sect->shdr);
+        sect->shdr = NULL;
+    }
+
+    if (sect->data) {
+        free(sect->data);
+        sect->data = NULL;
+    }
+
+    free(sect);
+    sect = NULL;
+}
+
