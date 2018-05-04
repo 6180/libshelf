@@ -1,7 +1,6 @@
-#ifndef ELF_CONSTANTS_4E9D67
-#define ELF_CONSTANTS_4E9D67
+#ifndef SHELF_CONSTANTS_4E9D67
+#define SHELF_CONSTANTS_4E9D67
 
-// #include <unordered_map>
 
 #define EI_NIDENT 16
 #define EI_MAG0 0
@@ -37,8 +36,8 @@
  * ELFCLASS64:   64-bit objects.  
  */
 #define ELFCLASSNONE 0
-#define ELFCLASS32  1
-#define ELFCLASS64  2
+#define ELFCLASS32   1
+#define ELFCLASS64   2
 
 /*
  * Byte e_ident[EI_DATA] identifies the data encoding of the processor-specific
@@ -60,7 +59,7 @@
  * EV_NONE: Invalid version.
  * EV_CURRENT: Current version.
  */
-#define EV_NONE 0
+#define EV_NONE    0
 #define EV_CURRENT 1
 
 /*
@@ -281,4 +280,4 @@
 #define SHF_EXCLUDE          (1 << 27)
 #define SHF_MASKPROC         0xf0000000
 
-#endif // ELF_CONSTANTS_4E9D67
+#endif // SHELF_CONSTANTS_4E9D67

@@ -1,11 +1,11 @@
-#ifndef ELF_B8FA07
-#define ELF_B8FA07
+#ifndef SHELF_B8FA07
+#define SHELF_B8FA07
 
 
 #include <stdint.h>
 #include <sys/types.h>
 
-#include "elf_constants.h"
+#include "shelf_constants.h"
 
 typedef uint32_t Elf32_Addr;
 typedef uint32_t Elf32_Off;
@@ -269,43 +269,43 @@ extern void Elf_Close(Elf_Desc *desc);
 /*
  * Accessor functions for individual header fields
  */
-extern Elf64_Ehdr *esh_get_hdr(Elf_Desc *desc);
+extern Elf64_Ehdr *elf_get_hdr(Elf_Desc *desc);
 
-extern uint8_t  esh_get_class(Elf_Desc *desc);
-extern uint8_t  esh_get_data(Elf_Desc *desc);
-extern uint8_t  esh_get_osabi(Elf_Desc *desc);
-extern uint8_t  esh_get_osabiversion(Elf_Desc *desc);
-extern uint16_t esh_get_type(Elf_Desc *desc);
-extern uint16_t esh_get_machine(Elf_Desc *desc);
-extern uint32_t esh_get_version(Elf_Desc *desc);
-extern uint64_t esh_get_entry(Elf_Desc *desc);
-extern uint64_t esh_get_phoff(Elf_Desc *desc);
-extern uint64_t esh_get_shoff(Elf_Desc *desc);
-extern uint32_t esh_get_flags(Elf_Desc *desc);
-extern uint16_t esh_get_ehsize(Elf_Desc *desc);
-extern uint16_t esh_get_phentsize(Elf_Desc *desc);
-extern uint16_t esh_get_phnum(Elf_Desc *desc);
-extern uint16_t esh_get_shentsize(Elf_Desc *desc);
-extern uint16_t esh_get_shnum(Elf_Desc *desc);
-extern uint16_t esh_get_shstrndx(Elf_Desc *desc);
+extern uint8_t  elf_get_class(Elf_Desc *desc);
+extern uint8_t  elf_get_data(Elf_Desc *desc);
+extern uint8_t  elf_get_osabi(Elf_Desc *desc);
+extern uint8_t  elf_get_osabiversion(Elf_Desc *desc);
+extern uint16_t elf_get_type(Elf_Desc *desc);
+extern uint16_t elf_get_machine(Elf_Desc *desc);
+extern uint32_t elf_get_version(Elf_Desc *desc);
+extern uint64_t elf_get_entry(Elf_Desc *desc);
+extern uint64_t elf_get_phoff(Elf_Desc *desc);
+extern uint64_t elf_get_shoff(Elf_Desc *desc);
+extern uint32_t elf_get_flags(Elf_Desc *desc);
+extern uint16_t elf_get_ehsize(Elf_Desc *desc);
+extern uint16_t elf_get_phentsize(Elf_Desc *desc);
+extern uint16_t elf_get_phnum(Elf_Desc *desc);
+extern uint16_t elf_get_shentsize(Elf_Desc *desc);
+extern uint16_t elf_get_shnum(Elf_Desc *desc);
+extern uint16_t elf_get_shstrndx(Elf_Desc *desc);
 
-extern void esh_set_class(Elf_Desc *desc, uint8_t class);
-extern void esh_set_data(Elf_Desc *desc, uint8_t data);
-extern void esh_set_osabi(Elf_Desc *desc, uint8_t osabi);
-extern void esh_set_osabiversion(Elf_Desc *desc, uint8_t osabiversion);
-extern void esh_set_type(Elf_Desc *desc, uint16_t type);
-extern void esh_set_machine(Elf_Desc *desc, uint16_t machine);
-extern void esh_set_version(Elf_Desc *desc, uint32_t version);
-extern void esh_set_entry(Elf_Desc *desc, uint64_t entry);
-extern void esh_set_phoff(Elf_Desc *desc, uint64_t phoff);
-extern void esh_set_shoff(Elf_Desc *desc, uint64_t shoff);
-extern void esh_set_flags(Elf_Desc *desc, uint32_t flags);
-extern void esh_set_ehsize(Elf_Desc *desc, uint16_t ehsize);
-extern void esh_set_phentsize(Elf_Desc *desc, uint16_t phentsize);
-extern void esh_set_phnum(Elf_Desc *desc, uint16_t phentnum);
-extern void esh_set_shentsize(Elf_Desc *desc, uint16_t shentsize);
-extern void esh_set_shnum(Elf_Desc *desc, uint16_t shentnum);
-extern void esh_set_shstrndx(Elf_Desc *desc, uint16_t shstrndx);
+extern void elf_set_class(Elf_Desc *desc, uint8_t class);
+extern void elf_set_data(Elf_Desc *desc, uint8_t data);
+extern void elf_set_osabi(Elf_Desc *desc, uint8_t osabi);
+extern void elf_set_osabiversion(Elf_Desc *desc, uint8_t osabiversion);
+extern void elf_set_type(Elf_Desc *desc, uint16_t type);
+extern void elf_set_machine(Elf_Desc *desc, uint16_t machine);
+extern void elf_set_version(Elf_Desc *desc, uint32_t version);
+extern void elf_set_entry(Elf_Desc *desc, uint64_t entry);
+extern void elf_set_phoff(Elf_Desc *desc, uint64_t phoff);
+extern void elf_set_shoff(Elf_Desc *desc, uint64_t shoff);
+extern void elf_set_flags(Elf_Desc *desc, uint32_t flags);
+extern void elf_set_ehsize(Elf_Desc *desc, uint16_t ehsize);
+extern void elf_set_phentsize(Elf_Desc *desc, uint16_t phentsize);
+extern void elf_set_phnum(Elf_Desc *desc, uint16_t phentnum);
+extern void elf_set_shentsize(Elf_Desc *desc, uint16_t shentsize);
+extern void elf_set_shnum(Elf_Desc *desc, uint16_t shentnum);
+extern void elf_set_shstrndx(Elf_Desc *desc, uint16_t shstrndx);
 
 
 /*
@@ -331,4 +331,4 @@ uint64_t read_qword_le(const unsigned char *src);
 uint64_t read_qword_be(const unsigned char *src);
 
 
-#endif // ELF_B8FA07
+#endif // SHELF_B8FA07

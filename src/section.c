@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../include/elf.h"
+#include "../include/shelf.h"
 #include "../include/section.h"
 
 

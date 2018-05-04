@@ -1,7 +1,7 @@
-#ifndef ELF_SECTION_736AB8
-#define ELF_SECTION_736AB8
+#ifndef SHELF_SECTION_736AB8
+#define SHELF_SECTION_736AB8
 
-#include "elf.h"
+#include "shelf.h"
 
 
 /* Elf section descriptor. */
@@ -42,4 +42,4 @@ extern int         *swap_sections(Elf_Desc *desc, Elf64_Shdr shdr_a, Elf64_Shdr 
 /* Misc. */
 extern void        free_shelfsect(shelfsect_t *sect);
 
-#endif // ELF_SECTION_736AB8
+#endif // SHELF_SECTION_736AB8

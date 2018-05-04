@@ -9,7 +9,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#include "../include/elf.h"
+#include "../include/shelf.h"
 
 
 Elf_Desc *Elf_Open(const char *path) {

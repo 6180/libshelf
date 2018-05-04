@@ -1,7 +1,7 @@
 #ifndef ELF_5CD73F63
 #define ELF_5CD73F63
 
-#include "elf.h"
+#include "shelf.h"
 
 extern void Elf_Dump_Ident(const Elf_Desc *desc);
 extern void Elf_Dump_Header(const Elf_Desc *desc);

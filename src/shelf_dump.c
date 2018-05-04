@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../include/elf.h"
+#include "../include/shelf.h"
+#include "../include/shelf_dump.h"
 
 
-void Elf_Dump_Ident(const Elf_Desc *desc) {
+void Shelf_Dump_Ident(const Elf_Desc *desc) {
     if (desc == NULL) {
         printf("Null pointer passed to Elf_Dump_Ident()\n");
         exit(-1);
@@ -24,7 +25,7 @@ void Elf_Dump_Ident(const Elf_Desc *desc) {
     printf("\tOS/ABI Version: %d\n", desc->e_ident[EI_ABIVERSION]);
 }
 
-void Elf_Dump_Header(const Elf_Desc *desc) {
+void Shelf_Dump_Header(const Elf_Desc *desc) {
     if (desc == NULL) {
         printf("Null pointer passed to Elf_Dump_Header()\n");
         exit(-1);
@@ -65,7 +66,7 @@ void Elf_Dump_Header(const Elf_Desc *desc) {
     printf("  Section header string table index: %u\n", desc->e_hdr.e_shstrndx);
 }
 
-void Elf_Dump_Program_Headers(const Elf_Desc *desc) {
+void Shelf_Dump_Program_Headers(const Elf_Desc *desc) {
     if (desc == NULL) {
         printf("Null pointer passed to Elf_Dump_Program_Headers()\n");
         exit(-1);
@@ -112,7 +113,7 @@ void Elf_Dump_Program_Headers(const Elf_Desc *desc) {
     }
 }
 
-void Elf_Dump_Section_Headers(const Elf_Desc *desc){
+void Shelf_Dump_Section_Headers(const Elf_Desc *desc){
     if (desc == NULL) {
         printf("Null pointer passed to Elf_Dump_Section_Headers()\n");
         exit(-1);
