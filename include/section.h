@@ -4,20 +4,9 @@
 #include "shelf.h"
 
 
-/* Elf section descriptor. */
-typedef struct shelf_sect {
-    char *name;         /* Cached name. */
-    Elf64_Shdr *shdr;   /* Associated Elf64_Shdr for this section. */
-    int index;          /* Index in sht. */
-    void *data;         /* Pointer to sections data cache. */
-
-    struct shelf_sect *prev;  /* Pointer to next section in list. */
-    struct shelf_sect *next;  /* Pointer to previous section in list. */
-} shelfsect_t;
-
-/* Function for retrieving section headers. */
-extern shelfsect_t *create_section(char *name); // TODO
-extern shelfsect_t *get_section_by_name(Elf_Desc *desc, char *name); // TODO
+/* Function for retrieving sections. */
+extern shelfsect_t *create_section(char *name);
+extern shelfsect_t *get_section_by_name(shelfobj_t *desc, char *name); // TODO
 extern shelfsect_t *get_section_by_index(Elf_Desc *desc, uint32_t index); // TODO
 extern shelfsect_t *get_sections_by_type(Elf_Desc *desc, uint32_t type); // TODO
 extern shelfsect_t *get_section_from_symbol(Elf_Desc *desc); // TODO
