@@ -3,6 +3,7 @@
 
 
 #include <stdint.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 
 #include "shelf_constants.h"
@@ -94,6 +95,8 @@ typedef struct Elf64_Ehdr {
     uint16_t      e_shstrndx;
 } Elf64_Ehdr;
 
+typedef Elf64_Ehdr shelf_Ehdr;
+
 /*
  * An executable or shared object file's program header table is an array of
  * structures, each describing a segment or other information the system needs
@@ -145,6 +148,8 @@ typedef struct Elf64_Phdr {
     uint64_t   p_memsz;
     uint64_t   p_align;
 } Elf64_Phdr;
+
+typedef Elf64_Phdr shelf_Phdr;
 
 /*
  * A file's section header table lets one locate all the file's sections. The
@@ -211,7 +216,21 @@ typedef struct {
     uint64_t   sh_entsize;
 } Elf64_Shdr;
 
-#define ELF_HEADER_MAXLEN 64
+typedef Elf64_Shdr shelf_Shdr;
+
+/* 
+ * Elf section descriptor.
+ */
+typedef struct shelf_sect {
+    char *name;         /* Cached name. */
+    shelf_Shdr *shdr;   /* Associated Elf64_Shdr for this section. */
+    int index;          /* Index in sht. */
+    void *data;         /* Pointer to sections data cache. */
+
+    struct shelf_sect *prev;  /* Pointer to next section in list. */
+    struct shelf_sect *next;  /* Pointer to previous section in list. */
+} shelfsect_t;
+
 
 /*
  * Decriptor for elf objects.
@@ -251,11 +270,30 @@ typedef struct Elf_Desc {
     unsigned e_dirty:1;     /* e_rawdata has been modified. */
     unsigned e_mmapped:1;   /* e_rawdata is mmapped */
     unsigned e_malloced:1;  /* e_rawdata is allocated on yonder heap */
-
-    uint64_t e_magic; /* Magic number for debugging. */
 } Elf_Desc;
 
-#define ELF_MAGIC 0x2A1D3297AFCED291ULL;
+/*
+ * Elf Object structure.
+ */
+typedef struct s_elfobj {
+    shelf_Ehdr *hdr;
+    shelf_Shdr *sht;
+    Elf64_Phdr *pht;
+    shelfsect_t *sect_list;
+
+    int fd;
+    char *filename;
+    struct stat file_stat;
+    int type;
+    int writable;
+    time_t load_time;
+    char hdr_corrupt;
+    char read;
+    char mmapped;
+    char malloced;
+    char stripped;
+
+} shelfobj_t;
 
 
 /* 
@@ -329,6 +367,5 @@ uint32_t read_dword_le(const unsigned char *src);
 uint32_t read_dword_be(const unsigned char *src);
 uint64_t read_qword_le(const unsigned char *src);
 uint64_t read_qword_be(const unsigned char *src);
-
 
 #endif // SHELF_B8FA07

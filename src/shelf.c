@@ -45,7 +45,6 @@ Elf_Desc *Elf_Open(const char *path) {
     /* Initialize fields we know at this point. */
     desc->e_size = file_stat.st_size;
     desc->e_readable = 1;
-    desc->e_magic = ELF_MAGIC;
 
     /* Before trying to open make sure the file is at least as large as an elf header. */
     if (desc->e_size < 52) {
