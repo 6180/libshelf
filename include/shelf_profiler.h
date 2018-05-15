@@ -67,7 +67,7 @@ char *clean_filename(const char *file);
         memset(buf, ' ', profiler_depth);                                \
         buf[profiler_depth] = '\0';                                      \
         profiler_depth++;                                                \
-        printf("%s", buf);                                                     \
+        printf("%s", buf);                                               \
         printf(C_GRN "->%d <%s@%s>\n" C_NRM,                             \
                profiler_depth, __FUNCTION__, clean_filename(__FILE__));  \
     }                                                                    \
@@ -95,7 +95,7 @@ char *clean_filename(const char *file);
     if ((profiler_level & PROFILE_FUNCS) > 0) {                          \
         memset(buf, ' ', profiler_depth);                                \
         buf[profiler_depth] = '\0';                                      \
-        printf("%s", buf);                                                     \
+        printf("%s", buf);                                               \
         printf(C_MAG "<-%d <%s@%s> " C_NRM,                              \
                profiler_depth, __FUNCTION__, clean_filename(__FILE__)    \
         );                                                               \
