@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 
 #include "shelf_constants.h"
 
