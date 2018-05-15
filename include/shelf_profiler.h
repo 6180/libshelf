@@ -12,7 +12,7 @@
 #define C_BLU  "\x1B[34m"
 #define C_MAG  "\x1B[35m"
 #define C_CYN  "\x1B[36m"
-#define C_WHT  "\x1B[37m
+#define C_WHT  "\x1B[37m"
 
 /* Temporary buffer to avoid some allocations. */
 #define BUF_LENGTH 1024
