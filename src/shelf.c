@@ -10,6 +10,7 @@
 #include <fcntl.h>
 
 #include "../include/shelf.h"
+#include "../include/shelf_profiler.h"
 
 
 Elf_Desc *Elf_Open(const char *path) {
@@ -22,6 +23,8 @@ Elf_Desc *Elf_Open(const char *path) {
     uint32_t (*read_dword)(const unsigned char *src);
     uint64_t (*read_qword)(const unsigned char *src);
     
+    PROFILER_IN();
+
     stat(path, &file_stat);
 
     /* Make sure this is a regular file. */
@@ -188,7 +191,7 @@ Elf_Desc *Elf_Open(const char *path) {
         }
     }    
 
-    return desc;
+    PROFILER_ROUT(desc, "Elf_Desc: %p");
 
 error:
     fflush(stdout);
@@ -211,36 +214,49 @@ error:
     free(desc->filepath);
     free(desc);
 
-    return NULL;
+    PROFILER_ROUT(NULL, "Elf_Desc: %p");
 }
 
 // ssize_t Elf_Write(desc *desc, const char *path) {
 //     return (ssize_t) 0;
 // }
 
-void Elf_Close(Elf_Desc *desc) {
-    if (!desc)
-        return;
+void Elf_Close(Elf_Desc **desc) {
+    PROFILER_IN();
 
-    if (desc->e_phdr != NULL)
-        free(desc->e_phdr);
+    if (!(*desc))
+        PROFILER_ERR("NULL pointer passed.");
 
-    if (desc->e_shdr != NULL)
-        free(desc->e_shdr);
+    if ((*desc)->e_phdr != NULL) {
+        free((*desc)->e_phdr);
+        (*desc)->e_phdr = NULL;
+    }
 
-    if (desc->e_mmapped)
-        munmap(desc->e_rawdata, desc->e_size);
+    if ((*desc)->e_shdr != NULL) {
+        free((*desc)->e_shdr);
+        (*desc)->e_shdr = NULL;
+    }
 
-    if (desc->e_malloced)
-        free(desc->e_rawdata);
+    if ((*desc)->e_mmapped) {
+        munmap((*desc)->e_rawdata, (*desc)->e_size);
+        (*desc)->e_mmapped = 0;
+    }
 
-    if (desc->e_fd)
-        close(desc->e_fd);
+    if ((*desc)->e_malloced) {
+        free((*desc)->e_rawdata);
+        (*desc)->e_malloced = 0;
+    }
 
-    free(desc->filepath);
-    free(desc);
+    if ((*desc)->e_fd) {
+        close((*desc)->e_fd);
+        (*desc)->e_fd = 0;
+    }
 
-    desc = NULL;
+    free((*desc)->filepath);
+    free((*desc));
+    (*desc) = NULL;
+
+    PROFILER_OUT();
 }
 
 
