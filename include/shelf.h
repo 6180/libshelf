@@ -302,7 +302,7 @@ typedef struct s_elfobj {
  */
 extern Elf_Desc *Elf_Open(const char *path);
 // extern ssize_t Elf_Write(Elf_Desc *elf_desc, const char *path);
-extern void Elf_Close(Elf_Desc *desc);
+extern void Elf_Close(Elf_Desc **desc);
 
 
 /*

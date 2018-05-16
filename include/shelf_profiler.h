@@ -44,6 +44,7 @@ extern char *clean_filename(const char *file);
     }                                                                        \
   } while (0)
 
+//TODO: Maybe add function timimg with stack meme
 #define PROFILER_IN()                                                        \
   int profile_me = profiler_depth;                                           \
   do {                                                                       \
