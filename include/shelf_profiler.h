@@ -33,75 +33,108 @@ extern void set_profiler_level(int level);
 /* You already know what it do. */
 extern int get_profiler_level();
 
-/* 
- * This is really hacky but it reduces a full path like 
- *   '/home/eevee/foo/bar/baz.h' to bar/baz.h. There are probably much cleaner
- *   ways to do this. If you know one please share~
- */
-char *clean_filename(const char *file) {
-    /* __FILE__ expands to a const * const char. The strdup removes 
-      the const pointer qualification. */ 
-    char *_dirname = basename(dirname(strdup(file)));
-    char *_basename = basename(strdup(file));
-    int tmplen = strlen(_dirname); 
-    strncpy(buf, _dirname, BUF_LENGTH);
-    buf[tmplen] = '/';        
-    strncpy(buf + tmplen + 1, _basename, BUF_LENGTH - tmplen - 2);
-    return buf;
-}            
+extern char *clean_filename(const char *file);        
 
-char *clean_filename(const char *file);
-
-#define PROFILER_DEBUG(fmt, args...) do {                                \
-    if ((profiler_level & PROFILE_DEBUG) > 0) {                          \
-        printf("[D]<%s@%s:%d>: " fmt,                                    \
-               clean_filename(__FILE__), __FUNCTION__, __LINE__, ##args  \
-        );                                                               \
-    }                                                                    \
-} while (0)
-
-#define PROFILER_IN()                                                    \
-  int profile_me = profiler_depth;                                       \
-  do {                                                                   \
-    if ((profiler_level & PROFILE_FUNCS) > 0) {                          \
-        memset(buf, ' ', profiler_depth);                                \
-        buf[profiler_depth] = '\0';                                      \
-        profiler_depth++;                                                \
-        printf("%s", buf);                                               \
-        printf(C_GRN "->%d <%s@%s>\n" C_NRM,                             \
-               profiler_depth, __FUNCTION__, clean_filename(__FILE__));  \
-    }                                                                    \
+#define PROFILER_DEBUG(fmt, args...)                                         \
+  do {                                                                       \
+    if ((profiler_level & PROFILE_DEBUG) > 0) {                              \
+        printf("[D]<%s@%s:%d>: " fmt,                                        \
+               clean_filename(__FILE__), __FUNCTION__, __LINE__, ##args      \
+        );                                                                   \
+    }                                                                        \
   } while (0)
 
-#define PROFILER_OUT() do {                                              \
-    if ((profiler_level & PROFILE_FUNCS) > 0) {                          \
-        profiler_depth--;                                                \
-        memset(buf, ' ', profiler_depth);                                \
-        buf[profiler_depth] = '\0';                                      \
-        printf("%s", buf);                                               \
-        printf(C_MAG "<-%d <%s@%s>\n" C_NRM,                             \
-               profiler_depth, __FUNCTION__, clean_filename(__FILE__)    \
-        );                                                               \
-    }                                                                    \
-} while (0)
+#define PROFILER_IN()                                                        \
+  int profile_me = profiler_depth;                                           \
+  do {                                                                       \
+    if ((profiler_level & PROFILE_FUNCS) > 0) {                              \
+        memset(buf, ' ', profiler_depth);                                    \
+        buf[profiler_depth] = '\0';                                          \
+        profiler_depth++;                                                    \
+        printf("%s", buf);                                                   \
+        printf(C_GRN "->%d <%s@%s>\n" C_NRM,                                 \
+               profiler_depth, __FUNCTION__, clean_filename(__FILE__));      \
+    }                                                                        \
+  } while (0)
 
-#define PROFILER_ROUT(ret, fmt) do {                                     \
-    profiler_depth--;                                                    \
-    if (profile_me != profiler_depth) {                                  \
-        printf(C_RED "[!] A function called by current function forgot " \
-                     "to decrement profiler_depth\n" C_NRM);             \
-        profiler_depth = profile_me;                                     \
-    }                                                                    \
-    if ((profiler_level & PROFILE_FUNCS) > 0) {                          \
-        memset(buf, ' ', profiler_depth);                                \
-        buf[profiler_depth] = '\0';                                      \
-        printf("%s", buf);                                               \
-        printf(C_MAG "<-%d <%s@%s> " C_NRM,                              \
-               profiler_depth, __FUNCTION__, clean_filename(__FILE__)    \
-        );                                                               \
-        snprintf(buf, BUF_LENGTH, "%s ", fmt);                           \
-        printf("(" fmt ")\n", ret);                                      \
-    }                                                                    \
-} while (0)
+
+//TODO: Maybe clean up a bit of duplicated code here.
+#define PROFILER_OUT()                                                       \
+  do {                                                                       \
+    if ((profiler_level & PROFILE_FUNCS) > 0) {                              \
+    profiler_depth--;                                                        \
+    if (profile_me != profiler_depth) {                                      \
+        printf(C_RED "[!] A function called by current function forgot "     \
+               "to decrement profiler_depth\n" C_NRM);                       \
+        profiler_depth = profile_me;                                         \
+    }                                                                        \
+        memset(buf, ' ', profiler_depth);                                    \
+        buf[profiler_depth] = '\0';                                          \
+        printf("%s", buf);                                                   \
+        printf(C_MAG "<-%d <%s@%s>\n" C_NRM,                                 \
+               profiler_depth, __FUNCTION__, clean_filename(__FILE__)        \
+        );                                                                   \
+    }                                                                        \
+    return;                                                                  \
+  } while (0)
+
+#define PROFILER_ROUT(ret, fmt)                                              \
+  do {                                                                       \
+    if ((profiler_level & PROFILE_FUNCS) > 0) {                              \
+        profiler_depth--;                                                    \
+        if (profile_me != profiler_depth) {                                  \
+            printf(C_RED "[!] A function called by current function forgot " \
+                   "to decrement profiler_depth\n" C_NRM);                   \
+            profiler_depth = profile_me;                                     \
+        }                                                                    \
+        memset(buf, ' ', profiler_depth);                                    \
+        buf[profiler_depth] = '\0';                                          \
+        printf("%s", buf);                                                   \
+        printf(C_MAG "<-%d <%s@%s> " C_NRM,                                  \
+               profiler_depth, __FUNCTION__, clean_filename(__FILE__)        \
+        );                                                                   \
+        snprintf(buf, BUF_LENGTH, "%s ", fmt);                               \
+        printf("(" fmt ")\n", ret);                                          \
+    }                                                                        \
+    return ret;                                                              \
+  } while (0)
+
+#define PROFILER_ERR(msg)                                                    \
+  do {                                                                       \
+    if ((profiler_level & PROFILE_FUNCS) > 0) {                              \
+        profiler_depth--;                                                    \
+        if (profile_me != profiler_depth) {                                  \
+            printf(C_RED "[!] A function called by current function forgot " \
+                   "to decrement profiler_depth\n" C_NRM);                   \
+            profiler_depth = profile_me;                                     \
+        }                                                                    \
+        memset(buf, ' ', profiler_depth);                                    \
+        buf[profiler_depth] = '\0';                                          \
+        printf("%s", buf);                                                   \
+        printf(C_RED "<-%d <%s@%s> (%s)\n" C_NRM,                              \
+               profiler_depth, __FUNCTION__, clean_filename(__FILE__), msg   \
+        );                                                                   \
+    }                                                                        \
+    return;                                                                  \
+  } while (0)
+
+#define PROFILER_RERR(msg, ret)                                              \
+  do {                                                                       \
+    if ((profiler_level & PROFILE_FUNCS) > 0) {                              \
+        profiler_level--;                                                    \
+        if (profile_me != profiler_depth) {                                  \
+            printf(C_RED "[!] A function called by current function forgot " \
+                   "to decrement profiler_depth\n" C_NRM);                   \
+            profiler_depth = profile_me;                                     \
+        }                                                                    \
+        memset(buf, ' ', profiler_depth);                                    \
+        buf[profiler_depth] = '\0';                                          \
+        printf("%s", buf);                                                   \
+        printf(C_RED "<-%d <%s@%s> (%s)\n" C_NRM,                              \
+               profiler_depth, __FUNCTION__, clean_filename(__FILE__), msg   \
+        );                                                                   \
+    }                                                                        \
+    return ret;                                                              \
+  } while (0)
 
 #endif // SHELF_PROFILER_77828342
