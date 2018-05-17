@@ -15,10 +15,10 @@ char *clean_filename(const char *file) {
     char *_dirname = basename(dirname(strdup(file)));
     char *_basename = basename(strdup(file));
     int tmplen = strlen(_dirname); 
-    strncpy(buf, _dirname, BUF_LENGTH);
-    buf[tmplen] = '/';        
-    strncpy(buf + tmplen + 1, _basename, BUF_LENGTH - tmplen - 2);
-    return buf;
+    strncpy(buffer, _dirname, BUFFER_LENGTH);
+    buffer[tmplen] = '/';        
+    strncpy(buffer + tmplen + 1, _basename, BUFFER_LENGTH - tmplen - 2);
+    return buffer;
 }   
 
 void set_profiler_level(int level) {

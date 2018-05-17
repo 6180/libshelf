@@ -269,427 +269,518 @@ Elf64_Ehdr *esh_get_hdr(Elf_Desc *desc) {
 }
 
 uint8_t  esh_get_class(Elf_Desc *desc) {
+    PROFILER_IN();
     assert(desc != NULL);
-    return desc->e_ident[EI_CLASS];
+    PROFILER_ROUT(desc->e_ident[EI_CLASS], "%u");
 }
 
 uint8_t  esh_get_data(Elf_Desc *desc) {
+    PROFILER_IN();
     assert(desc != NULL);
-    return desc->e_ident[EI_DATA];
+    PROFILER_ROUT(desc->e_ident[EI_DATA], "%u");
 }
 
 uint8_t  esh_get_osabi(Elf_Desc *desc) {
+    PROFILER_IN();
     assert(desc != NULL);
-    return desc->e_ident[EI_OSABI];
+    PROFILER_ROUT(desc->e_ident[EI_OSABI], "%u");
 }
 
 uint8_t  esh_get_osabiversion(Elf_Desc *desc) {
+    PROFILER_IN();
     assert(desc != NULL);
-    return desc->e_ident[EI_ABIVERSION];
+    PROFILER_ROUT(desc->e_ident[EI_ABIVERSION], "%u");
 }
 
 uint16_t esh_get_type(Elf_Desc *desc) {
+    PROFILER_IN();
     assert(desc != NULL);
-    return desc->e_hdr.e_type;
+    PROFILER_ROUT(desc->e_hdr.e_type, "%u");
 }
 
 uint16_t esh_get_machine(Elf_Desc *desc) {
+    PROFILER_IN();
     assert(desc != NULL);
-    return desc->e_hdr.e_machine;
+    PROFILER_ROUT(desc->e_hdr.e_machine, "%u");
 }
 
 uint32_t esh_get_version(Elf_Desc *desc) {
+    PROFILER_IN();
     assert(desc != NULL);
-    return desc->e_hdr.e_version;
+    PROFILER_ROUT(desc->e_hdr.e_version, "%u");
 }
 
 uint64_t esh_get_entry(Elf_Desc *desc) {
+    PROFILER_IN();
     assert(desc != NULL);
-    return desc->e_hdr.e_entry;
+    PROFILER_ROUT(desc->e_hdr.e_entry, "%lu");
 }
 
 uint64_t esh_get_phoff(Elf_Desc *desc) {
+    PROFILER_IN();
     assert(desc != NULL);
-    return desc->e_hdr.e_phoff;
+    PROFILER_ROUT(desc->e_hdr.e_phoff, "%lu");
 }
 
 uint64_t esh_get_shoff(Elf_Desc *desc) {
+    PROFILER_IN();
     assert(desc != NULL);
-    return desc->e_hdr.e_shoff;
+    PROFILER_ROUT(desc->e_hdr.e_shoff, "%lu");
 }
 
 uint32_t esh_get_flags(Elf_Desc *desc) {
+    PROFILER_IN();
     assert(desc != NULL);
-    return desc->e_hdr.e_flags;
+    PROFILER_ROUT(desc->e_hdr.e_flags, "%u");
 }
 
 uint16_t esh_get_ehsize(Elf_Desc *desc) {
+    PROFILER_IN();
     assert(desc != NULL);
-    return desc->e_hdr.e_ehsize;
+    PROFILER_ROUT(desc->e_hdr.e_ehsize, "%u");
 }
 
 uint16_t esh_get_phentsize(Elf_Desc *desc) {
+    PROFILER_IN();
     assert(desc != NULL);
-    return desc->e_hdr.e_phentsize;
+    PROFILER_ROUT(desc->e_hdr.e_phentsize, "%u");
 }
 
 uint16_t esh_get_phnum(Elf_Desc *desc) {
+    PROFILER_IN();
     assert(desc != NULL);
-    return desc->e_hdr.e_phnum;
+    PROFILER_ROUT(desc->e_hdr.e_phnum, "%u");
 }
 
 uint16_t esh_get_shentsize(Elf_Desc *desc) {
+    PROFILER_IN();
     assert(desc != NULL);
-    return desc->e_hdr.e_shentsize;
+    PROFILER_ROUT(desc->e_hdr.e_shentsize, "%u");
 }
 
 uint16_t esh_get_shnum(Elf_Desc *desc) {
+    PROFILER_IN();
     assert(desc != NULL);
-    return desc->e_hdr.e_shnum;
+    PROFILER_ROUT(desc->e_hdr.e_shnum, "%u");
 }
 
 uint16_t esh_get_shstrndx(Elf_Desc *desc) {
+    PROFILER_IN();
     assert(desc != NULL);
-    return desc->e_hdr.e_shstrndx;
+    PROFILER_ROUT(desc->e_hdr.e_shstrndx, "%u");
 }
 
 /*
  * Setterinos for header members
  */
 void esh_set_class(Elf_Desc *desc, uint8_t class) {
+    PROFILER_IN();
     assert(desc != NULL);
     desc->e_ident[EI_CLASS] = class;
+    PROFILER_OUT();
 }
 
 void esh_set_data(Elf_Desc *desc, uint8_t data) {
+    PROFILER_IN();
     assert(desc != NULL);
     desc->e_ident[EI_DATA] = data;
+    PROFILER_OUT();
 }
 
 void esh_set_osabi(Elf_Desc *desc, uint8_t osabi) {
+    PROFILER_IN();
     assert(desc != NULL);
     desc->e_ident[EI_OSABI] = osabi;
+    PROFILER_OUT();
 }
 
 void esh_set_osabiversion(Elf_Desc *desc, uint8_t osabiversion) {
+    PROFILER_IN();
     assert(desc != NULL);
     desc->e_ident[EI_ABIVERSION] = osabiversion;
+    PROFILER_OUT();
 }
 
 void esh_set_type(Elf_Desc *desc, uint16_t type) {
+    PROFILER_IN();
     assert(desc != NULL);
     desc->e_hdr.e_type = type;
+    PROFILER_OUT();
 }
 
 void esh_set_machine(Elf_Desc *desc, uint16_t machine) {
+    PROFILER_IN();
     assert(desc != NULL);
     desc->e_hdr.e_machine = machine;
+    PROFILER_OUT();
 }
 
 void esh_set_version(Elf_Desc *desc, uint32_t version) {
+    PROFILER_IN();
     assert(desc != NULL);
     desc->e_hdr.e_version = version;
+    PROFILER_OUT();
 }
 
 void esh_set_entry(Elf_Desc *desc, uint64_t entry) {
+    PROFILER_IN();
     assert(desc != NULL);
     desc->e_hdr.e_entry = entry;
+    PROFILER_OUT();
 }
 
 void esh_set_phoff(Elf_Desc *desc, uint64_t phoff) {
+    PROFILER_IN();
     assert(desc != NULL);
     desc->e_hdr.e_phoff = phoff;
+    PROFILER_OUT();
 }
 
 void esh_set_shoff(Elf_Desc *desc, uint64_t shoff) {
+    PROFILER_IN();
     assert(desc != NULL);
     desc->e_hdr.e_shoff = shoff;
+    PROFILER_OUT();
 }
 
 void esh_set_flags(Elf_Desc *desc, uint32_t flags) {
+    PROFILER_IN();
     assert(desc != NULL);
     desc->e_hdr.e_flags = flags;
+    PROFILER_OUT();
 }
 
 void esh_set_ehsize(Elf_Desc *desc, uint16_t ehsize) {
+    PROFILER_IN();
     assert(desc != NULL);
     desc->e_hdr.e_ehsize = ehsize;
+    PROFILER_OUT();
 }
 
 void esh_set_phentsize(Elf_Desc *desc, uint16_t phentsize) {
+    PROFILER_IN();
     assert(desc != NULL);
     desc->e_hdr.e_phentsize = phentsize;
+    PROFILER_OUT();
 }
 
 void esh_set_phnum(Elf_Desc *desc, uint16_t phnum) {
+    PROFILER_IN();
     assert(desc != NULL);
     desc->e_hdr.e_phnum = phnum;
+    PROFILER_OUT();
 }
 
 void esh_set_shentsize(Elf_Desc *desc, uint16_t shentsize) {
+    PROFILER_IN();
     assert(desc != NULL);
     desc->e_hdr.e_shentsize = shentsize;
+    PROFILER_OUT();
 }
 
 void esh_set_shnum(Elf_Desc *desc, uint16_t shnum) {
+    PROFILER_IN();
     assert(desc != NULL);
     desc->e_hdr.e_shnum = shnum;
+    PROFILER_OUT();
 }
 
 void esh_set_shstrndx(Elf_Desc *desc, uint16_t shstrndx) {
+    PROFILER_IN();
     assert(desc != NULL);
     desc->e_hdr.e_shstrndx = shstrndx;
+    PROFILER_OUT();
 }
 
+#define STR_CASE(case_num, str) case case_num: strncpy(buf, str, sizeof(buf)); break;
 
 const char* get_elf_class_str(unsigned int elf_class) {
     static char buf[32];
 
+    PROFILER_IN();
+
     switch (elf_class) {
-        case ELFCLASSNONE: return "none";
-        case ELFCLASS32:   return "ELF32";
-        case ELFCLASS64:   return "ELF64";
+        STR_CASE(ELFCLASSNONE, "none");
+        STR_CASE(ELFCLASS32,   "ELF32");
+        STR_CASE(ELFCLASS64,   "ELF64");
         default: {
             snprintf(buf, sizeof(buf), "<unknown: 0x%02x>", elf_class);
-            return buf;
+            break;
         }
     }
+    PROFILER_ROUT(buf, "\"%s\"");
 }
 
 const char *get_data_encoding_str(unsigned int encoding) {
     static char buf[32];
 
+    PROFILER_IN();
+
     switch (encoding) {
-        case ELFDATANONE: return "none";
-        case ELFDATA2LSB: return "2's compliment, little-endian";
-        case ELFDATA2MSB: return "2's compliment, big-endian";
+        STR_CASE(ELFDATANONE, "none");
+        STR_CASE(ELFDATA2LSB, "2's compliment, little-endian");
+        STR_CASE(ELFDATA2MSB, "2's compliment, big-endian");
         default: {
             snprintf(buf, sizeof(buf), "<unknown: 0x%02x>", encoding);
-            return buf;
+            break;
         }
     }
+
+    PROFILER_ROUT(buf, "\"%s\"");
 }
 
 const char *get_elf_version_str(unsigned int version) {
     static char buf[32];
 
+    PROFILER_IN();
+
     switch (version) {
-        case EV_NONE:    return "none";
-        case EV_CURRENT: return "current (1)";
+        STR_CASE(EV_NONE,    "none");
+        STR_CASE(EV_CURRENT, "current (1");
         default: {
             snprintf(buf, sizeof(buf), "<unknown: 0x%02x>", version);
-            return buf;
+            break;
         }
     }
+
+    PROFILER_ROUT(buf, "\"%s\"");
 }
 
 const char *get_osabi_str(unsigned int osabi) {
     static char buf[32];
 
+    PROFILER_IN();
+
     switch (osabi) {
-        case ELFOSABI_SYSV:    return "UNIX System V ABI";
-        case ELFOSABI_HPUX:    return "Hewlett-Packard HP-UX";
-        case ELFOSABI_NETBSD:  return "NetBSD";
-        case ELFOSABI_LINUX:   return "Linux";
-        case ELFOSABI_SOLARIS: return "Sun Solaris";
-        case ELFOSABI_AIX:     return "AIX";
-        case ELFOSABI_IRIX:    return "IRIX";
-        case ELFOSABI_FREEBSD: return "FreeBSD";
-        case ELFOSABI_TRU64:   return "Compaq TRU64 UNIX";
-        case ELFOSABI_MODESTO: return "Novell Modesto";
-        case ELFOSABI_OPENBSD: return "Open BSD";
-        case ELFOSABI_OPENVMS: return "Open VMS";
-        case ELFOSABI_NSK:     return "Hewlett-Packard Non-Stop Kernel";
+        STR_CASE(ELFOSABI_SYSV,    "UNIX System V ABI");
+        STR_CASE(ELFOSABI_HPUX,    "Hewlett-Packard HP-UX");
+        STR_CASE(ELFOSABI_NETBSD,  "NetBSD");
+        STR_CASE(ELFOSABI_LINUX,   "Linux");
+        STR_CASE(ELFOSABI_SOLARIS, "Sun Solaris");
+        STR_CASE(ELFOSABI_AIX,     "AIX");
+        STR_CASE(ELFOSABI_IRIX,    "IRIX");
+        STR_CASE(ELFOSABI_FREEBSD, "FreeBSD");
+        STR_CASE(ELFOSABI_TRU64,   "Compaq TRU64 UNIX");
+        STR_CASE(ELFOSABI_MODESTO, "Novell Modesto");
+        STR_CASE(ELFOSABI_OPENBSD, "Open BSD");
+        STR_CASE(ELFOSABI_OPENVMS, "Open VMS");
+        STR_CASE(ELFOSABI_NSK,     "Hewlett-Packard Non-Stop Kernel");
         default: {
             snprintf(buf, sizeof(buf), "<unknown: 0x%02x>", osabi);
-            return buf;
+            break;
         }
     }
+
+    PROFILER_ROUT(buf, "\"%s\"");
 }
 
 const char *get_file_type_str(unsigned int file_type) {
-    static char buf[32];
+    static char buf[64];
+
+    PROFILER_IN();
 
     switch (file_type) {
-        case ET_NONE: return "NONE (None)";
-        case ET_REL:  return "REL (Relocatable file)";
-        case ET_EXEC: return "EXEC (Executable file)";
-        case ET_DYN:  return "DYN (Shared object file)";
-        case ET_CORE: return "CORE (Core file)";
+        STR_CASE(ET_NONE, "NONE (None");
+        STR_CASE(ET_REL,  "REL (Relocatable file");
+        STR_CASE(ET_EXEC, "EXEC (Executable file");
+        STR_CASE(ET_DYN,  "DYN (Shared object file");
+        STR_CASE(ET_CORE, "CORE (Core file");
         default: {
             snprintf(buf, sizeof(buf), "<unknown: 0x%02x>", file_type);
-            return buf;
+            break;
         }
     }
+
+    PROFILER_ROUT(buf, "\"%s\"");
 }
 
 const char *get_machine_str(unsigned int machine) {
-    static char buf[32];
+    static char buf[64];
+
+    PROFILER_IN();
 
     switch (machine) {
-        case 0:   return"No machine";
-        case 1:   return"AT&T WE 32100";
-        case 2:   return"SPARC";
-        case 3:   return"Intel 80386";
-        case 4:   return"Motorola 68000";
-        case 5:   return"Motorola 88000";
-        case 7:   return"Intel 80860";
-        case 8:   return"MIPS I Architecture";
-        case 9:   return"IBM System/370 Processor";
-        case 10:  return "MIPS RS3000 Little-endian";
-        case 15:  return "Hewlett-Packard PA-RISC";
-        case 17:  return "Fujitsu VPP500";
-        case 18:  return "Enhanced instruction set SPARC";
-        case 19:  return "Intel 80960";
-        case 20:  return "PowerPC";
-        case 21:  return "64-bit PowerPC";
-        case 22:  return "IBM System/390 Processor";
-        case 36:  return "NEC V800";
-        case 37:  return "Fujitsu FR20";
-        case 38:  return "TRW RH-32";
-        case 39:  return "Motorola RCE";
-        case 40:  return "Advanced RISC Machines ARM";
-        case 41:  return "Digital Alpha";
-        case 42:  return "Hitachi SH";
-        case 43:  return "SPARC Version 9";
-        case 44:  return "Siemens TriCore embedded processor";
-        case 45:  return "Argonaut RISC Core, Argonaut Technologies Inc.";
-        case 46:  return "Hitachi H8/300";
-        case 47:  return "Hitachi H8/300H";
-        case 48:  return "Hitachi H8S";
-        case 49:  return "Hitachi H8/500";
-        case 50:  return "Intel IA-64 processor architecture";
-        case 51:  return "Stanford MIPS-X";
-        case 52:  return "Motorola ColdFire";
-        case 53:  return "Motorola M68HC12";
-        case 54:  return "Fujitsu MMA Multimedia Accelerator";
-        case 55:  return "Siemens PCP";
-        case 56:  return "Sony nCPU embedded RISC processor";
-        case 57:  return "Denso NDR1 microprocessor";
-        case 58:  return "Motorola Star*Core processor";
-        case 59:  return "Toyota ME16 processor";
-        case 60:  return "STMicroelectronics ST100 processor";
-        case 61:  return "Advanced Logic Corp. TinyJ embedded processor family";
-        case 62:  return "AMD x86-64 architecture";
-        case 63:  return "Sony DSP Processor";
-        case 64:  return "Digital Equipment Corp. PDP-10";
-        case 65:  return "Digital Equipment Corp. PDP-11";
-        case 66:  return "Siemens FX66 microcontroller";
-        case 67:  return "STMicroelectronics ST9+ 8/16 bit microcontroller";
-        case 68:  return "STMicroelectronics ST7 8-bit microcontroller";
-        case 69:  return "Motorola MC68HC16 Microcontroller";
-        case 70:  return "Motorola MC68HC11 Microcontroller";
-        case 71:  return "Motorola MC68HC08 Microcontroller";
-        case 72:  return "Motorola MC68HC05 Microcontroller";
-        case 73:  return "Silicon Graphics SVx";
-        case 74:  return "STMicroelectronics ST19 8-bit microcontroller";
-        case 75:  return "Digital VAX";
-        case 76:  return "Axis Communications 32-bit embedded processor";
-        case 77:  return "Infineon Technologies 32-bit embedded processor";
-        case 78:  return "Element 14 64-bit DSP Processor";
-        case 79:  return "LSI Logic 16-bit DSP Processor";
-        case 80:  return "Donald Knuth's educational 64-bit processor";
-        case 81:  return "Harvard University machine-independent object files";
-        case 82:  return "SiTera Prism";
-        case 83:  return "Atmel AVR 8-bit microcontroller";
-        case 84:  return "Fujitsu FR30";
-        case 85:  return "Mitsubishi D10V";
-        case 86:  return "Mitsubishi D30V";
-        case 87:  return "NEC v850";
-        case 88:  return "Mitsubishi M32R";
-        case 89:  return "Matsushita MN10300";
-        case 90:  return "Matsushita MN10200";
-        case 91:  return "picoJava";
-        case 92:  return "OpenRISC 32-bit embedded processor";
-        case 93:  return "ARC Cores Tangent-A5";
-        case 94:  return "Tensilica Xtensa Architecture";
-        case 95:  return "Alphamosaic VideoCore processor";
-        case 96:  return "Thompson Multimedia General Purpose Processor";
-        case 97:  return "National Semiconductor 32000 series";
-        case 98:  return "Tenor Network TPC processor";
-        case 99:  return "Trebia SNP 1000 processor";
-        case 100: return "STMicroelectronics (www.st.com) ST200 microcontroller";
+        STR_CASE(0,   "No machine");
+        STR_CASE(1,   "AT&T WE 32100");
+        STR_CASE(2,   "SPARC");
+        STR_CASE(3,   "Intel 80386");
+        STR_CASE(4,   "Motorola 68000");
+        STR_CASE(5,   "Motorola 88000");
+        STR_CASE(7,   "Intel 80860");
+        STR_CASE(8,   "MIPS I Architecture");
+        STR_CASE(9,   "IBM System/370 Processor");
+        STR_CASE(10,  "MIPS RS3000 Little-endian");
+        STR_CASE(15,  "Hewlett-Packard PA-RISC");
+        STR_CASE(17,  "Fujitsu VPP500");
+        STR_CASE(18,  "Enhanced instruction set SPARC");
+        STR_CASE(19,  "Intel 80960");
+        STR_CASE(20,  "PowerPC");
+        STR_CASE(21,  "64-bit PowerPC");
+        STR_CASE(22,  "IBM System/390 Processor");
+        STR_CASE(36,  "NEC V800");
+        STR_CASE(37,  "Fujitsu FR20");
+        STR_CASE(38,  "TRW RH-32");
+        STR_CASE(39,  "Motorola RCE");
+        STR_CASE(40,  "Advanced RISC Machines ARM");
+        STR_CASE(41,  "Digital Alpha");
+        STR_CASE(42,  "Hitachi SH");
+        STR_CASE(43,  "SPARC Version 9");
+        STR_CASE(44,  "Siemens TriCore embedded processor");
+        STR_CASE(45,  "Argonaut RISC Core, Argonaut Technologies Inc.");
+        STR_CASE(46,  "Hitachi H8/300");
+        STR_CASE(47,  "Hitachi H8/300H");
+        STR_CASE(48,  "Hitachi H8S");
+        STR_CASE(49,  "Hitachi H8/500");
+        STR_CASE(50,  "Intel IA-64 processor architecture");
+        STR_CASE(51,  "Stanford MIPS-X");
+        STR_CASE(52,  "Motorola ColdFire");
+        STR_CASE(53,  "Motorola M68HC12");
+        STR_CASE(54,  "Fujitsu MMA Multimedia Accelerator");
+        STR_CASE(55,  "Siemens PCP");
+        STR_CASE(56,  "Sony nCPU embedded RISC processor");
+        STR_CASE(57,  "Denso NDR1 microprocessor");
+        STR_CASE(58,  "Motorola Star*Core processor");
+        STR_CASE(59,  "Toyota ME16 processor");
+        STR_CASE(60,  "STMicroelectronics ST100 processor");
+        STR_CASE(61,  "Advanced Logic Corp. TinyJ embedded processor family");
+        STR_CASE(62,  "AMD x86-64 architecture");
+        STR_CASE(63,  "Sony DSP Processor");
+        STR_CASE(64,  "Digital Equipment Corp. PDP-10");
+        STR_CASE(65,  "Digital Equipment Corp. PDP-11");
+        STR_CASE(66,  "Siemens FX66 microcontroller");
+        STR_CASE(67,  "STMicroelectronics ST9+ 8/16 bit microcontroller");
+        STR_CASE(68,  "STMicroelectronics ST7 8-bit microcontroller");
+        STR_CASE(69,  "Motorola MC68HC16 Microcontroller");
+        STR_CASE(70,  "Motorola MC68HC11 Microcontroller");
+        STR_CASE(71,  "Motorola MC68HC08 Microcontroller");
+        STR_CASE(72,  "Motorola MC68HC05 Microcontroller");
+        STR_CASE(73,  "Silicon Graphics SVx");
+        STR_CASE(74,  "STMicroelectronics ST19 8-bit microcontroller");
+        STR_CASE(75,  "Digital VAX");
+        STR_CASE(76,  "Axis Communications 32-bit embedded processor");
+        STR_CASE(77,  "Infineon Technologies 32-bit embedded processor");
+        STR_CASE(78,  "Element 14 64-bit DSP Processor");
+        STR_CASE(79,  "LSI Logic 16-bit DSP Processor");
+        STR_CASE(80,  "Donald Knuth's educational 64-bit processor");
+        STR_CASE(81,  "Harvard University machine-independent object files");
+        STR_CASE(82,  "SiTera Prism");
+        STR_CASE(83,  "Atmel AVR 8-bit microcontroller");
+        STR_CASE(84,  "Fujitsu FR30");
+        STR_CASE(85,  "Mitsubishi D10V");
+        STR_CASE(86,  "Mitsubishi D30V");
+        STR_CASE(87,  "NEC v850");
+        STR_CASE(88,  "Mitsubishi M32R");
+        STR_CASE(89,  "Matsushita MN10300");
+        STR_CASE(90,  "Matsushita MN10200");
+        STR_CASE(91,  "picoJava");
+        STR_CASE(92,  "OpenRISC 32-bit embedded processor");
+        STR_CASE(93,  "ARC Cores Tangent-A5");
+        STR_CASE(94,  "Tensilica Xtensa Architecture");
+        STR_CASE(95,  "Alphamosaic VideoCore processor");
+        STR_CASE(96,  "Thompson Multimedia General Purpose Processor");
+        STR_CASE(97,  "National Semiconductor 32000 series");
+        STR_CASE(98,  "Tenor Network TPC processor");
+        STR_CASE(99,  "Trebia SNP 1000 processor");
+        STR_CASE(100, "STMicroelectronics (www.st.com) ST200 microcontroller");
         default: {
             snprintf(buf, sizeof(buf), "<unknown: 0x%02x>", machine);
-            return buf;
+            break;
         }
     }
+
+    PROFILER_ROUT(buf, "\"%s\"");
 }
 
 const char *get_phdr_type_str(unsigned int type) {
+    static char buf[32];
+
+    PROFILER_IN();
+
     switch (type) {
-        case PT_NULL:         return "NULL";
-        case PT_LOAD:         return "LOAD";
-        case PT_DYNAMIC:      return "DYNAMIC";
-        case PT_INTERP:       return "INTERP";
-        case PT_NOTE:         return "NOTE";
-        case PT_SHLIB:        return "SHLIB";
-        case PT_PHDR:         return "PHDR";
-        case PT_TLS:          return "TLS";
-        case PT_LOOS:         return "LOOS";
-        case PT_HIOS:         return "HIOS";
-        case PT_LOPROC:       return "LOPROC";
-        case PT_HIPROC:       return "HIPROC";
-        case PT_GNU_EH_FRAME: return "EH_FRAME";
-        case PT_GNU_STACK:    return "STACK";
-        case PT_GNU_RELRO:    return "RELRO";
-        default:              return "INVALID";
+        STR_CASE(PT_NULL,         "NULL");
+        STR_CASE(PT_LOAD,         "LOAD");
+        STR_CASE(PT_DYNAMIC,      "DYNAMIC");
+        STR_CASE(PT_INTERP,       "INTERP");
+        STR_CASE(PT_NOTE,         "NOTE");
+        STR_CASE(PT_SHLIB,        "SHLIB");
+        STR_CASE(PT_PHDR,         "PHDR");
+        STR_CASE(PT_TLS,          "TLS");
+        STR_CASE(PT_LOOS,         "LOOS");
+        STR_CASE(PT_HIOS,         "HIOS");
+        STR_CASE(PT_LOPROC,       "LOPROC");
+        STR_CASE(PT_HIPROC,       "HIPROC");
+        STR_CASE(PT_GNU_EH_FRAME, "EH_FRAME");
+        STR_CASE(PT_GNU_STACK,    "STACK");
+        STR_CASE(PT_GNU_RELRO,    "RELRO");
+        default: strncpy(buf, "INVALID", sizeof(buf)); break;
     }
+
+    PROFILER_ROUT(buf, "\"%s\"");
 }
 
 const char *get_phdr_flags_str(unsigned int flags) {
     static char buf[4] = {0};
+
+    PROFILER_IN();
 
     buf[0] = (flags & PF_R) ? 'R' : '-';
     buf[1] = (flags & PF_W) ? 'W' : '-';
     buf[2] = (flags & PF_X) ? 'X' : '-';
     buf[3] = '\0'; // Just in case fam.
 
-    return buf;
+    PROFILER_ROUT(buf, "\"%s\"");
 }
 
 const char *get_shdr_type_str(uint32_t type) {
+    static char buf[32];
+
+    PROFILER_IN();
+
     switch (type) {
-        case SHT_NULL:           return "NULL";
-        case SHT_PROGBITS:       return "PROGBITS";
-        case SHT_SYMTAB:         return "SYMTAB";
-        case SHT_STRTAB:         return "STRTAB";
-        case SHT_RELA:           return "RELA";
-        case SHT_HASH:           return "HASH";
-        case SHT_DYNAMIC:        return "DYNAMIC";
-        case SHT_NOTE:           return "NOTE";
-        case SHT_NOBITS:         return "NOBITS";
-        case SHT_REL:            return "REL";
-        case SHT_SHLIB:          return "SHLIB";
-        case SHT_DYNSYM:         return "DYNSYM";
-        case SHT_INIT_ARRAY:     return "INIT_ARRAY";
-        case SHT_FINI_ARRAY:     return "FINI_ARRAY";
-        case SHT_PREINIT_ARRAY:  return "PREINIT_ARRAY";
-        case SHT_GROUP:          return "GROUP";
-        case SHT_SYMTAB_SHNDX:   return "SYMTAB_SHNDX";
-        case SHT_LOOS:           return "LOOS";
-        case SHT_GNU_ATTRIBUTES: return "GNU_ATTRIBUTES";
-        case SHT_GNU_HASH:       return "GNU_HASH";
-        case SHT_GNU_LIBLIST:    return "GNU_LIBLIST";
-        case SHT_CHECKSUM:       return "CHECKSUM";
-        case SHT_LOSUNW:         return "LOSUNW";
-        case SHT_SUNW_COMDAT:    return "SUNW_COMDAT";
-        case SHT_SUNW_syminfo:   return "SUNW_syminfo";
-        case SHT_GNU_verdef:     return "GNU_verdef";
-        case SHT_GNU_verneed:    return "GNU_verneed";
-        case SHT_GNU_versym:     return "GNU_versym";
-        case SHT_LOPROC:         return "LOPROC";
-        case SHT_HIPROC:         return "HIPROC";
-        case SHT_LOUSER:         return "LOUSER";
-        case SHT_HIUSER:         return "HIUSER";
-        default:                 return "INVALID";
+        STR_CASE(SHT_NULL,           "NULL");
+        STR_CASE(SHT_PROGBITS,       "PROGBITS");
+        STR_CASE(SHT_SYMTAB,         "SYMTAB");
+        STR_CASE(SHT_STRTAB,         "STRTAB");
+        STR_CASE(SHT_RELA,           "RELA");
+        STR_CASE(SHT_HASH,           "HASH");
+        STR_CASE(SHT_DYNAMIC,        "DYNAMIC");
+        STR_CASE(SHT_NOTE,           "NOTE");
+        STR_CASE(SHT_NOBITS,         "NOBITS");
+        STR_CASE(SHT_REL,            "REL");
+        STR_CASE(SHT_SHLIB,          "SHLIB");
+        STR_CASE(SHT_DYNSYM,         "DYNSYM");
+        STR_CASE(SHT_INIT_ARRAY,     "INIT_ARRAY");
+        STR_CASE(SHT_FINI_ARRAY,     "FINI_ARRAY");
+        STR_CASE(SHT_PREINIT_ARRAY,  "PREINIT_ARRAY");
+        STR_CASE(SHT_GROUP,          "GROUP");
+        STR_CASE(SHT_SYMTAB_SHNDX,   "SYMTAB_SHNDX");
+        STR_CASE(SHT_LOOS,           "LOOS");
+        STR_CASE(SHT_GNU_ATTRIBUTES, "GNU_ATTRIBUTES");
+        STR_CASE(SHT_GNU_HASH,       "GNU_HASH");
+        STR_CASE(SHT_GNU_LIBLIST,    "GNU_LIBLIST");
+        STR_CASE(SHT_CHECKSUM,       "CHECKSUM");
+        STR_CASE(SHT_LOSUNW,         "LOSUNW");
+        STR_CASE(SHT_SUNW_COMDAT,    "SUNW_COMDAT");
+        STR_CASE(SHT_SUNW_syminfo,   "SUNW_syminfo");
+        STR_CASE(SHT_GNU_verdef,     "GNU_verdef");
+        STR_CASE(SHT_GNU_verneed,    "GNU_verneed");
+        STR_CASE(SHT_GNU_versym,     "GNU_versym");
+        STR_CASE(SHT_LOPROC,         "LOPROC");
+        STR_CASE(SHT_HIPROC,         "HIPROC");
+        STR_CASE(SHT_LOUSER,         "LOUSER");
+        STR_CASE(SHT_HIUSER,         "HIUSER");
+        default: strncpy(buf, "INVALID", sizeof(buf)); break;
     }
+
+    PROFILER_ROUT(buf, "\"%s\"");
 }
 
 const char *get_shdr_flags_str(unsigned int sh_flags) {
     static char buf[32];
     char *p = buf;
     unsigned int flag;
+
+    PROFILER_IN();
 
     memset(buf, 0, sizeof(buf));
 
@@ -711,7 +802,7 @@ const char *get_shdr_flags_str(unsigned int sh_flags) {
         }
     }
 
-    return buf;
+    PROFILER_ROUT(buf, "\"%s\"");
 }
 
 uint16_t read_word_le(const unsigned char *src) {
