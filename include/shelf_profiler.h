@@ -123,7 +123,7 @@ extern char *clean_filename(const char *file);
 #define PROFILER_RERR(msg, ret)                                              \
   do {                                                                       \
     if ((profiler_level & PROFILE_FUNCS) > 0) {                              \
-        profiler_level--;                                                    \
+        profiler_depth--;                                                    \
         if (profile_me != profiler_depth) {                                  \
             fprintf(stderr, C_RED "[!] A function called by current "        \
                    "function forgot to decrement profiler_depth\n" C_NRM);   \

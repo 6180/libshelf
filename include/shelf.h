@@ -33,7 +33,7 @@ typedef uint64_t Elf64_Xword;
 /*
  * An ELF header resides at the beginning of an ELF object file and holds
  * information describing the file's organization.
- * 
+ *
  * e_ident: This member holds machine independant data with which to decode and
  *   interpret a file.
  * e_type: This member identifies the object file type.
@@ -106,7 +106,7 @@ typedef Elf64_Ehdr shelf_Ehdr;
  * object files. A program specifies its own program header size with the ELF
  * header's e_phentsize and e_phnum members. The ELF program header is described
  * by the type Elf32_Phdr or Elf64_Phdr depending on the architecture.
- * 
+ *
  * p_type: This member of the structure indicates what kind of segment this
  *   array element describes or how to interpret the array element's information.
  * p_offset: This member holds the offset from the beginning of the file at
@@ -158,7 +158,7 @@ typedef Elf64_Phdr shelf_Phdr;
  * ELF header's e_shoff member gives the byte offset from the beginning of the
  * file to the section header table. e_shnum holds the number of entries the
  * section header table contains. e_shentsize holds the size in bytes of each entry.
- * 
+ *
  * sh_name: This member specifies the name of the section. It is an index into
  *   the section header string table section, giving the location of a
  *   null-terminated string.
@@ -176,7 +176,7 @@ typedef Elf64_Phdr shelf_Phdr;
  *   type is SHT_NOBITS, the section occupies sh_size bytes in t he file. A
  *   section of type SHT_NOBITS may have a non-zero size but occupies no space
  *   in the file.
- * sh_link: This memebr holds a section header table index link, whose 
+ * sh_link: This memebr holds a section header table index link, whose
  *   interpretation depends on the section type.
  * sh_info: This member holds extra information, whose interpretation depends
  *   on the section type.
@@ -219,7 +219,7 @@ typedef struct {
 
 typedef Elf64_Shdr shelf_Shdr;
 
-/* 
+/*
  * Elf section descriptor.
  */
 typedef struct shelf_sect {
@@ -234,117 +234,91 @@ typedef struct shelf_sect {
 
 
 /*
- * Decriptor for elf objects.
- */
-typedef struct Elf_Desc {
-    /* Size of the ELF object on-disk. */
-    off_t e_size;
-
-    /* Path for the file associated with this object. */
-    char *filepath;
-    
-    /* File descriptor for reading or writing this object to or from disk. */
-    int e_fd;
-    
-    /* Pointer to the beginning of the raw file if loaded in memory. */
-    unsigned char *e_rawdata;
-
-    /* Pointer to the beginning of the elf header. Usually the same as e_rawdata. */
-    unsigned char *e_ident;
-   
-    /* 1 - 32-bit
-     * 2 - 64-bit */
-    unsigned char e_class;
-    
-    /* 1 - little-endian
-     * 2 - big-endian */
-    unsigned char e_encoding;
-
-    /* Internally we'll just use the 64-bit structures to simplify implementation */
-    Elf64_Ehdr e_hdr;
-    Elf64_Phdr *e_phdr;
-    Elf64_Shdr *e_shdr;
-
-    /* Misc flagerinos. */
-    unsigned e_readable:1;  /* File is readable. */
-    unsigned e_writable:1;  /* File is Writable. */
-    unsigned e_dirty:1;     /* e_rawdata has been modified. */
-    unsigned e_mmapped:1;   /* e_rawdata is mmapped */
-    unsigned e_malloced:1;  /* e_rawdata is allocated on yonder heap */
-} Elf_Desc;
-
-/*
  * Elf Object structure.
  */
 typedef struct s_elfobj {
-    shelf_Ehdr *hdr;
+    shelf_Ehdr hdr;
     shelf_Shdr *sht;
     Elf64_Phdr *pht;
     shelfsect_t *sect_list;
 
+    unsigned char *e_ident;
+    char *ei_magic;
+    uint8_t ei_class;
+    uint8_t ei_data;
+    uint8_t ei_version;
+    uint8_t ei_osabi;
+    uint8_t ei_abiversion;
+
     int fd;
     char *filename;
+    unsigned char *data;
     struct stat file_stat;
     int type;
-    int writable;
+    int writable; //
     time_t load_time;
     char hdr_corrupt;
     char read;
     char mmapped;
     char malloced;
     char stripped;
+    const char *error;
 
 } shelfobj_t;
 
 
-/* 
- * Functions for creating and managing struct Elf_Desc objects. 
+/*
+ * Extern globals.
  */
-extern Elf_Desc *Elf_Open(const char *path);
+extern char *shelf_error;
+
+/*
+ * Functions for creating and managing struct Elf_Desc objects.
+ */
+extern shelfobj_t *shelf_open(const char *path);
 // extern ssize_t Elf_Write(Elf_Desc *elf_desc, const char *path);
-extern void Elf_Close(Elf_Desc **desc);
+extern void shelf_close(shelfobj_t **desc);
 
 
 /*
  * Accessor functions for individual header fields
  */
-extern Elf64_Ehdr *elf_get_hdr(Elf_Desc *desc);
+extern Elf64_Ehdr *elf_get_hdr(shelfobj_t *desc);
+extern uint8_t  elf_get_class(shelfobj_t *desc);
+extern uint8_t  elf_get_data(shelfobj_t *desc);
+extern uint8_t  elf_get_osabi(shelfobj_t *desc);
+extern uint8_t  elf_get_osabiversion(shelfobj_t *desc);
+extern uint16_t elf_get_type(shelfobj_t *desc);
+extern uint16_t elf_get_machine(shelfobj_t *desc);
+extern uint32_t elf_get_version(shelfobj_t *desc);
+extern uint64_t elf_get_entry(shelfobj_t *desc);
+extern uint64_t elf_get_phoff(shelfobj_t *desc);
+extern uint64_t elf_get_shoff(shelfobj_t *desc);
+extern uint32_t elf_get_flags(shelfobj_t *desc);
+extern uint16_t elf_get_ehsize(shelfobj_t *desc);
+extern uint16_t elf_get_phentsize(shelfobj_t *desc);
+extern uint16_t elf_get_phnum(shelfobj_t *desc);
+extern uint16_t elf_get_shentsize(shelfobj_t *desc);
+extern uint16_t elf_get_shnum(shelfobj_t *desc);
+extern uint16_t elf_get_shstrndx(shelfobj_t *desc);
 
-extern uint8_t  elf_get_class(Elf_Desc *desc);
-extern uint8_t  elf_get_data(Elf_Desc *desc);
-extern uint8_t  elf_get_osabi(Elf_Desc *desc);
-extern uint8_t  elf_get_osabiversion(Elf_Desc *desc);
-extern uint16_t elf_get_type(Elf_Desc *desc);
-extern uint16_t elf_get_machine(Elf_Desc *desc);
-extern uint32_t elf_get_version(Elf_Desc *desc);
-extern uint64_t elf_get_entry(Elf_Desc *desc);
-extern uint64_t elf_get_phoff(Elf_Desc *desc);
-extern uint64_t elf_get_shoff(Elf_Desc *desc);
-extern uint32_t elf_get_flags(Elf_Desc *desc);
-extern uint16_t elf_get_ehsize(Elf_Desc *desc);
-extern uint16_t elf_get_phentsize(Elf_Desc *desc);
-extern uint16_t elf_get_phnum(Elf_Desc *desc);
-extern uint16_t elf_get_shentsize(Elf_Desc *desc);
-extern uint16_t elf_get_shnum(Elf_Desc *desc);
-extern uint16_t elf_get_shstrndx(Elf_Desc *desc);
-
-extern void elf_set_class(Elf_Desc *desc, uint8_t class);
-extern void elf_set_data(Elf_Desc *desc, uint8_t data);
-extern void elf_set_osabi(Elf_Desc *desc, uint8_t osabi);
-extern void elf_set_osabiversion(Elf_Desc *desc, uint8_t osabiversion);
-extern void elf_set_type(Elf_Desc *desc, uint16_t type);
-extern void elf_set_machine(Elf_Desc *desc, uint16_t machine);
-extern void elf_set_version(Elf_Desc *desc, uint32_t version);
-extern void elf_set_entry(Elf_Desc *desc, uint64_t entry);
-extern void elf_set_phoff(Elf_Desc *desc, uint64_t phoff);
-extern void elf_set_shoff(Elf_Desc *desc, uint64_t shoff);
-extern void elf_set_flags(Elf_Desc *desc, uint32_t flags);
-extern void elf_set_ehsize(Elf_Desc *desc, uint16_t ehsize);
-extern void elf_set_phentsize(Elf_Desc *desc, uint16_t phentsize);
-extern void elf_set_phnum(Elf_Desc *desc, uint16_t phentnum);
-extern void elf_set_shentsize(Elf_Desc *desc, uint16_t shentsize);
-extern void elf_set_shnum(Elf_Desc *desc, uint16_t shentnum);
-extern void elf_set_shstrndx(Elf_Desc *desc, uint16_t shstrndx);
+extern void elf_set_class(shelfobj_t *desc, uint8_t class);
+extern void elf_set_data(shelfobj_t *desc, uint8_t data);
+extern void elf_set_osabi(shelfobj_t *desc, uint8_t osabi);
+extern void elf_set_osabiversion(shelfobj_t *desc, uint8_t osabiversion);
+extern void elf_set_type(shelfobj_t *desc, uint16_t type);
+extern void elf_set_machine(shelfobj_t *desc, uint16_t machine);
+extern void elf_set_version(shelfobj_t *desc, uint32_t version);
+extern void elf_set_entry(shelfobj_t *desc, uint64_t entry);
+extern void elf_set_phoff(shelfobj_t *desc, uint64_t phoff);
+extern void elf_set_shoff(shelfobj_t *desc, uint64_t shoff);
+extern void elf_set_flags(shelfobj_t *desc, uint32_t flags);
+extern void elf_set_ehsize(shelfobj_t *desc, uint16_t ehsize);
+extern void elf_set_phentsize(shelfobj_t *desc, uint16_t phentsize);
+extern void elf_set_phnum(shelfobj_t *desc, uint16_t phentnum);
+extern void elf_set_shentsize(shelfobj_t *desc, uint16_t shentsize);
+extern void elf_set_shnum(shelfobj_t *desc, uint16_t shentnum);
+extern void elf_set_shstrndx(shelfobj_t *desc, uint16_t shstrndx);
 
 
 /*

@@ -3,9 +3,9 @@
 
 #include "shelf.h"
 
-extern void Shelf_Dump_Ident(const Elf_Desc *desc);
-extern void Shelf_Dump_Header(const Elf_Desc *desc);
-extern void Shelf_Dump_Program_Headers(const Elf_Desc *desc);
-extern void Shelf_Dump_Section_Headers(const Elf_Desc *desc);
+extern void shelf_dump_ident(const shelfobj_t *desc);
+extern void shelf_dump_header(const shelfobj_t *desc);
+extern void shelf_dump_program_headers(const shelfobj_t *desc);
+extern void shelf_dump_section_headers(const shelfobj_t *desc);
 
 #endif // ELF_5CD73F63
