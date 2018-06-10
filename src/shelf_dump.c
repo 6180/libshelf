@@ -6,7 +6,8 @@
 #include "../include/shelf_profiler.h"
 
 
-void shelf_dump_ident(const shelfobj_t *desc) {
+void shelf_dump_ident(const shelfobj_t *desc)
+{
     PROFILER_IN();
 
     if (desc == NULL)
@@ -28,7 +29,8 @@ void shelf_dump_ident(const shelfobj_t *desc) {
     PROFILER_OUT();
 }
 
-void shelf_dump_header(const shelfobj_t *desc) {
+void shelf_dump_header(const shelfobj_t *desc)
+{
     if (desc == NULL) {
         printf("Null pointer passed to Elf_Dump_Header()\n");
         exit(-1);
@@ -69,7 +71,8 @@ void shelf_dump_header(const shelfobj_t *desc) {
     printf("  Section header string table index: %u\n", desc->hdr.e_shstrndx);
 }
 
-void shelf_dump_program_headers(const shelfobj_t *desc) {
+void shelf_dump_program_headers(const shelfobj_t *desc)
+{
     if (desc == NULL) {
         printf("Null pointer passed to Elf_Dump_Program_Headers()\n");
         exit(-1);
@@ -116,7 +119,8 @@ void shelf_dump_program_headers(const shelfobj_t *desc) {
     }
 }
 
-void shelf_dump_section_headers(const shelfobj_t *desc){
+void shelf_dump_section_headers(const shelfobj_t *desc)
+{
     if (desc == NULL) {
         printf("Null pointer passed to Elf_Dump_Section_Headers()\n");
         exit(-1);
@@ -145,14 +149,14 @@ void shelf_dump_section_headers(const shelfobj_t *desc){
         }
     } else { // 64-bit
         printf("  [Nr] Name               Type               Address            Offset\n"
-            "       Size               EntSize            Flags  Link  Info  Align\n"
-            "--------------------------------------------------------------------------\n");
+               "       Size               EntSize            Flags  Link  Info  Align\n"
+               "--------------------------------------------------------------------------\n"
+        );
 
         for (uint16_t i = 0; i < desc->hdr.e_shnum; i++) {
             printf("  [%-2d] %-18s %-18s 0x%016lx 0x%08lx\n"
                     "       0x%016lx 0x%016lx %-5.5s\n",
                 i,
-                // get_shdr_name(desc, desc->sht[i].sh_name),
                 desc->data + desc->sht[desc->hdr.e_shstrndx].sh_offset + desc->sht[i].sh_name,
                 get_shdr_type_str(desc->sht[i].sh_type),
                 desc->sht[i].sh_addr,

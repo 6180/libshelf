@@ -11,7 +11,8 @@ int profiler_level = 0;
  *   '/home/eevee/foo/bar/baz.h' to bar/baz.h. There are probably much cleaner
  *   ways to do this. If you know one please share~
  */
-char *clean_filename(const char *file) {
+char *clean_filename(const char *file)
+{
     char *cpy = strdup(file);
     char *s = cpy + strlen(cpy);
 
@@ -30,10 +31,12 @@ char *clean_filename(const char *file) {
     return buffer;
 }
 
-void set_profiler_level(int level) {
+void set_profiler_level(int level)
+{
     profiler_level = level;
 }
 
-int get_profiler_level() {
+int get_profiler_level()
+{
     return profiler_level;
 }

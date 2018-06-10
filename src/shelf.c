@@ -14,7 +14,8 @@
 
 char *shelf_error;
 
-shelfobj_t *shelf_open(const char *path) {
+shelfobj_t *shelf_open(const char *path)
+{
     shelfobj_t *desc;
     int o_flags = -1;
 
@@ -199,7 +200,8 @@ error:
 //     return (ssize_t) 0;
 // }
 
-void shelf_close(shelfobj_t **desc) {
+void shelf_close(shelfobj_t **desc)
+{
     PROFILER_IN();
 
     if (!(*desc))
@@ -258,108 +260,126 @@ void shelf_close(shelfobj_t **desc) {
 /*
  * Getterinos for header members
  */
-Elf64_Ehdr *esh_get_hdr(shelfobj_t *desc) {
+Elf64_Ehdr *esh_get_hdr(shelfobj_t *desc)
+{
     assert(desc != NULL);
     return &(desc->hdr);
 }
 
-uint8_t  esh_get_class(shelfobj_t *desc) {
+uint8_t  esh_get_class(shelfobj_t *desc)
+{
     PROFILER_IN();
     assert(desc != NULL);
     PROFILER_ROUT(desc->e_ident[EI_CLASS], "%u");
 }
 
-uint8_t  esh_get_data(shelfobj_t *desc) {
+uint8_t  esh_get_data(shelfobj_t *desc)
+{
     PROFILER_IN();
     assert(desc != NULL);
     PROFILER_ROUT(desc->e_ident[EI_DATA], "%u");
 }
 
-uint8_t  esh_get_osabi(shelfobj_t *desc) {
+uint8_t  esh_get_osabi(shelfobj_t *desc)
+{
     PROFILER_IN();
     assert(desc != NULL);
     PROFILER_ROUT(desc->e_ident[EI_OSABI], "%u");
 }
 
-uint8_t  esh_get_osabiversion(shelfobj_t *desc) {
+uint8_t  esh_get_osabiversion(shelfobj_t *desc)
+{
     PROFILER_IN();
     assert(desc != NULL);
     PROFILER_ROUT(desc->e_ident[EI_ABIVERSION], "%u");
 }
 
-uint16_t esh_get_type(shelfobj_t *desc) {
+uint16_t esh_get_type(shelfobj_t *desc)
+{
     PROFILER_IN();
     assert(desc != NULL);
     PROFILER_ROUT(desc->hdr.e_type, "%u");
 }
 
-uint16_t esh_get_machine(shelfobj_t *desc) {
+uint16_t esh_get_machine(shelfobj_t *desc)
+{
     PROFILER_IN();
     assert(desc != NULL);
     PROFILER_ROUT(desc->hdr.e_machine, "%u");
 }
 
-uint32_t esh_get_version(shelfobj_t *desc) {
+uint32_t esh_get_version(shelfobj_t *desc)
+{
     PROFILER_IN();
     assert(desc != NULL);
     PROFILER_ROUT(desc->hdr.e_version, "%u");
 }
 
-uint64_t esh_get_entry(shelfobj_t *desc) {
+uint64_t esh_get_entry(shelfobj_t *desc)
+{
     PROFILER_IN();
     assert(desc != NULL);
     PROFILER_ROUT(desc->hdr.e_entry, "%lu");
 }
 
-uint64_t esh_get_phoff(shelfobj_t *desc) {
+uint64_t esh_get_phoff(shelfobj_t *desc)
+{
     PROFILER_IN();
     assert(desc != NULL);
     PROFILER_ROUT(desc->hdr.e_phoff, "%lu");
 }
 
-uint64_t esh_get_shoff(shelfobj_t *desc) {
+uint64_t esh_get_shoff(shelfobj_t *desc)
+{
     PROFILER_IN();
     assert(desc != NULL);
     PROFILER_ROUT(desc->hdr.e_shoff, "%lu");
 }
 
-uint32_t esh_get_flags(shelfobj_t *desc) {
+uint32_t esh_get_flags(shelfobj_t *desc)
+{
     PROFILER_IN();
     assert(desc != NULL);
     PROFILER_ROUT(desc->hdr.e_flags, "%u");
 }
 
-uint16_t esh_get_ehsize(shelfobj_t *desc) {
+uint16_t esh_get_ehsize(shelfobj_t *desc)
+{
     PROFILER_IN();
     assert(desc != NULL);
     PROFILER_ROUT(desc->hdr.e_ehsize, "%u");
 }
 
-uint16_t esh_get_phentsize(shelfobj_t *desc) {
+uint16_t esh_get_phentsize(shelfobj_t *desc)
+{
     PROFILER_IN();
     assert(desc != NULL);
     PROFILER_ROUT(desc->hdr.e_phentsize, "%u");
 }
 
-uint16_t esh_get_phnum(shelfobj_t *desc) {
+uint16_t esh_get_phnum(shelfobj_t *desc)
+{
     PROFILER_IN();
     assert(desc != NULL);
     PROFILER_ROUT(desc->hdr.e_phnum, "%u");
 }
 
-uint16_t esh_get_shentsize(shelfobj_t *desc) {
+uint16_t esh_get_shentsize(shelfobj_t *desc)
+{
     PROFILER_IN();
     assert(desc != NULL);
     PROFILER_ROUT(desc->hdr.e_shentsize, "%u");
 }
 
-uint16_t esh_get_shnum(shelfobj_t *desc) {
+uint16_t esh_get_shnum(shelfobj_t *desc)
+{
     PROFILER_IN();
     assert(desc != NULL);
     PROFILER_ROUT(desc->hdr.e_shnum, "%u");
 }
 
-uint16_t elf_get_shstrndx(shelfobj_t *desc) {
+uint16_t elf_get_shstrndx(shelfobj_t *desc)
+{
     PROFILER_IN();
     assert(desc != NULL);
     PROFILER_ROUT(desc->hdr.e_shstrndx, "%u");
@@ -368,119 +388,136 @@ uint16_t elf_get_shstrndx(shelfobj_t *desc) {
 /*
  * Setterinos for header members
  */
-void esh_set_class(shelfobj_t *desc, uint8_t class) {
+void esh_set_class(shelfobj_t *desc, uint8_t class)
+{
     PROFILER_IN();
     assert(desc != NULL);
     desc->e_ident[EI_CLASS] = class;
     PROFILER_OUT();
 }
 
-void esh_set_data(shelfobj_t *desc, uint8_t data) {
+void esh_set_data(shelfobj_t *desc, uint8_t data)
+{
     PROFILER_IN();
     assert(desc != NULL);
     desc->e_ident[EI_DATA] = data;
     PROFILER_OUT();
 }
 
-void esh_set_osabi(shelfobj_t *desc, uint8_t osabi) {
+void esh_set_osabi(shelfobj_t *desc, uint8_t osabi)
+{
     PROFILER_IN();
     assert(desc != NULL);
     desc->e_ident[EI_OSABI] = osabi;
     PROFILER_OUT();
 }
 
-void esh_set_osabiversion(shelfobj_t *desc, uint8_t osabiversion) {
+void esh_set_osabiversion(shelfobj_t *desc, uint8_t osabiversion)
+{
     PROFILER_IN();
     assert(desc != NULL);
     desc->e_ident[EI_ABIVERSION] = osabiversion;
     PROFILER_OUT();
 }
 
-void esh_set_type(shelfobj_t *desc, uint16_t type) {
+void esh_set_type(shelfobj_t *desc, uint16_t type)
+{
     PROFILER_IN();
     assert(desc != NULL);
     desc->hdr.e_type = type;
     PROFILER_OUT();
 }
 
-void esh_set_machine(shelfobj_t *desc, uint16_t machine) {
+void esh_set_machine(shelfobj_t *desc, uint16_t machine)
+{
     PROFILER_IN();
     assert(desc != NULL);
     desc->hdr.e_machine = machine;
     PROFILER_OUT();
 }
 
-void esh_set_version(shelfobj_t *desc, uint32_t version) {
+void esh_set_version(shelfobj_t *desc, uint32_t version)
+{
     PROFILER_IN();
     assert(desc != NULL);
     desc->hdr.e_version = version;
     PROFILER_OUT();
 }
 
-void esh_set_entry(shelfobj_t *desc, uint64_t entry) {
+void esh_set_entry(shelfobj_t *desc, uint64_t entry)
+{
     PROFILER_IN();
     assert(desc != NULL);
     desc->hdr.e_entry = entry;
     PROFILER_OUT();
 }
 
-void esh_set_phoff(shelfobj_t *desc, uint64_t phoff) {
+void esh_set_phoff(shelfobj_t *desc, uint64_t phoff)
+{
     PROFILER_IN();
     assert(desc != NULL);
     desc->hdr.e_phoff = phoff;
     PROFILER_OUT();
 }
 
-void esh_set_shoff(shelfobj_t *desc, uint64_t shoff) {
+void esh_set_shoff(shelfobj_t *desc, uint64_t shoff)
+{
     PROFILER_IN();
     assert(desc != NULL);
     desc->hdr.e_shoff = shoff;
     PROFILER_OUT();
 }
 
-void esh_set_flags(shelfobj_t *desc, uint32_t flags) {
+void esh_set_flags(shelfobj_t *desc, uint32_t flags)
+{
     PROFILER_IN();
     assert(desc != NULL);
     desc->hdr.e_flags = flags;
     PROFILER_OUT();
 }
 
-void esh_set_ehsize(shelfobj_t *desc, uint16_t ehsize) {
+void esh_set_ehsize(shelfobj_t *desc, uint16_t ehsize)
+{
     PROFILER_IN();
     assert(desc != NULL);
     desc->hdr.e_ehsize = ehsize;
     PROFILER_OUT();
 }
 
-void esh_set_phentsize(shelfobj_t *desc, uint16_t phentsize) {
+void esh_set_phentsize(shelfobj_t *desc, uint16_t phentsize)
+{
     PROFILER_IN();
     assert(desc != NULL);
     desc->hdr.e_phentsize = phentsize;
     PROFILER_OUT();
 }
 
-void esh_set_phnum(shelfobj_t *desc, uint16_t phnum) {
+void esh_set_phnum(shelfobj_t *desc, uint16_t phnum)
+{
     PROFILER_IN();
     assert(desc != NULL);
     desc->hdr.e_phnum = phnum;
     PROFILER_OUT();
 }
 
-void esh_set_shentsize(shelfobj_t *desc, uint16_t shentsize) {
+void esh_set_shentsize(shelfobj_t *desc, uint16_t shentsize)
+{
     PROFILER_IN();
     assert(desc != NULL);
     desc->hdr.e_shentsize = shentsize;
     PROFILER_OUT();
 }
 
-void esh_set_shnum(shelfobj_t *desc, uint16_t shnum) {
+void esh_set_shnum(shelfobj_t *desc, uint16_t shnum)
+{
     PROFILER_IN();
     assert(desc != NULL);
     desc->hdr.e_shnum = shnum;
     PROFILER_OUT();
 }
 
-void esh_set_shstrndx(shelfobj_t *desc, uint16_t shstrndx) {
+void esh_set_shstrndx(shelfobj_t *desc, uint16_t shstrndx)
+{
     PROFILER_IN();
     assert(desc != NULL);
     desc->hdr.e_shstrndx = shstrndx;
@@ -489,7 +526,8 @@ void esh_set_shstrndx(shelfobj_t *desc, uint16_t shstrndx) {
 
 #define STR_CASE(case_num, str) case case_num: strncpy(buf, str, sizeof(buf)); break;
 
-const char* get_elf_class_str(unsigned int elf_class) {
+const char* get_elf_class_str(unsigned int elf_class)
+{
     static char buf[32];
 
     PROFILER_IN();
@@ -506,7 +544,8 @@ const char* get_elf_class_str(unsigned int elf_class) {
     PROFILER_ROUT(buf, "\"%s\"");
 }
 
-const char *get_data_encoding_str(unsigned int encoding) {
+const char *get_data_encoding_str(unsigned int encoding)
+{
     static char buf[32];
 
     PROFILER_IN();
@@ -524,7 +563,8 @@ const char *get_data_encoding_str(unsigned int encoding) {
     PROFILER_ROUT(buf, "\"%s\"");
 }
 
-const char *get_elf_version_str(unsigned int version) {
+const char *get_elf_version_str(unsigned int version)
+{
     static char buf[32];
 
     PROFILER_IN();
@@ -541,7 +581,8 @@ const char *get_elf_version_str(unsigned int version) {
     PROFILER_ROUT(buf, "\"%s\"");
 }
 
-const char *get_osabi_str(unsigned int osabi) {
+const char *get_osabi_str(unsigned int osabi)
+{
     static char buf[32];
 
     PROFILER_IN();
@@ -569,7 +610,8 @@ const char *get_osabi_str(unsigned int osabi) {
     PROFILER_ROUT(buf, "\"%s\"");
 }
 
-const char *get_file_type_str(unsigned int file_type) {
+const char *get_file_type_str(unsigned int file_type)
+{
     static char buf[64];
 
     PROFILER_IN();
@@ -589,7 +631,8 @@ const char *get_file_type_str(unsigned int file_type) {
     PROFILER_ROUT(buf, "\"%s\"");
 }
 
-const char *get_machine_str(unsigned int machine) {
+const char *get_machine_str(unsigned int machine)
+{
     static char buf[64];
 
     PROFILER_IN();
@@ -686,7 +729,8 @@ const char *get_machine_str(unsigned int machine) {
     PROFILER_ROUT(buf, "\"%s\"");
 }
 
-const char *get_phdr_type_str(unsigned int type) {
+const char *get_phdr_type_str(unsigned int type)
+{
     static char buf[32];
 
     PROFILER_IN();
@@ -726,7 +770,8 @@ const char *get_phdr_flags_str(unsigned int flags) {
     PROFILER_ROUT(buf, "\"%s\"");
 }
 
-const char *get_shdr_type_str(uint32_t type) {
+const char *get_shdr_type_str(uint32_t type)
+{
     static char buf[32];
 
     PROFILER_IN();
@@ -770,7 +815,8 @@ const char *get_shdr_type_str(uint32_t type) {
     PROFILER_ROUT(buf, "\"%s\"");
 }
 
-const char *get_shdr_flags_str(unsigned int sh_flags) {
+const char *get_shdr_flags_str(unsigned int sh_flags)
+{
     static char buf[32];
     char *p = buf;
     unsigned int flag;
@@ -800,21 +846,24 @@ const char *get_shdr_flags_str(unsigned int sh_flags) {
     PROFILER_ROUT(buf, "\"%s\"");
 }
 
-uint16_t read_word_le(const unsigned char *src) {
+uint16_t read_word_le(const unsigned char *src)
+{
     uint16_t ret = 0;
     ret |= src[0];
     ret |= src[1] << 8;
     return ret;
 }
 
-uint16_t read_word_be(const unsigned char *src) {
+uint16_t read_word_be(const unsigned char *src)
+{
     uint16_t ret = 0;
     ret |= src[1];
     ret |= src[0] << 8;
     return ret;
 }
 
-uint32_t read_dword_le(const unsigned char *src) {
+uint32_t read_dword_le(const unsigned char *src)
+{
     uint32_t ret = 0;
     ret |= src[0];
     ret |= src[1] << 8;
@@ -823,7 +872,8 @@ uint32_t read_dword_le(const unsigned char *src) {
     return ret;
 }
 
-uint32_t read_dword_be(const unsigned char *src) {
+uint32_t read_dword_be(const unsigned char *src)
+{
     uint32_t ret = 0;
     ret |= src[3];
     ret |= src[2] << 8;
@@ -832,7 +882,8 @@ uint32_t read_dword_be(const unsigned char *src) {
     return ret;
 }
 
-uint64_t read_qword_le(const unsigned char *src) {
+uint64_t read_qword_le(const unsigned char *src)
+{
     uint64_t ret = 0;
     ret |= (uint64_t)src[0];
     ret |= (uint64_t)src[1] << 8;
@@ -845,7 +896,8 @@ uint64_t read_qword_le(const unsigned char *src) {
     return ret;
 }
 
-uint64_t read_qword_be(const unsigned char *src) {
+uint64_t read_qword_be(const unsigned char *src)
+{
     uint64_t ret = 0;
     ret |= (uint64_t)src[3];
     ret |= (uint64_t)src[2] << 8;

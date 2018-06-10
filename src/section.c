@@ -22,7 +22,6 @@ shelfsect_t *create_section(char *name)
     return new_sect;
 }
 
-
 shelfsect_t *get_section_by_name(shelfobj_t *desc, char *name)
 {
     shelfsect_t *ret = 0;
@@ -45,7 +44,6 @@ shelfsect_t *get_section_by_name(shelfobj_t *desc, char *name)
 
     PROFILER_ROUT(ret, "shelfsect_t: %p");
 }
-
 
 void free_shelfsect(shelfsect_t *sect)
 {
@@ -72,7 +70,6 @@ void free_shelfsect(shelfsect_t *sect)
     free(sect);
     sect = NULL;
 }
-
 
 void load_section_list(shelfobj_t *desc)
 {
