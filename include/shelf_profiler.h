@@ -39,7 +39,7 @@ extern char *clean_filename(const char *file);
 #define PROFILER_DEBUG(fmt, args...)                                         \
   do {                                                                       \
     if ((profiler_level & PROFILE_DEBUG) > 0) {                              \
-        fprintf(stderr, "[D]<%s@%s:%d>: " fmt,                               \
+        fprintf(stderr, C_YEL "[D]<%s@%s:%d>: " C_NRM fmt ,                               \
                clean_filename(__FILE__), __FUNCTION__, __LINE__, ##args      \
         );                                                                   \
     }                                                                        \

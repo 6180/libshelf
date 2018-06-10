@@ -116,8 +116,6 @@ shelfobj_t *shelf_open(const char *path) {
 
     desc->pht = malloc(desc->hdr.e_phnum * sizeof(Elf64_Phdr));
 
-    PROFILER_DEBUG("%lu\n", desc->hdr.e_phnum * sizeof(Elf64_Phdr));
-
     if (desc->pht == NULL) {
         shelf_error = "Malloc for pht failed";
         goto error;
@@ -206,6 +204,23 @@ void shelf_close(shelfobj_t **desc) {
 
     if (!(*desc))
         PROFILER_ERR("NULL pointer passed.");
+
+    if ((*desc)->sect_list) {
+        for (int i = 0; i < (*desc)->hdr.e_shnum; i++) {
+            // free section name string
+            if ((*desc)->sect_list[i].name != NULL) {
+                free((*desc)->sect_list[i].name);
+                (*desc)->sect_list[i].name = NULL;
+            }
+            // free section data if it is allocated
+            if ((*desc)->sect_list[i].data != NULL) {
+                free((*desc)->sect_list[i].data);
+                (*desc)->sect_list[i].data = NULL;
+            }
+        }
+        free((*desc)->sect_list);
+        (*desc)->sect_list = NULL;
+    }
 
     if ((*desc)->pht != NULL) {
         free((*desc)->pht);

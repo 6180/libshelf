@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "../include/shelf_profiler.h"
 
 
@@ -23,7 +25,7 @@ char *clean_filename(const char *file) {
         }
     }
 
-    strncpy(buffer, s + 1, BUFFER_LENGTH);
+    strncpy(buffer, s + 1, BUFFER_LENGTH - 1);
     free(cpy);
     return buffer;
 }

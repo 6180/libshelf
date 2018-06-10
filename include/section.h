@@ -30,5 +30,6 @@ extern int         *swap_sections(shelfobj_t *desc, Elf64_Shdr shdr_a, Elf64_Shd
 
 /* Misc. */
 extern void        free_shelfsect(shelfsect_t *sect);
+void               load_section_list(shelfobj_t *desc);
 
 #endif // SHELF_SECTION_736AB8
