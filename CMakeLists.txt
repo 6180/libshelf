@@ -1,12 +1,31 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.5)
 
-project(libelfbutcher VERSION 0.0.1 LANGUAGES C)
+project(libshelf VERSION 0.0.1 LANGUAGES C)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/lib)
 set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
-add_library(elfbutcher SHARED src/shelf.c src/shelf_dump.c src/section.c)
+set(LIBSHELF_SOURCES
+    src/shelf.c
+    src/shelf_dump.c
+    src/section.c
+    src/shelf_profiler.c
+)
 
-target_compile_options(elfbutcher PRIVATE -Wall -Wextra -O3)
+add_library(libshelf SHARED ${LIBSHELF_SOURCES})
+set_target_properties(libshelf PROPERTIES OUTPUT_NAME "shelf")
+target_compile_options(libshelf PRIVATE -std=c11 -Wall -Wextra -O3)
+target_include_directories(libshelf PRIVATE include)
 
+install(TARGETS libshelf DESTINATION /usr/lib/shelf)
+install(DIRECTORY include/ DESTINATION /usr/include/shelf
+FILES_MATCHING PATTERN "*.h"
+)
+
+add_library(debug SHARED ${LIBSHELF_SOURCES})
+set_target_properties(debug PROPERTIES OUTPUT_NAME "shelf")
+target_compile_options(debug PRIVATE -std=c11 -Wall -Wextra -Og -g)
+target_include_directories(debug PRIVATE include src)
+
+# Test program project.
 add_subdirectory(test ${CMAKE_SOURCE_DIR}/build EXCLUDE_FROM_ALL)
