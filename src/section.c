@@ -24,7 +24,7 @@ shelfsect_t *create_section(char *name)
 
 shelfsect_t *get_section_by_name(shelfobj_t *desc, char *name)
 {
-    shelfsect_t *ret = 0;
+    shelfsect_t *ret = NULL;
 
     PROFILER_IN();
 
@@ -35,7 +35,7 @@ shelfsect_t *get_section_by_name(shelfobj_t *desc, char *name)
     if (desc->sect_list == NULL)
         load_section_list(desc);
 
-    for (uint32_t i = 0; i < desc->hdr.e_shnum; i++) {
+    for (size_t i = 0; i < desc->hdr.e_shnum; i++) {
         if (!strcmp(name, desc->sect_list[i].name)) {
             ret = &desc->sect_list[i];
             break;
@@ -43,6 +43,87 @@ shelfsect_t *get_section_by_name(shelfobj_t *desc, char *name)
     }
 
     PROFILER_ROUT(ret, "shelfsect_t: %p");
+}
+
+shelfsect_t *get_section_by_index(shelfobj_t *desc, uint32_t index)
+{
+    shelfsect_t *ret = NULL;
+
+    PROFILER_IN();
+
+    if (desc == NULL || index >= desc->hdr.e_shnum)
+        PROFILER_RERR("Bad argument passed to get_section_by_index()\n", NULL);
+
+    if (desc->sect_list == NULL)
+        load_section_list(desc);
+
+    for (size_t i = 0; i < desc->hdr.e_shnum; i++) {
+        if (desc->sect_list[i].index == index) {
+            ret = &desc->sect_list[i];
+            break;
+        }
+    }
+
+    PROFILER_ROUT(ret, "shelfsect_t: %p");    
+}
+
+shelfsect_t **get_sections_by_type(shelfobj_t *desc, uint32_t type)
+{
+    shelfsect_t **sections = NULL;
+    uint32_t matches = 0;
+
+    PROFILER_IN();
+
+    if (desc == NULL)
+        PROFILER_RERR("Null argument passed to get_section_by_index()\n", NULL);
+
+    if (desc->sect_list == NULL)
+        load_section_list(desc);
+
+    // Count the matches first instead of using a dynamic collection
+    for (size_t i = 0; i < desc->hdr.e_shnum; i++) {
+        if (desc->sht[i].sh_type == type)
+            matches++;
+    }
+
+    sections = malloc((matches + 1) * sizeof(shelfsect_t*));
+    // NULL pointer terminated array
+    sections[matches] = NULL;
+    size_t idx = 0;
+
+    // Populate sections array with pointers to matching sections
+    for (size_t i = 0; i < desc->hdr.e_shnum; i++) {
+        if (desc->sht[i].sh_type == type)
+            sections[idx++] = &(desc->sect_list[i]);
+    }
+
+    PROFILER_ROUT(sections, "shelfsect_t**: %p");
+}
+
+shelfsect_t *get_section_list(shelfobj_t *desc)
+{
+    PROFILER_IN();
+
+    if (desc == NULL)
+        PROFILER_RERR("Null argument passed to get_section_by_index()\n", NULL);
+
+    if (desc->sect_list == NULL)
+        load_section_list(desc);
+    
+    PROFILER_ROUT(desc->sect_list, "shelfsect_t *: %p");
+}
+
+shelfsect_t *get_tail_section(shelfobj_t *desc)
+{
+    PROFILER_IN();
+
+    if (desc == NULL)
+        PROFILER_RERR("Null argument passed to get_section_by_index()\n", NULL);
+
+    if (desc->sect_list == NULL)
+        load_section_list(desc);
+
+    PROFILER_ROUT(&(desc->sect_list[desc->hdr.e_shnum - 1]), "shelfsect_t: %p");
 }
 
 void free_shelfsect(shelfsect_t *sect)

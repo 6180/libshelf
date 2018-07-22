@@ -6,14 +6,14 @@
 
 /* Function for retrieving sections. */
 extern shelfsect_t *create_section(char *name);
-extern shelfsect_t *get_section_by_name(shelfobj_t *desc, char *name); // TODO
-extern shelfsect_t *get_section_by_index(shelfobj_t *desc, uint32_t index); // TODO
-extern shelfsect_t *get_sections_by_type(shelfobj_t *desc, uint32_t type); // TODO
+extern shelfsect_t *get_section_by_name(shelfobj_t *desc, char *name);
+extern shelfsect_t *get_section_by_index(shelfobj_t *desc, uint32_t index);
+extern shelfsect_t **get_sections_by_type(shelfobj_t *desc, uint32_t type);
 extern shelfsect_t *get_section_from_symbol(shelfobj_t *desc); // TODO
 extern shelfsect_t *get_parent_section(shelfobj_t *desc, Elf64_Addr addr); // TODO
 extern shelfsect_t *get_parent_section_by_foffset(shelfobj_t *desc, Elf64_Addr addr); // TODO
-extern shelfsect_t *get_section_list(shelfobj_t *desc); // TODO
-extern shelfsect_t *get_tail_section(shelfobj_t *desc); // TODO
+extern shelfsect_t *get_section_list(shelfobj_t *desc);
+extern shelfsect_t *get_tail_section(shelfobj_t *desc);
 
 /* Functions for reading/writing section data. */
 extern void        *get_section_data(shelfobj_t *desc, Elf64_Shdr shdr); // TODO
