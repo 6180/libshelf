@@ -96,7 +96,7 @@ extern char *clean_filename(const char *file);
                profiler_depth, __FUNCTION__, clean_filename(__FILE__)        \
         );                                                                   \
         snprintf(buffer, BUFFER_LENGTH, "%s ", fmt);                         \
-        fprintf(stderr, "(" fmt ")\sn", ret);                                 \
+        fprintf(stderr, "(" fmt ")\n", ret);                                 \
     }                                                                        \
     return ret;                                                              \
   } while (0)
