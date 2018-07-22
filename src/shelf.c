@@ -9,8 +9,10 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#include "../include/shelf.h"
-#include "../include/shelf_profiler.h"
+#include "shelf.h"
+#include "shelf_profiler.h"
+#include "section.h"
+#include "symbol.h"
 
 char *shelf_error;
 
@@ -67,6 +69,10 @@ shelfobj_t *shelf_open(const char *path)
 
     desc->mmapped = 1;
 
+    /*
+    * Load header.
+    */
+
     desc->e_ident = desc->data;
     desc->ei_class = desc->e_ident[EI_CLASS];
     desc->ei_data = desc->e_ident[EI_DATA];
@@ -115,6 +121,10 @@ shelfobj_t *shelf_open(const char *path)
         desc->hdr.e_shstrndx = read_word(desc->data + offset); offset += 2;
     }
 
+    /*
+    * Load program header table.
+    */
+
     desc->pht = malloc(desc->hdr.e_phnum * sizeof(Elf64_Phdr));
 
     if (desc->pht == NULL) {
@@ -146,6 +156,10 @@ shelfobj_t *shelf_open(const char *path)
         }
     }
 
+    /*
+    * Load section header table.
+    */
+
     desc->sht = malloc(desc->hdr.e_shnum * sizeof(Elf64_Shdr));
 
     if (desc->sht == NULL) {
@@ -169,6 +183,49 @@ shelfobj_t *shelf_open(const char *path)
             desc->sht[i].sh_info =      read_dword(sh_base + i * desc->hdr.e_shentsize + 44);
             desc->sht[i].sh_addralign = read_qword(sh_base + i * desc->hdr.e_shentsize + 48);
             desc->sht[i].sh_entsize =   read_qword(sh_base + i * desc->hdr.e_shentsize + 56);
+        }
+    }
+
+    /*
+     * Load symbol table.
+     */
+
+    size_t num_symbols;
+    shelfsect_t *symtab_sect = get_section_by_name(desc, ".symtab");
+    shelfsect_t *strtab_sect = get_section_by_name(desc, ".strtab");
+ 
+    if (symtab_sect != NULL) {
+        if (desc->ei_class == ELFCLASS64) {
+            num_symbols = symtab_sect->shdr->sh_size / sizeof(Elf64_Sym); 
+        } else {
+            num_symbols = symtab_sect->shdr->sh_size / sizeof(Elf32_Sym); 
+        }
+
+        desc->symtab = malloc(num_symbols * sizeof(shelfsym_t));
+
+        unsigned char *symtab_base = desc->data + symtab_sect->shdr->sh_offset;
+
+        for (size_t i = 0; i < num_symbols; i++) {
+            if (desc->ei_class == ELFCLASS64) { // 64-bit
+                desc->symtab[i].st_name =  read_dword((sizeof(Elf64_Sym) * i + symtab_base + 0));
+                desc->symtab[i].st_info =  (sizeof(Elf64_Sym) * i + symtab_base + 4);
+                desc->symtab[i].st_other = (sizeof(Elf64_Sym) * i + symtab_base + 5 );
+                desc->symtab[i].st_shndx = read_word((sizeof(Elf64_Sym) * i + symtab_base + 6));
+                desc->symtab[i].st_value = read_qword((sizeof(Elf64_Sym) * i + symtab_base + 8));
+                desc->symtab[i].st_size =  read_qword((sizeof(Elf64_Sym) * i + symtab_base + 16));
+            } else { // 32-bit.
+                desc->symtab[i].st_name =  read_dword((sizeof(Elf64_Sym) * i + symtab_base + 0));
+                desc->symtab[i].st_value = read_dword((sizeof(Elf64_Sym) * i + symtab_base + 4));
+                desc->symtab[i].st_size =  read_dword((sizeof(Elf64_Sym) * i + symtab_base + 8));
+                desc->symtab[i].st_info =  (sizeof(Elf64_Sym) * i + symtab_base + 12);
+                desc->symtab[i].st_other = (sizeof(Elf64_Sym) * i + symtab_base + 13 );
+                desc->symtab[i].st_shndx = read_word((sizeof(Elf64_Sym) * i + symtab_base + 14));
+            }
+
+            if (desc->symtab[i].st_name != NULL) {
+                desc->symtab[i].name = desc->data + strtab_sect->shdr->sh_offset + desc->symtab[i].st_name;
+                printf("%s\n", desc->symtab[i].name);
+            }
         }
     }
 

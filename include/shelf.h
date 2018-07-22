@@ -230,16 +230,53 @@ typedef struct shelf_sect {
 } shelfsect_t;
 
 /*
+ * An object file's symbol table holds information needed to locate
+ * and relocate a program's symbolic definitions and  references. A
+ * symbol table index is a subscript into this array. 
+ */
+ typedef struct {
+    uint32_t st_name;
+    Elf32_Addr st_value;
+    uint32_t st_size;
+    unsigned char st_info;
+    unsigned char st_other;
+    uint16_t st_shndx;
+} Elf32_Sym;
+
+typedef struct {
+    uint32_t st_name;
+    unsigned char st_info;
+    unsigned char st_other;
+    uint16_t st_shndx;
+    Elf64_Addr st_value;
+    uint64_t st_size;
+} Elf64_Sym;
+
+/*
+ * Elf symbol table entry structure
+ */
+typedef struct s_elfsym {
+    char *name;
+    uint32_t st_name;
+    unsigned char st_info;
+    unsigned char st_other;
+    uint16_t st_shndx;
+    Elf64_Addr st_value;
+    uint64_t st_size;
+} shelfsym_t;
+
+/*
  * Elf Object structure.
  */
 typedef struct s_elfobj {
-    shelf_Ehdr hdr;
-    shelf_Shdr *sht;
-    Elf64_Phdr *pht;
+    shelf_Ehdr  hdr;
+    shelf_Shdr  *sht;
+    Elf64_Phdr  *pht;
     shelfsect_t *sect_list;
+    shelfsym_t  *symtab;
 
     unsigned char *e_ident;
-    char *ei_magic;
+    char    *ei_magic;
     uint8_t ei_class;
     uint8_t ei_data;
     uint8_t ei_version;
@@ -261,6 +298,8 @@ typedef struct s_elfobj {
     const char *error;
 
 } shelfobj_t;
+
+
 
 /*
  * Extern globals.
