@@ -10,6 +10,7 @@ set(LIBSHELF_SOURCES
     src/shelf.c
     src/shelf_dump.c
     src/section.c
+    src/symbol.c
     src/shelf_profiler.c
 )
 
