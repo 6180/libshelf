@@ -13,7 +13,6 @@ set(LIBSHELF_SOURCES
     src/shelf_profiler.c
 )
 
-
 add_library(libshelf SHARED ${LIBSHELF_SOURCES})
 set_target_properties(libshelf PROPERTIES OUTPUT_NAME "shelf")
 target_compile_options(libshelf PRIVATE -std=gnu11 -Wall -Wextra -O3)

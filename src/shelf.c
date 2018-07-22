@@ -571,7 +571,7 @@ const char *get_elf_version_str(unsigned int version)
 
     switch (version) {
         STR_CASE(EV_NONE,    "none");
-        STR_CASE(EV_CURRENT, "current (1");
+        STR_CASE(EV_CURRENT, "current (1)");
         default: {
             snprintf(buf, sizeof(buf), "<unknown: 0x%02x>", version);
             break;

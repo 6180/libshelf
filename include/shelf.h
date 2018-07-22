@@ -229,7 +229,6 @@ typedef struct shelf_sect {
     void *data;         /* Pointer to sections data cache. */
 } shelfsect_t;
 
-
 /*
  * Elf Object structure.
  */
@@ -252,7 +251,7 @@ typedef struct s_elfobj {
     unsigned char *data;
     struct stat file_stat;
     int type;
-    int writable; //
+    int writable;
     time_t load_time;
     char hdr_corrupt;
     char read;
@@ -262,7 +261,6 @@ typedef struct s_elfobj {
     const char *error;
 
 } shelfobj_t;
-
 
 /*
  * Extern globals.
@@ -275,7 +273,6 @@ extern char *shelf_error;
 extern shelfobj_t *shelf_open(const char *path);
 // extern ssize_t Elf_Write(Elf_Desc *elf_desc, const char *path);
 extern void shelf_close(shelfobj_t **desc);
-
 
 /*
  * Accessor functions for individual header fields
@@ -317,7 +314,6 @@ extern void elf_set_shentsize(shelfobj_t *desc, uint16_t shentsize);
 extern void elf_set_shnum(shelfobj_t *desc, uint16_t shentnum);
 extern void elf_set_shstrndx(shelfobj_t *desc, uint16_t shstrndx);
 
-
 /*
  * Helper functions for getting user friendly names for some header fields.
  */
@@ -331,7 +327,6 @@ extern const char *get_phdr_type_str(unsigned int type);
 extern const char *get_phdr_flags_str(unsigned int flags);
 extern const char *get_shdr_type_str(uint32_t type);
 extern const char *get_shdr_flags_str(unsigned int flags);
-
 
 uint16_t read_word_le(const unsigned char *src);
 uint16_t read_word_be(const unsigned char *src);
