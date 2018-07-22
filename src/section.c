@@ -75,7 +75,7 @@ shelfsect_t **get_sections_by_type(shelfobj_t *desc, uint32_t type)
     PROFILER_IN();
 
     if (desc == NULL)
-        PROFILER_RERR("Null argument passed to get_section_by_index()\n", NULL);
+        PROFILER_RERR("Null argument passed to get_sections_by_type()\n", NULL);
 
     if (desc->sect_list == NULL)
         load_section_list(desc);
@@ -100,12 +100,56 @@ shelfsect_t **get_sections_by_type(shelfobj_t *desc, uint32_t type)
     PROFILER_ROUT(sections, "shelfsect_t**: %p");
 }
 
+shelfsect_t *get_parent_section(shelfobj_t *desc, Elf64_Addr addr)
+{
+        PROFILER_IN();
+
+    if (desc == NULL)
+        PROFILER_RERR("Null argument passed to get_parent_section()\n", NULL);
+
+    if (desc->sect_list == NULL)
+        load_section_list(desc);
+
+    for (size_t i = 1; i < desc->hdr.e_shnum; i++) {
+        shelfsect_t *cur_sect = &(desc->sect_list[i]); 
+        
+        if (cur_sect->shdr->sh_addr <= addr && 
+            cur_sect->shdr->sh_addr + cur_sect->shdr->sh_size >= addr) {
+            
+            PROFILER_ROUT(cur_sect, "shelfsect_t *: %p");
+        }
+    }
+}
+
+shelfsect_t *get_parent_section_by_foffset(shelfobj_t *desc, Elf64_Addr addr)
+{
+    PROFILER_IN();
+
+    if (desc == NULL)
+        PROFILER_RERR("Null argument passed to get_parent_section_by_foffset()\n", NULL);
+
+    if (desc->sect_list == NULL)
+        load_section_list(desc);
+
+    for (size_t i = 1; i < desc->hdr.e_shnum; i++) {
+        shelfsect_t *cur_sect = &(desc->sect_list[i]); 
+        
+        if (cur_sect->shdr->sh_offset <= addr && 
+            cur_sect->shdr->sh_offset + cur_sect->shdr->sh_size >= addr) {
+            
+            PROFILER_ROUT(cur_sect, "shelfsect_t *: %p");
+        }
+    }
+
+    PROFILER_ROUT(NULL, "shelfsect_t *: %p");
+}
+
 shelfsect_t *get_section_list(shelfobj_t *desc)
 {
     PROFILER_IN();
 
     if (desc == NULL)
-        PROFILER_RERR("Null argument passed to get_section_by_index()\n", NULL);
+        PROFILER_RERR("Null argument passed to get_section_list()\n", NULL);
 
     if (desc->sect_list == NULL)
         load_section_list(desc);
@@ -118,7 +162,7 @@ shelfsect_t *get_tail_section(shelfobj_t *desc)
     PROFILER_IN();
 
     if (desc == NULL)
-        PROFILER_RERR("Null argument passed to get_section_by_index()\n", NULL);
+        PROFILER_RERR("Null argument passed to get_tail_section()\n", NULL);
 
     if (desc->sect_list == NULL)
         load_section_list(desc);
