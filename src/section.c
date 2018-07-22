@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../include/shelf.h"
-#include "../include/shelf_profiler.h"
-#include "../include/section.h"
+#include "shelf.h"
+#include "shelf_profiler.h"
+#include "section.h"
 
 
 shelfsect_t *create_section(char *name)

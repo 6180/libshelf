@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../include/shelf.h"
-#include "../include/shelf_dump.h"
-#include "../include/shelf_profiler.h"
+#include "shelf.h"
+#include "shelf_dump.h"
+#include "shelf_profiler.h"
 
 
 void shelf_dump_ident(const shelfobj_t *desc)

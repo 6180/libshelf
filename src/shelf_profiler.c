@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../include/shelf_profiler.h"
+#include "shelf_profiler.h"
 
 
 int profiler_depth = 0;

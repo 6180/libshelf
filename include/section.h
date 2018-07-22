@@ -22,10 +22,9 @@ extern int         *append_data_to_section(shelfobj_t *desc, void *data, size_t 
 
 /* Functions for adding and removing sections. */
 extern shelfsect_t *add_section(shelfobj_t *desc, Elf64_Addr addr); // TODO:
-extern shelfsect_t *add_runtime_section(shelfobj_t *desc, Elf64_Addr addr); // TODO:
 extern int         *remove_section(shelfobj_t *desc, char *name); // TODO:
 extern int         *shift_section(shelfobj_t *desc, Elf64_Addr addr); // TODO:
-extern int         *swap_sections(shelfobj_t *desc, Elf64_Shdr shdr_a, Elf64_Shdr shdr_b); // TODO:
+extern int         *swap_sections(shelfobj_t *desc, Elf64_Shdr *shdr_a, Elf64_Shdr *shdr_b); // TODO:
 
 /* Misc. */
 extern void        free_shelfsect(shelfsect_t *sect);
