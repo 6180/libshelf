@@ -280,4 +280,49 @@
 #define SHF_EXCLUDE          (1 << 27)
 #define SHF_MASKPROC         0xf0000000
 
+/*
+ * Defined constants for st_info.
+ */
+#define STT_NOTYPE     0
+#define STT_OBJECT     1
+#define STT_FUNC       2
+#define STT_SECTION    3
+#define STT_FILE       4
+#define STT_COMMON     5
+#define STT_TLS        6
+#define STT_GNU_IFUNC  10
+
+#define STB_LOCAL      0
+#define STB_GLOBAL     1
+#define STB_WEAK       2
+#define STB_GNU_UNIQUE 10
+
+/* Don't know why all of these are duplicated but that's what Mr Elf spec says. */
+/*
+ * Extract a binding from an st_info value.
+ */
+#define ELF32_ST_BIND(info) ((info) >> 4)
+#define ELF64_ST_BIND(info) ((info) >> 4)
+
+/*
+ * Extract a type from an st_info value.
+ */
+#define ELF32_ST_TYPE(info) ((info) & 0xf)
+#define ELF64_ST_TYPE(info) ((info) & 0xf)
+
+/*
+ * Convert a binding and a type into an st_info value.
+ */
+#define ELF32_ST_INFO(bind, type) ((bind)<<4)+((type)&0xf)
+#define ELF64_ST_INFO(bind, type) ((bind)<<4)+((type)&0xf)
+
+/*
+ * Defined constants for st_other.
+ */
+#define STV_DEFAULT   0
+#define STV_INTERNAL  1
+#define STV_HIDDEN    2
+#define STV_PROTECTED 3
+
+
 #endif // SHELF_CONSTANTS_4E9D67

@@ -237,6 +237,16 @@ error:
         desc->pht = NULL;
     }
 
+    if (desc->sht != NULL) {
+        free(desc->sht);
+        desc->sht = NULL;
+    }
+
+    if (desc->symtab != NULL) {
+        free(desc->symtab);
+        desc->symtab = NULL;
+    }
+
     if (desc->mmapped) {
         munmap(desc->data, desc->file_stat.st_size);
         desc->mmapped = 0;
@@ -289,6 +299,11 @@ void shelf_close(shelfobj_t **desc)
     if ((*desc)->sht != NULL) {
         free((*desc)->sht);
         (*desc)->sht = NULL;
+    }
+
+    if ((*desc)->symtab != NULL) {
+        free((*desc)->symtab);
+        (*desc)->symtab = NULL;
     }
 
     if ((*desc)->mmapped) {
